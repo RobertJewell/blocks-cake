@@ -1,5 +1,5 @@
-import * as React from "react";
-import { useMutation } from "@tanstack/react-query";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,24 +8,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { examplefunction } from "@/core/functions/example-functions";
+import { postUser } from "@/core/functions/post-user";
+import { useMutation } from "@tanstack/react-query";
 import {
+  AlertCircle,
+  CheckCircle,
+  Code2,
   Loader2,
   Play,
   Server,
   Zap,
-  CheckCircle,
-  AlertCircle,
-  Code2,
 } from "lucide-react";
-import { examplefunction } from "@/core/functions/example-functions";
+import * as React from "react";
 
 export function MiddlewareDemo() {
   const [inputValue, setInputValue] = React.useState("Hello TanStack Start!");
 
   const mutation = useMutation({
     mutationFn: examplefunction,
+    onSuccess: (data) => {
+      console.log("Client: Server function executed successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Client: Server function failed:", error);
+    },
+  });
+
+  const userMutation = useMutation({
+    mutationFn: postUser,
     onSuccess: (data) => {
       console.log("Client: Server function executed successfully:", data);
     },
@@ -42,8 +53,16 @@ export function MiddlewareDemo() {
     });
   };
 
+  const handleExecuteUser = () => {
+    userMutation.mutate({
+      data: {
+        name: inputValue,
+      },
+    });
+  };
+
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-muted/20">
+    <section className="py-24 bg-linear-to-b from-background to-muted/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4">
@@ -104,9 +123,22 @@ export function MiddlewareDemo() {
                   Execute Server Function
                 </Button>
 
+                <Button
+                  onClick={handleExecuteUser}
+                  disabled={userMutation.isPending}
+                  className="w-full"
+                >
+                  {userMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Zap className="w-4 h-4 mr-2" />
+                  )}
+                  Add user
+                </Button>
+
                 {/* Status Display */}
                 <div className="space-y-2">
-                  {mutation.isPending && (
+                  {userMutation.isPending && (
                     <Alert>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <AlertDescription>
@@ -115,16 +147,17 @@ export function MiddlewareDemo() {
                     </Alert>
                   )}
 
-                  {mutation.isSuccess && (
+                  {userMutation.isSuccess && (
                     <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20">
                       <CheckCircle className="w-4 h-4 text-green-600" />
                       <AlertDescription className="text-green-800 dark:text-green-200">
-                        <strong>Success!</strong> Response: "{mutation.data}"
+                        <strong>Success!</strong> Response: "
+                        {userMutation.data.user.id}"
                       </AlertDescription>
                     </Alert>
                   )}
 
-                  {mutation.isError && (
+                  {userMutation.isError && (
                     <Alert className="border-red-200 bg-red-50 dark:bg-red-950/20">
                       <AlertCircle className="w-4 h-4 text-red-600" />
                       <AlertDescription className="text-red-800 dark:text-red-200">

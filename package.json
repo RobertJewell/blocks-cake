@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-start-on-cloudflare",
+  "name": "blocks-cakes",
   "private": true,
   "type": "module",
   "scripts": {
@@ -23,6 +23,8 @@
     "@tanstack/react-start": "^1.134.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "drizzle-kit": "^0.31.6",
+    "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.476.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
