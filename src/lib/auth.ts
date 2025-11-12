@@ -1,0 +1,12 @@
+import { getDB } from "@/core/db/drizzle";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { env } from "cloudflare:workers";
+
+const db = getDB(env.blocks_cake_db);
+
+export const auth = betterAuth({
+  database: drizzleAdapter(db, {
+    provider: "sqlite",
+  }),
+});
