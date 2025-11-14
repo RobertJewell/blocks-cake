@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { examplefunction } from "@/core/functions/example-functions";
-import { postUser } from "@/core/functions/post-user";
 import { useMutation } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -35,28 +34,10 @@ export function MiddlewareDemo() {
     },
   });
 
-  const userMutation = useMutation({
-    mutationFn: postUser,
-    onSuccess: (data) => {
-      console.log("Client: Server function executed successfully:", data);
-    },
-    onError: (error) => {
-      console.error("Client: Server function failed:", error);
-    },
-  });
-
   const handleExecute = () => {
     mutation.mutate({
       data: {
         exampleKey: "exampleValue",
-      },
-    });
-  };
-
-  const handleExecuteUser = () => {
-    userMutation.mutate({
-      data: {
-        name: inputValue,
       },
     });
   };
@@ -123,22 +104,9 @@ export function MiddlewareDemo() {
                   Execute Server Function
                 </Button>
 
-                <Button
-                  onClick={handleExecuteUser}
-                  disabled={userMutation.isPending}
-                  className="w-full"
-                >
-                  {userMutation.isPending ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Zap className="w-4 h-4 mr-2" />
-                  )}
-                  Add user
-                </Button>
-
                 {/* Status Display */}
                 <div className="space-y-2">
-                  {userMutation.isPending && (
+                  {mutation.isPending && (
                     <Alert>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <AlertDescription>
@@ -147,17 +115,16 @@ export function MiddlewareDemo() {
                     </Alert>
                   )}
 
-                  {userMutation.isSuccess && (
+                  {mutation.isSuccess && (
                     <Alert className="border-green-200 bg-green-50 dark:bg-green-950/20">
                       <CheckCircle className="w-4 h-4 text-green-600" />
                       <AlertDescription className="text-green-800 dark:text-green-200">
-                        <strong>Success!</strong> Response: "
-                        {userMutation.data.user.id}"
+                        <strong>Success!</strong> Response: "{mutation.data}"
                       </AlertDescription>
                     </Alert>
                   )}
 
-                  {userMutation.isError && (
+                  {mutation.isError && (
                     <Alert className="border-red-200 bg-red-50 dark:bg-red-950/20">
                       <AlertCircle className="w-4 h-4 text-red-600" />
                       <AlertDescription className="text-red-800 dark:text-red-200">
