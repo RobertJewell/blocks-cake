@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/core/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,7 +28,7 @@ type RegisterMutation = UseMutationResult<
   RegisterValues
 >;
 
-export const Route = createFileRoute("/register")({
+export const Route = createFileRoute("/auth/register")({
   component: RegisterPage,
   ssr: false,
 });
@@ -100,6 +100,26 @@ function RegisterForm({
     formState: { errors, isSubmitting },
   } = form;
 
+  const { data: session } = authClient.useSession();
+
+  if (session)
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Hi {session.user.name}!</CardTitle>
+          <CardDescription>You're already logged in.</CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex flex-col gap-8 text-sm">
+          <div>
+            <p className="text-muted-foreground"> Logged in with email:</p>
+            <p>{session.user.email}</p>
+          </div>
+          <Button onClick={() => authClient.signOut()}>Sign out</Button>
+        </CardContent>
+      </Card>
+    );
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -150,9 +170,9 @@ function RegisterForm({
 
             <FieldDescription className="text-center">
               Already have an account?{" "}
-              <a href="/login" className="underline underline-offset-4">
+              <Link to="/auth/login" className="underline underline-offset-4">
                 Login
-              </a>
+              </Link>
             </FieldDescription>
           </FieldGroup>
         </form>

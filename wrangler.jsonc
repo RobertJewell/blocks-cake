@@ -12,6 +12,7 @@
       "binding": "blocks_cake_db",
       "database_name": "blocks-cake-db",
       "database_id": "29d1f84b-e2bc-43b1-bde2-1ee5b0358ab8",
+      // "remote": true,
     },
   ],
 }

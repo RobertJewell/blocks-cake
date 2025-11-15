@@ -1,40 +1,34 @@
-import { Button } from "@/components/ui/button";
+import { authClient } from "@/core/auth/auth-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "lucide-react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { authClient } from "@/core/auth/auth-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from "../ui/card";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
+import { Input } from "../ui/input";
 
 type SignInEmailResult = Awaited<ReturnType<typeof authClient.signIn.email>>;
 type LoginValues = z.infer<typeof LoginSchema>;
-type LoginMutation = UseMutationResult<SignInEmailResult, Error, LoginValues>;
-
-export const Route = createFileRoute("/login")({
-  component: LoginPage,
-  ssr: false,
-});
 
 const LoginSchema = z.object({
   email: z.email("Invalid email"),
   password: z.string().min(1, "Password is required"),
 });
 
-function LoginPage() {
+export const LoginForm = () => {
+  const form = useForm<LoginValues>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
   const loginMutation = useMutation<SignInEmailResult, Error, LoginValues>({
     mutationFn: async ({ email, password }) => {
       const res = await authClient.signIn.email({ email, password });
@@ -47,35 +41,9 @@ function LoginPage() {
     },
   });
 
-  const form = useForm<LoginValues>({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
-  });
-
   function onSubmit(values: LoginValues) {
     loginMutation.mutate(values);
   }
-
-  return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
-      <LoginForm
-        form={form}
-        loginMutation={loginMutation}
-        onSubmit={onSubmit}
-      />
-    </div>
-  );
-}
-
-function LoginForm({
-  form,
-  loginMutation,
-  onSubmit,
-}: {
-  form: ReturnType<typeof useForm<LoginValues>>;
-  loginMutation: LoginMutation;
-  onSubmit: (values: LoginValues) => void;
-}) {
   const {
     register,
     handleSubmit,
@@ -129,13 +97,16 @@ function LoginForm({
 
             <FieldDescription className="text-center">
               Don&apos;t have an account?{" "}
-              <a href="/register" className="underline underline-offset-4">
+              <Link
+                to="/auth/register"
+                className="underline underline-offset-4"
+              >
                 Sign up
-              </a>
+              </Link>
             </FieldDescription>
           </FieldGroup>
         </form>
       </CardContent>
     </Card>
   );
-}
+};

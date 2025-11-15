@@ -13,3 +13,9 @@ export function createAuthInstance() {
     plugins: [reactStartCookies()],
   });
 }
+
+export type AuthInstance = ReturnType<typeof createAuthInstance>;
+
+export type AuthSession = Awaited<
+  ReturnType<AuthInstance["api"]["getSession"]>
+>;
