@@ -37,7 +37,7 @@ export const LoginForm = () => {
       return res;
     },
     onSuccess: () => {
-      window.location.href = "/";
+      window.location.href = "/app";
     },
   });
 

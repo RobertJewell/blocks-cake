@@ -28,7 +28,7 @@ type RegisterMutation = UseMutationResult<
   RegisterValues
 >;
 
-export const Route = createFileRoute("/auth/register")({
+export const Route = createFileRoute("/app/register")({
   component: RegisterPage,
   ssr: false,
 });
@@ -170,7 +170,7 @@ function RegisterForm({
 
             <FieldDescription className="text-center">
               Already have an account?{" "}
-              <Link to="/auth/login" className="underline underline-offset-4">
+              <Link to="/app/login" className="underline underline-offset-4">
                 Login
               </Link>
             </FieldDescription>

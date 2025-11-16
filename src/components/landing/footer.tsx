@@ -21,16 +21,14 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-foreground">Developer</h3>
             <ul role="list" className="mt-2 space-y-1">
-              {navigation.main.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center group"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  to={"/app/login"}
+                  className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center group"
+                >
+                  Login
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

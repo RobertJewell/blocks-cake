@@ -1,11 +1,11 @@
+import { useSidebar } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { useParams } from "@tanstack/react-router";
 import { Eye, Pencil, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useSidebar } from "~/components/ui/sidebar";
-import { useSavePage } from "~/lib/cms/hooks/useSavePage";
-import { useEditorStore } from "~/lib/cms/stores/editor-store";
-import { cn } from "~/lib/utils";
-import { Route } from "~/routes/(authenticated)/edit/$slug";
 import { blurUpVariants } from "../../blocks/shared/animations";
+import { useSavePage } from "../../hooks/useSavePage";
+import { useEditorStore } from "../../stores/editor-store";
 import { ToolbarButton } from "./toolbar-button";
 
 export function EditorToolbar() {
@@ -16,9 +16,7 @@ export function EditorToolbar() {
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
   const { setOpen } = useSidebar();
 
-  console.log(editedBlocks);
-
-  const { slug } = Route.useParams(); // ✅ get slug from route
+  const { slug } = useParams();
   const savePageMutation = useSavePage();
 
   const isEdit = mode === "edit";
@@ -50,7 +48,11 @@ export function EditorToolbar() {
               setMode(isEdit ? "view" : "edit");
             }}
           >
-            {isEdit ? <Eye className="size-4" /> : <Pencil className="size-4" />}
+            {isEdit ? (
+              <Eye className="size-4" />
+            ) : (
+              <Pencil className="size-4" />
+            )}
             {isEdit ? "View" : "Edit"}
           </ToolbarButton>
         </motion.div>

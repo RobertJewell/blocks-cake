@@ -1,5 +1,7 @@
 import { authClient } from "@/core/auth/auth-client";
-import { AuthSession } from "@/core/auth/hooks/use-session";
+
+import { AuthQueryResult } from "@/core/auth/functions/queries";
+import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { Button } from "../ui/button";
 import {
@@ -10,8 +12,9 @@ import {
   CardTitle,
 } from "../ui/card";
 
-export const UserConfirmationCard = ({ session }: { session: AuthSession }) => {
-  if (!session)
+export const UserConfirmationCard = ({ user }: { user: AuthQueryResult }) => {
+  const navigate = useNavigate();
+  if (!user)
     return (
       <Card className="w-full min-h-96 min-w-sm max-w-md">
         <CardContent className="flex flex-col items-center justify-center gap-8 text-sm">
@@ -23,16 +26,23 @@ export const UserConfirmationCard = ({ session }: { session: AuthSession }) => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Hi {session.user.name}!</CardTitle>
+        <CardTitle>Hi {user.name}!</CardTitle>
         <CardDescription>You're already logged in.</CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col gap-8 text-sm">
         <div>
           <p className="text-muted-foreground"> Logged in with email:</p>
-          <p>{session.user.email}</p>
+          <p>{user.email}</p>
         </div>
-        <Button onClick={() => authClient.signOut()}>Sign out</Button>
+        <Button
+          onClick={async () => {
+            await authClient.signOut();
+            navigate({ to: "/" });
+          }}
+        >
+          Sign out
+        </Button>
       </CardContent>
     </Card>
   );

@@ -75,7 +75,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const initialBlock = initialPage.blocks.find((b) => b.id === id);
     if (!initialBlock) return;
 
-    const updatedBlocks = page.blocks.map((b) => (b.id === id ? initialBlock : b));
+    const updatedBlocks = page.blocks.map((b) =>
+      b.id === id ? initialBlock : b,
+    );
 
     // remove the block from editedBlocks
     const editedBlocks = new Set(get().editedBlocks);

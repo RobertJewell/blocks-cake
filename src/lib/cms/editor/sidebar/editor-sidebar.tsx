@@ -1,11 +1,15 @@
-"use client";
-
-import { Separator } from "~/components/ui/separator";
-import { Sidebar, SidebarContent, SidebarHeader } from "~/components/ui/sidebar";
-import { useEditorStore } from "~/lib/cms/stores/editor-store";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+} from "@/components/ui/sidebar";
+import { useEditorStore } from "../../stores/editor-store";
 import { FormRenderer } from "../form-renderer";
 
-export function EditorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function EditorSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const page = useEditorStore((s) => s.page);
   const updateBlock = useEditorStore((s) => s.updateBlock);

@@ -1,8 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PageData } from "../blocks/block-registry.types";
 
-import { PageData } from "../blocks/block-registry";
-
-async function savePage(slug: string, data: PageData, status: string = "draft") {
+async function savePage(
+  slug: string,
+  data: PageData,
+  status: string = "draft",
+) {
   const res = await fetch(`/api/pages/${slug}`, {
     method: "POST",
     headers: {

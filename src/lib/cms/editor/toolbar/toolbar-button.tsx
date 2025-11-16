@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
-import { Button } from "~/components/ui/button";
 
 export function ToolbarButton({
   id,
@@ -12,7 +12,12 @@ export function ToolbarButton({
 }) {
   return (
     <motion.div layoutId={id} layout="position">
-      <Button size="sm" variant="ghost" className="rounded-full !px-3" onClick={onClick}>
+      <Button
+        size="sm"
+        variant="ghost"
+        className="rounded-full px-3!"
+        onClick={onClick}
+      >
         {children}
       </Button>
     </motion.div>
