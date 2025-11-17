@@ -1,13 +1,15 @@
-import { getDb } from "~/lib/db";
+import { DrizzleDB } from "@/core/db/drizzle";
 import { PageData } from "../blocks/block-registry.types";
 
-export async function loadPageData(slug: string, requirePublished = true) {
-  const db = await getDb();
+export async function loadPageData(
+  db: DrizzleDB,
+  options: { slug: string; requirePublished: boolean },
+) {
   const row = await db.query.pages.findFirst({
-    where: (p, { eq }) => eq(p.slug, slug),
+    where: (p, { eq }) => eq(p.slug, options.slug),
   });
 
-  if (!row || (requirePublished && row.status !== "published")) {
+  if (!row || (options.requirePublished && row.status !== "published")) {
     return null;
   }
 

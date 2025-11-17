@@ -1,6 +1,6 @@
 import { authClient } from "@/core/auth/auth-client";
 
-import { AuthQueryResult } from "@/core/auth/functions/queries";
+import { AuthQueryResult } from "@/core/auth/queries";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { Button } from "../ui/button";

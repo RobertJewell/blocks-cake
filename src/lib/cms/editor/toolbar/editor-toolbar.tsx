@@ -1,6 +1,7 @@
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { useParams } from "@tanstack/react-router";
+
+import { Route } from "@/routes/app/(authenticated)/edit/$...slug";
 import { Eye, Pencil, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { blurUpVariants } from "../../blocks/shared/animations";
@@ -16,7 +17,9 @@ export function EditorToolbar() {
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
   const { setOpen } = useSidebar();
 
-  const { slug } = useParams();
+  console.log(page);
+
+  const { _splat } = Route.useParams();
   const savePageMutation = useSavePage();
 
   const isEdit = mode === "edit";
@@ -71,7 +74,7 @@ export function EditorToolbar() {
               id="save"
               onClick={() => {
                 savePageMutation.mutate(
-                  { slug, data: page, status: "published" },
+                  { slug: _splat!, data: page, status: "published" },
                   {
                     onSuccess: () => {
                       resetEditedBlocks();

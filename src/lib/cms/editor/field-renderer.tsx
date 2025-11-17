@@ -1,6 +1,6 @@
+import { Input } from "@/components/ui/input";
+import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap";
 import { ControllerRenderProps, Path } from "react-hook-form";
-import { Input } from "~/components/ui/input";
-import { MinimalTiptapEditor } from "~/components/ui/minimal-tiptap";
 import { FieldTypeMap } from "../blocks/block-registry";
 
 type RendererProps<T extends keyof FieldTypeMap> = {

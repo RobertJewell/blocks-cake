@@ -64,7 +64,10 @@ export type PageData = { blocks: Block[] };
 /**
  * Extract props for a given block type.
  */
-export type PropsOf<T extends Block["type"]> = Extract<Block, { type: T }>["props"];
+export type PropsOf<T extends Block["type"]> = Extract<
+  Block,
+  { type: T }
+>["props"];
 
 /**
  * Extract fields for a given registry entry.

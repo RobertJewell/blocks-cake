@@ -30,11 +30,15 @@ export const FeaturesThreeColumn: React.FC<FeaturesThreeColumnProps> = ({
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       {/* Intro copy */}
       <div className="mx-auto max-w-2xl lg:text-center">
-        {sectionLabel && <h2 className="font-semibold text-pink-600">{sectionLabel}</h2>}
+        {sectionLabel && (
+          <h2 className="font-semibold text-pink-600">{sectionLabel}</h2>
+        )}
         <p className="mt-2 font-serif text-5xl text-gray-700 sm:text-6xl lg:text-7xl">
           {heading}
         </p>
-        {description && <p className="mt-6 text-lg/8 text-gray-600">{description}</p>}
+        {description && (
+          <p className="mt-6 text-lg/8 text-gray-600">{description}</p>
+        )}
       </div>
 
       {/* Feature cards */}

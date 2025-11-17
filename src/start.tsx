@@ -5,6 +5,7 @@ declare module "@tanstack/react-start" {
     server: {
       requestContext: {
         fromFetch: boolean;
+        // db: DrizzleDB;
       };
     };
   }
@@ -13,13 +14,6 @@ declare module "@tanstack/react-start" {
 export const startInstance = createStart(() => {
   return {
     defaultSsr: true,
+    // requestMiddleware: [drizzleMiddleware],
   };
-});
-
-startInstance.createMiddleware().server(({ next }) => {
-  return next({
-    context: {
-      fromStartInstanceMw: true,
-    },
-  });
 });

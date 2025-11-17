@@ -2,8 +2,10 @@
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme";
+import { useEditorStore } from "@/lib/cms/stores/editor-store";
+import { seo } from "@/lib/utils/seo";
 import appCss from "@/styles.css?url";
-import { seo } from "@/utils/seo";
+
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -17,6 +19,7 @@ import * as React from "react";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
+  editorStore: typeof useEditorStore;
 }>()({
   head: () => ({
     meta: [

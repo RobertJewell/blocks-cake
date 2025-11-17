@@ -2,7 +2,8 @@
 
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
-import { Button } from "~/components/ui/button";
+
+import { Button } from "@/components/ui/button";
 import { blurUpVariants } from "../shared/animations";
 
 export type HeroProps = {
@@ -32,7 +33,10 @@ export const Hero = ({
   const rightImageRotateRaw = useTransform(scrollY, [0, 300], [5, 10]);
 
   const leftImageX = useSpring(leftImageXRaw, { stiffness: 100, damping: 30 });
-  const rightImageX = useSpring(rightImageXRaw, { stiffness: 100, damping: 30 });
+  const rightImageX = useSpring(rightImageXRaw, {
+    stiffness: 100,
+    damping: 30,
+  });
   const leftImageRotate = useSpring(leftImageRotateRaw, {
     stiffness: 100,
     damping: 30,

@@ -29,6 +29,14 @@ export function Footer() {
                   Login
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={"/home"}
+                  className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center group"
+                >
+                  Home
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

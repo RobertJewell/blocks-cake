@@ -18,7 +18,11 @@ export const typographyMap: Record<string, string> = {
   muted: "text-sm text-muted-foreground",
 };
 
-function renderWithClass(tag: string, children: DOMNode[], extraClass?: string) {
+function renderWithClass(
+  tag: string,
+  children: DOMNode[],
+  extraClass?: string,
+) {
   const className = typographyMap[tag] ?? "";
   const merged = extraClass ? `${className} ${extraClass}` : className;
   return createElement(
