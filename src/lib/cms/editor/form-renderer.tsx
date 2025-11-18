@@ -13,8 +13,8 @@ import { Block, PropsOf } from "../blocks/block-registry.types";
 import { fieldRenderers } from "./field-renderer";
 
 type FormRendererProps<T extends Block["type"]> = {
-  block: { id: string; type: T; props: PropsOf<T> };
-  onSubmit: SubmitHandler<PropsOf<T>>;
+  block: Block;
+  onSubmit?: SubmitHandler<PropsOf<T>>;
   onChange?: (patch: Partial<PropsOf<T>>) => void;
   children?: ReactNode;
 };
@@ -28,7 +28,7 @@ export function FormRenderer<T extends Block["type"]>({
   const fields = registry[block.type].fields;
 
   const form = useForm<PropsOf<T>>({
-    defaultValues: block.props as DefaultValues<PropsOf<T>>,
+    defaultValues: block.data as DefaultValues<PropsOf<T>>,
   });
 
   form.watch((values) => {
@@ -38,7 +38,7 @@ export function FormRenderer<T extends Block["type"]>({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={onSubmit && form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
         {Object.entries(fields).map(([key, def]) => {

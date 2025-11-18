@@ -38,8 +38,8 @@ function RouteComponent() {
             </div>
           );
         }
-        const Component = def.Component as React.ComponentType<typeof b.props>;
-        return <Component key={b.id} {...b.props} />;
+        const Component = def.component as React.ComponentType<typeof b.data>;
+        return <Component key={b.id} {...b.data} />;
       })}
     </div>
   );

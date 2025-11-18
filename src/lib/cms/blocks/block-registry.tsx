@@ -1,7 +1,6 @@
 import { defineBlock } from "./block-builder";
 import { HeroComponent, heroConfig } from "./hero";
-import { RichTextComponent } from "./rich-text/rich-text-component";
-import { richTextFields } from "./rich-text/rich-text-config";
+import { RichTextComponent, richTextConfig } from "./rich-text";
 
 export const registry = {
   hero: defineBlock({
@@ -10,9 +9,9 @@ export const registry = {
     component: HeroComponent,
   }),
 
-  richText: defineBlock({
+  richtext: defineBlock({
     type: "richtext",
-    fields: richTextFields,
+    fields: richTextConfig,
     component: RichTextComponent,
   }),
 } as const;

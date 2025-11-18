@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
@@ -45,14 +43,7 @@ export function EditorSidebar({
                 key={block?.id}
                 block={block}
                 onChange={(patch) => updateBlock(block.id, block.type, patch)}
-                onSubmit={(blockData) => {
-                  console.log(blockData);
-                }}
-              >
-                <SidebarFooter>
-                  <Button type="submit">Save</Button>
-                </SidebarFooter>
-              </FormRenderer>
+              ></FormRenderer>
             )}
           </AnimatePresence>
         </motion.div>

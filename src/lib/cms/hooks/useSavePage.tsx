@@ -1,17 +1,21 @@
+import { PageData } from "@/lib/cms/blocks/block-registry.types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageData } from "../blocks/block-registry.types";
 
 async function savePage(
   slug: string,
   data: PageData,
   status: string = "draft",
 ) {
+  // FIX: We spread 'data' (...data) so that 'blocks' is at the root level.
+  // This matches the server-side Zod schema: { blocks: [], status: "" }
+  const payload = { ...data, status };
+
   const res = await fetch(`/api/pages/${slug}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ data, status }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -35,10 +39,13 @@ export function useSavePage() {
       status?: string;
     }) => savePage(slug, data, status),
     onSuccess: (res, variables) => {
-      // optional: update cache for this page immediately
+      // Update the cache immediately if the server returns the fresh page
       if (res.page) {
         queryClient.setQueryData(["page", variables.slug], res.page);
       }
+
+      // Also invalidate to ensure we are perfectly synced
+      queryClient.invalidateQueries({ queryKey: ["page", variables.slug] });
     },
   });
 }

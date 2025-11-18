@@ -16,6 +16,7 @@ export const Route = createFileRoute("/app/(authenticated)/edit/$/slug")({
     });
     if (!res.ok) throw notFound();
     const page = (await res.json()) as PageData;
+    console.log(page.blocks);
 
     context.editorStore.getState().setPage(page);
 
@@ -36,6 +37,8 @@ function EditPage() {
     return null;
   }
 
+  console.log(initialPage);
+
   return (
     <div className="relative">
       {page.blocks.map((b) => {
@@ -47,10 +50,10 @@ function EditPage() {
             </div>
           );
         }
-        const Component = def.component as React.ComponentType<typeof b.props>;
+        const Component = def.component as React.ComponentType<typeof b.data>;
         return (
           <BlockShell key={b.id} block={b}>
-            <Component {...b.props} />
+            <Component {...b.data} />
           </BlockShell>
         );
       })}

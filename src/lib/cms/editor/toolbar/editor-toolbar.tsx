@@ -17,8 +17,6 @@ export function EditorToolbar() {
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
   const { setOpen } = useSidebar();
 
-  console.log(page);
-
   const { _splat } = Route.useParams();
   const savePageMutation = useSavePage();
 

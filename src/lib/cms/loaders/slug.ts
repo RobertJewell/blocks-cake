@@ -31,18 +31,15 @@ export async function loadPageData(
     .where(eq(pageBlocks.pageId, page.id))
     .orderBy(pageBlocks.order);
 
-  // 3. Transform into front-end PageData format
   const blocksData = rows.map((row) => ({
     id: row.block.id,
     type: row.block.type,
-    props: row.block.data.props, // includes props or other fields inside data JSON
+    data: row.block.data,
   }));
 
   const result = {
     blocks: blocksData,
   };
-
-  console.log(result);
 
   return result;
 }
