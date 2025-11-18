@@ -1,21 +1,15 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
-
-import { Button } from "@/components/ui/button";
+import z from "zod";
 import { blurUpVariants } from "../shared/animations";
+import { HeroSchema } from "./hero-config";
 
-export type HeroProps = {
-  heading: string;
-  subheading?: string;
-  ctaText?: string;
-  ctaHref?: string;
-  leftImage?: string;
-  rightImage?: string;
-};
+export type HeroProps = z.infer<typeof HeroSchema>;
 
-export const Hero = ({
+export const HeroComponent = ({
   heading,
   subheading,
   ctaText,

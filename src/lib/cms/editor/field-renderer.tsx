@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap";
 import { ControllerRenderProps, Path } from "react-hook-form";
-import { FieldTypeMap } from "../blocks/block-registry";
+import { FieldTypeMap } from "../blocks/block-builder";
 
 type RendererProps<T extends keyof FieldTypeMap> = {
   field: ControllerRenderProps<
@@ -16,6 +16,7 @@ type FieldRenderers = {
 
 export const fieldRenderers: FieldRenderers = {
   text: ({ field }) => <Input {...field} />,
+  url: ({ field }) => <Input {...field} />,
 
   image: ({ field }) => (
     <Input

@@ -1,9 +1,10 @@
-import { FieldTypeMap, Registry } from "./block-registry";
+import { FieldType, FieldTypeMap } from "./block-builder";
+import { Registry } from "./block-registry";
 
 /**
  * Definition of a single field: type from FieldTypeMap + label for UI
  */
-export type FieldDef<T extends keyof FieldTypeMap> = {
+export type FieldDef<T extends FieldType> = {
   type: T;
   label: string;
 };
@@ -13,8 +14,8 @@ export type FieldDef<T extends keyof FieldTypeMap> = {
  * Example: string -> "text" | "richtext", string[] -> "image".
  */
 type FieldTypeForValue<V> = {
-  [K in keyof FieldTypeMap]: V extends FieldTypeMap[K] ? K : never;
-}[keyof FieldTypeMap];
+  [K in FieldType]: V extends FieldTypeMap[K] ? K : never;
+}[FieldType];
 
 /**
  * Given component props, generate the required fields object.
@@ -48,7 +49,7 @@ export function defineEntry<P>(
 export type BlockOf<K extends keyof Registry> = {
   id: string;
   type: K;
-  props: React.ComponentProps<Registry[K]["Component"]>;
+  props: React.ComponentProps<Registry[K]["component"]>;
 };
 
 /**

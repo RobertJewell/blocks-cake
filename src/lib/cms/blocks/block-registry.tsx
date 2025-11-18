@@ -1,25 +1,19 @@
-import { defineEntry } from "./block-registry.types";
-import { Hero } from "./hero/hero-block";
-import { RichTextBlock } from "./rich-text/rich-text";
-
-export type FieldTypeMap = {
-  text: string;
-  image: string;
-  richtext: string;
-};
+import { defineBlock } from "./block-builder";
+import { HeroComponent, heroConfig } from "./hero";
+import { RichTextComponent } from "./rich-text/rich-text-component";
+import { richTextFields } from "./rich-text/rich-text-config";
 
 export const registry = {
-  hero: defineEntry(Hero, {
-    heading: { type: "text", label: "Heading" },
-    subheading: { type: "text", label: "Subheading" },
-    ctaText: { type: "text", label: "Call to action text" },
-    ctaHref: { type: "text", label: "Call to action link" },
-    leftImage: { type: "image", label: "Left Image" },
-    rightImage: { type: "image", label: "Right Image" },
+  hero: defineBlock({
+    type: "hero",
+    fields: heroConfig,
+    component: HeroComponent,
   }),
 
-  richText: defineEntry(RichTextBlock, {
-    content: { type: "richtext", label: "Content" },
+  richText: defineBlock({
+    type: "richtext",
+    fields: richTextFields,
+    component: RichTextComponent,
   }),
 } as const;
 

@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { loadPageData } from "@/lib/cms/loaders/slug";
 import { isValidSlugPath } from "@/lib/utils";
 import { drizzleMiddleware } from "@/core/middleware/db-middleware";
-import { PageData } from "@/lib/cms/blocks/block-registry.types";
 import { eq, sql } from "drizzle-orm";
 import { json } from "@tanstack/react-start";
 import { blocks, pageBlocks, pages } from "@/core/db/schema";

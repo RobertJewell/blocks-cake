@@ -14,12 +14,8 @@ export const Route = createFileRoute("/app/(authenticated)/edit/$/slug")({
     const res = await fetch(`/api/pages/${slug}`, {
       credentials: "same-origin",
     });
-
     if (!res.ok) throw notFound();
-
     const page = (await res.json()) as PageData;
-
-    console.log(page);
 
     context.editorStore.getState().setPage(page);
 
@@ -51,7 +47,7 @@ function EditPage() {
             </div>
           );
         }
-        const Component = def.Component as React.ComponentType<typeof b.props>;
+        const Component = def.component as React.ComponentType<typeof b.props>;
         return (
           <BlockShell key={b.id} block={b}>
             <Component {...b.props} />

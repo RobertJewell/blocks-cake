@@ -2,6 +2,8 @@ import { isTag } from "domutils";
 import { DOMNode, domToReact } from "html-react-parser";
 import { parseDocument } from "htmlparser2";
 import { createElement } from "react";
+import z from "zod";
+import { RichTextSchema } from "./rich-text-config";
 
 export const typographyMap: Record<string, string> = {
   h1: "scroll-m-20 [&:not(:first-child)]:mt-6 pb-4 text-5xl font-serif tracking-tight lg:text-6xl",
@@ -41,8 +43,10 @@ function replace(node: any): any {
   }
 }
 
-export function RichTextBlock({ content }: { content: string }) {
-  const doc = parseDocument(content);
+export type RichTextProps = z.infer<typeof RichTextSchema>;
+
+export function RichTextComponent({ content }: RichTextProps) {
+  const doc = parseDocument(content || "");
 
   return (
     <div className="mx-auto max-w-3xl p-4 py-12 text-gray-700">

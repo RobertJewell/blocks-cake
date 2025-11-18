@@ -61,8 +61,8 @@ export function FormRenderer<T extends Block["type"]>({
                 <FormItem>
                   <FormLabel>{def.label}</FormLabel>
                   <FormControl>
-                    {/*@ts-expect-error this will always match */}
-                    {Renderer({ field: field })}
+                    {/* this will always match */}
+                    {Renderer({ field: field as any })}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
