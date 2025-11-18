@@ -7,18 +7,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { registry } from "@/lib/cms/blocks/block-registry";
-import { DefaultValues, Path, useForm } from "react-hook-form";
+import { ReactNode } from "react";
+import { DefaultValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { Block, PropsOf } from "../blocks/block-registry.types";
 import { fieldRenderers } from "./field-renderer";
 
 type FormRendererProps<T extends Block["type"]> = {
   block: { id: string; type: T; props: PropsOf<T> };
+  onSubmit: SubmitHandler<PropsOf<T>>;
   onChange?: (patch: Partial<PropsOf<T>>) => void;
+  children?: ReactNode;
 };
 
 export function FormRenderer<T extends Block["type"]>({
   block,
+  onSubmit,
   onChange,
+  children,
 }: FormRendererProps<T>) {
   const fields = registry[block.type].fields;
 
@@ -32,7 +37,10 @@ export function FormRenderer<T extends Block["type"]>({
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
         {Object.entries(fields).map(([key, def]) => {
           const Renderer =
             fieldRenderers[def.type as keyof typeof fieldRenderers];
@@ -62,6 +70,7 @@ export function FormRenderer<T extends Block["type"]>({
             />
           );
         })}
+        {children}
       </form>
     </Form>
   );

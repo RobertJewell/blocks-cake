@@ -1,4 +1,6 @@
-import parse, { DOMNode, Element, domToReact } from "html-react-parser";
+import { isTag } from "domutils";
+import { DOMNode, domToReact } from "html-react-parser";
+import { parseDocument } from "htmlparser2";
 import { createElement } from "react";
 
 export const typographyMap: Record<string, string> = {
@@ -18,34 +20,33 @@ export const typographyMap: Record<string, string> = {
   muted: "text-sm text-muted-foreground",
 };
 
-function renderWithClass(
-  tag: string,
-  children: DOMNode[],
-  extraClass?: string,
-) {
+function renderWithClass(tag: string, children: any[], extraClass?: string) {
   const className = typographyMap[tag] ?? "";
   const merged = extraClass ? `${className} ${extraClass}` : className;
+  const mappedTag = tag === "lead" ? "p" : tag;
+
   return createElement(
-    tag === "lead" ? "p" : tag,
+    mappedTag,
     { className: merged },
-    domToReact(children),
+    domToReact(children, { replace }),
   );
 }
 
+function replace(node: any): any {
+  if (isTag(node)) {
+    const tag = node.name;
+    if (tag in typographyMap) {
+      return renderWithClass(tag, node.children || []);
+    }
+  }
+}
+
 export function RichTextBlock({ content }: { content: string }) {
+  const doc = parseDocument(content);
+
   return (
     <div className="mx-auto max-w-3xl p-4 py-12 text-gray-700">
-      {parse(content, {
-        replace: (domNode) => {
-          if (domNode instanceof Element) {
-            const { name, children } = domNode;
-
-            if (name in typographyMap) {
-              return renderWithClass(name, children as DOMNode[]);
-            }
-          }
-        },
-      })}
+      {domToReact(doc.children as DOMNode[], { replace })}
     </div>
   );
 }

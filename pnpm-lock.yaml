@@ -152,6 +152,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      domutils:
+        specifier: ^3.2.2
+        version: 3.2.2
       drizzle-kit:
         specifier: ^0.31.6
         version: 0.31.6
@@ -164,6 +167,9 @@ importers:
       html-react-parser:
         specifier: ^5.2.10
         version: 5.2.10(@types/react@19.2.2)(react@19.2.0)
+      htmlparser2:
+        specifier: ^10.0.0
+        version: 10.0.0
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
