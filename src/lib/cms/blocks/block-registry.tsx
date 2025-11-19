@@ -14,6 +14,6 @@ export const registry = {
     fields: richTextConfig,
     component: RichTextComponent,
   }),
-} as const;
+};
 
 export type Registry = typeof registry;
