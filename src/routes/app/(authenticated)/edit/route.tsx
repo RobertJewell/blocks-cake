@@ -1,11 +1,12 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { EditorSidebar } from "@/lib/cms/editor/sidebar/editor-sidebar";
 import { EditorToolbar } from "@/lib/cms/editor/toolbar/editor-toolbar";
+import { useEditorStore } from "@/lib/cms/stores/editor-store";
 import { cn } from "@/lib/utils";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { motion, Variants } from "motion/react";
-import { useState } from "react";
 
 export const Route = createFileRoute("/app/(authenticated)/edit")({
   component: EditLayout,
@@ -44,10 +45,20 @@ const windowVariants: Variants = {
 };
 
 function EditLayout() {
-  const [open, setOpen] = useState(false);
+  const mode = useEditorStore((s) => s.mode);
+  const setMode = useEditorStore((s) => s.setMode);
+  const isMobile = useIsMobile();
 
   return (
-    <SidebarProvider className="bg-sidebar" open={open} onOpenChange={setOpen}>
+    <SidebarProvider
+      className="bg-sidebar"
+      open={mode !== "view"}
+      onOpenChange={(open) => {
+        if (!open) {
+          setMode("view");
+        }
+      }}
+    >
       <EditorSidebar />
 
       {/* h-svh and overflow-hidden are CRITICAL here to lock the viewport */}
@@ -55,7 +66,7 @@ function EditLayout() {
         <motion.div
           className={cn("flex min-h-0 flex-1 flex-col")}
           initial="collapsed"
-          animate={open ? "expanded" : "collapsed"}
+          animate={mode !== "view" && !isMobile ? "expanded" : "collapsed"}
           variants={containerVariants}
         >
           <EditorToolbar />
@@ -64,9 +75,8 @@ function EditLayout() {
           <motion.div
             className="flex flex-1 flex-col overflow-hidden bg-background shadow-sm border-border"
             variants={windowVariants}
-            // No style prop needed! The variant handles the height via margin.
           >
-            <ScrollArea className="flex-1 h-full">
+            <ScrollArea className="flex-1 bg-white h-full">
               <Outlet />
             </ScrollArea>
           </motion.div>

@@ -4,7 +4,7 @@ export function HeroSkeleton() {
   return (
     <div className="w-full max-w-72 mx-auto max-h-56 h-56">
       {/* Mini Container: h-64 (16rem), rounded-xl to look like a mini card */}
-      <div className="relative flex h-full w-full flex-col items-center overflow-hidden rounded-xl bg-muted/20 p-3 border border-border/10">
+      <div className="relative flex h-full w-full flex-col items-center overflow-hidden rounded-xl bg-muted/20 p-3">
         {/* Mini Heading */}
         <Skeleton className="mt-8 h-4 w-3/4 rounded-sm" />
 

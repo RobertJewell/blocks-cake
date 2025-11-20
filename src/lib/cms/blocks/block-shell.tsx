@@ -1,5 +1,4 @@
 import * as React from "react";
-import { BlockEditButton } from "../editor/toolbar/block-edit-button";
 import { Block } from "./block-registry.types";
 
 type Props = {
@@ -16,17 +15,18 @@ export function BlockShell({ block, children }: Props) {
 
   return (
     <div
-    // onClick={(e) => {
-    //   if (!isEdit) return;
-    //   e.stopPropagation();
-    //   setSelected(block.id);
-    // }}
-    // className={cn(
-    //   "group relative z-20",
-    //   isEdit && selectedId !== block.id ? "cursor-pointer" : "",
-    // )}
+      id={block.id}
+      // onClick={(e) => {
+      //   if (!isEdit) return;
+      //   e.stopPropagation();
+      //   setSelected(block.id);
+      // }}
+      // className={cn(
+      //   "group relative z-20",
+      //   isEdit && selectedId !== block.id ? "cursor-pointer" : "",
+      // )}
     >
-      <BlockEditButton blockId={block.id} />
+      {/*<BlockEditButton blockId={block.id} />*/}
       {/*overlay replaces by edit button per clock*/}
       {/*<div
         className={cn(
