@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Home, Search, FileQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "@tanstack/react-router";
+import { ArrowLeft, FileQuestion, Home } from "lucide-react";
 
 export function NotFound({ children }: { children?: any }) {
   return (
@@ -30,8 +30,8 @@ export function NotFound({ children }: { children?: any }) {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 onClick={() => window.history.back()}
                 className="flex items-center gap-2"
               >
@@ -44,16 +44,6 @@ export function NotFound({ children }: { children?: any }) {
                   Home
                 </Link>
               </Button>
-            </div>
-
-            {/* Help text */}
-            <div className="pt-4 border-t w-full">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
-                <Search className="h-4 w-4" />
-                <span>
-                  Try checking the URL or use the search functionality
-                </span>
-              </div>
             </div>
           </div>
         </CardContent>

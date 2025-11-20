@@ -6,8 +6,8 @@ import {
 } from "@/lib/cms/blocks/block-registry.types";
 
 type EditorState = {
-  mode: "view" | "edit";
-  setMode: (mode: "view" | "edit") => void;
+  mode: "view" | "edit" | "edit-layout" | "edit-meta";
+  setMode: (mode: "view" | "edit" | "edit-layout" | "edit-meta") => void;
 
   // page
   page: PageData | null;
@@ -24,6 +24,7 @@ type EditorState = {
   resetEditedBlocks: () => void;
   resetPage: () => void;
   resetBlock: (id: string) => void;
+  reorderBlocks: (blocks: Block[]) => void;
 
   // initial page
   initialPage: PageData | null;
@@ -35,7 +36,7 @@ type EditorState = {
 };
 
 export const useEditorStore = create<EditorState>((set, get) => ({
-  mode: "edit",
+  mode: "view",
   setMode: (mode) => set({ mode }),
 
   // page
@@ -57,6 +58,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       return {
         page: { ...s.page, blocks: updatedBlocks },
         editedBlocks,
+      };
+    }),
+  reorderBlocks: (blocks) =>
+    set((s) => {
+      if (!s.page) return {};
+      return {
+        page: { ...s.page, blocks },
       };
     }),
 

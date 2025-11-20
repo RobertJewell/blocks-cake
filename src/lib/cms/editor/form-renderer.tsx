@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { registry } from "@/lib/cms/blocks/block-registry";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode } from "react";
 import { DefaultValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { Block, PropsOf } from "../blocks/block-registry.types";
@@ -25,9 +26,11 @@ export function FormRenderer<T extends Block["type"]>({
   onChange,
   children,
 }: FormRendererProps<T>) {
-  const fields = registry[block.type].fields;
+  const blockDef = registry[block.type];
 
   const form = useForm<PropsOf<T>>({
+    mode: "onChange",
+    resolver: zodResolver(blockDef.schema as any),
     defaultValues: block.data as DefaultValues<PropsOf<T>>,
   });
 
@@ -41,7 +44,7 @@ export function FormRenderer<T extends Block["type"]>({
         onSubmit={onSubmit && form.handleSubmit(onSubmit)}
         className="flex flex-col gap-4"
       >
-        {Object.entries(fields).map(([key, def]) => {
+        {Object.entries(blockDef.fields).map(([key, def]) => {
           const Renderer =
             fieldRenderers[def.type as keyof typeof fieldRenderers];
           if (!Renderer) {

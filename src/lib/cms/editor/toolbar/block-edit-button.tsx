@@ -9,17 +9,18 @@ import { ToolbarButton } from "./toolbar-button";
 
 export function BlockEditButton({ blockId }: { blockId: string }) {
   const mode = useEditorStore((s) => s.mode);
-  const setMode = useEditorStore((s) => s.setMode);
   const setSelected = useEditorStore((s) => s.setSelected);
   const page = useEditorStore((s) => s.page);
   const editedBlocks = useEditorStore((s) => s.editedBlocks);
-  const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
-  const { setOpen } = useSidebar();
+  const resetBlock = useEditorStore((s) => s.resetBlock);
+  const selectedId = useEditorStore((s) => s.selectedBlockId);
 
-  // const savePageMutation = useSavePage();
+  const { setOpen } = useSidebar();
 
   const isEdit = mode === "edit";
   const hasChanges = editedBlocks.has(blockId);
+
+  if (!isEdit) return null;
 
   return (
     <motion.div
@@ -27,7 +28,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
       initial={false}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "bg-background absolute bottom-6 mx-auto right-6 z-50 flex items-center gap-1 overflow-hidden rounded-full border p-1 shadow-lg",
+        "bg-background absolute bottom-6 mx-auto left-6 z-50 flex items-center gap-1 overflow-hidden rounded-full border p-1 shadow-lg",
       )}
     >
       <AnimatePresence mode="popLayout" initial={false}>
@@ -65,15 +66,10 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
             <ToolbarButton
               id={blockId + "reset"}
               onClick={() => {
-                // savePageMutation.mutate(
-                //   { slug: _splat!, data: page, status: "published" },
-                //   {
-                //     onSuccess: () => {
-                //       resetEditedBlocks();
-                //     },
-                //   },
-                // );
-                console.log(blockId);
+                if (selectedId === blockId) {
+                  setSelected(undefined);
+                }
+                resetBlock(blockId);
               }}
             >
               <ResetIcon className="size-4" />

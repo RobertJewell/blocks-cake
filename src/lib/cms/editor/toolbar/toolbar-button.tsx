@@ -15,7 +15,7 @@ export function ToolbarButton({
       <Button
         size="sm"
         variant="ghost"
-        className="rounded-full px-3!"
+        className="rounded-full hover:bg-transparent text-muted-foreground hover:text-foreground px-3!"
         onClick={onClick}
       >
         {children}

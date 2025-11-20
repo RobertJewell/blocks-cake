@@ -1,25 +1,27 @@
-import React from "react";
-import { Registry } from "./block-registry";
+import { z } from "zod";
+import { registry } from "./block-registry";
 
-// 1. Extract the Props shape from the Component
-export type PropsOf<T extends keyof Registry> = React.ComponentProps<
-  Registry[T]["component"]
->;
+export type Registry = typeof registry;
 
-// 2. Define the Block Shape
-// CHANGE: We renamed 'props' to 'data' to match the DB schema
-export type BlockOf<K extends keyof Registry> = {
-  id: string;
-  type: K;
-  data: PropsOf<K>;
-};
+export type BlockType = keyof Registry;
 
-// 3. Union of all possible blocks
-export type Block = { [K in keyof Registry]: BlockOf<K> }[keyof Registry];
+export type Block = {
+  [K in BlockType]: {
+    id: string;
+    type: K;
+    data: z.infer<Registry[K]["schema"]>;
+  };
+}[BlockType];
 
-// 4. Page Data
+export type PropsOf<T extends Block["type"]> = Extract<
+  Block,
+  { type: T }
+>["data"];
+
 export type PageData = {
-  title?: string;
-  status?: string;
+  id: string;
+  slug: string;
+  title: string;
   blocks: Block[];
+  status: "draft" | "published";
 };

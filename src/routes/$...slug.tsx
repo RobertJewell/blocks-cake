@@ -1,31 +1,51 @@
+import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
+import { NotFound } from "@/components/not-found";
+import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
 import { registry } from "@/lib/cms/blocks/block-registry";
-import { PageData } from "@/lib/cms/blocks/block-registry.types";
+import { Block } from "@/lib/cms/blocks/block-registry.types";
 import { isValidSlugPath } from "@/lib/utils";
+
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$/slug")({
   ssr: true,
   loader: async ({ params }) => {
     const slug = params._splat;
+
     if (!slug || !isValidSlugPath(slug) || slug.startsWith("/edit")) {
       throw notFound();
     }
 
-    const res = await fetch(`/api/pages/${slug}`, {
-      credentials: "same-origin",
-    });
+    try {
+      const page = await getPageBySlug({ data: slug });
 
-    if (!res.ok) throw notFound();
+      if (!page) {
+        console.log(`[Slug Route: ${slug}] - Page not found in DB"`);
+        throw notFound();
+      }
 
-    const page = (await res.json()) as PageData;
-    return page;
+      return page;
+    } catch (err) {
+      if (
+        err instanceof Response ||
+        (err as any).status === 404 ||
+        (err as any).isNotFound
+      ) {
+        throw err;
+      }
+
+      console.error(`[Slug Route: ${slug}] error:`, err);
+      throw err;
+    }
   },
   component: RouteComponent,
+
+  notFoundComponent: () => <NotFound />,
+  errorComponent: DefaultCatchBoundary,
 });
 
 function RouteComponent() {
   const page = Route.useLoaderData();
-  console.log(page);
 
   return (
     <div>
@@ -38,10 +58,10 @@ function RouteComponent() {
             </div>
           );
         }
-        const Component = def.component as React.ComponentType<typeof b.data>;
+        const Component =
+          def.component as unknown as React.ComponentType<Block>;
         return <Component key={b.id} {...b.data} />;
       })}
     </div>
   );
-  return <div>Hello "/$slug"!</div>;
 }

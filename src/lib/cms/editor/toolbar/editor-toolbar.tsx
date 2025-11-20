@@ -1,8 +1,8 @@
 import { useSidebar } from "@/components/ui/sidebar";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-
 import { Route } from "@/routes/app/(authenticated)/edit/$...slug";
-import { Eye, Pencil, Save } from "lucide-react";
+import { Layers, Pencil, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { blurUpVariants } from "../../blocks/shared/animations";
 import { useSavePage } from "../../hooks/useSavePage";
@@ -12,16 +12,25 @@ import { ToolbarButton } from "./toolbar-button";
 export function EditorToolbar() {
   const mode = useEditorStore((s) => s.mode);
   const setMode = useEditorStore((s) => s.setMode);
+
   const page = useEditorStore((s) => s.page);
+  const initialPage = useEditorStore((s) => s.initialPage);
+  const setInitialPage = useEditorStore((s) => s.setInitialPage);
+
+  const setSelected = useEditorStore((s) => s.setSelected);
   const editedBlocks = useEditorStore((s) => s.editedBlocks);
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
-  const { setOpen } = useSidebar();
 
   const { _splat } = Route.useParams();
+  const { setOpen } = useSidebar();
   const savePageMutation = useSavePage();
 
-  const isEdit = mode === "edit";
-  const showSave = editedBlocks.size > 0;
+  //block order
+  const currentOrder = page?.blocks.map((b) => b.id).join("|") ?? "";
+  const initialOrder = initialPage?.blocks.map((b) => b.id).join("|") ?? "";
+  const hasReordered = currentOrder !== initialOrder;
+
+  const showSave = editedBlocks.size > 0 || hasReordered;
 
   return (
     <motion.div
@@ -29,35 +38,50 @@ export function EditorToolbar() {
       initial={false}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "bg-background fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-1 overflow-hidden rounded-full border p-1 shadow-lg",
+        "bg-background/70 backdrop-blur-xs fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 overflow-hidden rounded-full border p-1.5 shadow-lg",
       )}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.div
-          key="mode"
-          layout="position"
-          variants={blurUpVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          custom={{ y: 5, duration: 0.2 }}
+      {/* Mode Toggle Group */}
+      <motion.div layoutId={"edit"} layout="position">
+        <ToggleGroup
+          type="single"
+          value={mode}
+          variant={"link"}
+          onValueChange={(val: typeof mode | "") => {
+            if (!val) {
+              setMode("view");
+              setOpen(false);
+              setSelected(undefined);
+              return;
+            }
+            const newMode = val;
+            setMode(newMode);
+            setOpen(true);
+          }}
+          className="gap-1"
         >
-          <ToolbarButton
-            id="mode"
-            onClick={() => {
-              setOpen(!isEdit);
-              setMode(isEdit ? "view" : "edit");
-            }}
+          <ToggleGroupItem
+            value="edit"
+            variant={"link"}
+            aria-label="Edit Content"
+            className="p-0 rounded-full"
+            style={{ width: 32, height: 32 }}
           >
-            {isEdit ? (
-              <Eye className="size-4" />
-            ) : (
-              <Pencil className="size-4" />
-            )}
-            {isEdit ? "View" : "Edit"}
-          </ToolbarButton>
-        </motion.div>
+            <Pencil className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="edit-layout"
+            aria-label="Edit Layout"
+            className="h-8 w-8 p-0 rounded"
+            style={{ width: 32, height: 32 }}
+          >
+            <Layers className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </motion.div>
 
+      {/* Save Button (Conditional) */}
+      <AnimatePresence mode="popLayout" initial={false}>
         {showSave && page && (
           <motion.div
             key="save"
@@ -66,7 +90,8 @@ export function EditorToolbar() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            custom={{ y: 5, duration: 0.2 }}
+            custom={{ x: 10, duration: 0.2 }}
+            className="ml-1 pl-2 border-l"
           >
             <ToolbarButton
               id="save"
@@ -76,6 +101,7 @@ export function EditorToolbar() {
                   {
                     onSuccess: () => {
                       resetEditedBlocks();
+                      setInitialPage(page);
                     },
                   },
                 );

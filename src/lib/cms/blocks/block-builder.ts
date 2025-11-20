@@ -1,16 +1,16 @@
 import { z } from "zod";
-import React from "react";
+import React, { ReactNode } from "react";
 
 export type FieldTypeMap = {
   text: string;
   richtext: string;
-  image: string; // todo - update this
+  image: string;
   url: string;
 };
 
 export type FieldType = keyof FieldTypeMap;
 
-type FieldDefinition<K extends FieldType> = {
+export type FieldDefinition<K extends FieldType> = {
   type: K;
   label: string;
   schema: z.ZodType<FieldTypeMap[K] | undefined>;
@@ -45,11 +45,12 @@ export const fields = {
   url: (label: string): FieldDefinition<"url"> => ({
     type: "url",
     label,
-    schema: z.url(),
+    schema: z.url().optional().or(z.literal("")),
     defaultValue: "",
   }),
 };
 
+// Converts a map of FieldDefinitions into a Zod Object Schema
 export function createSchema<T extends Record<string, FieldDefinition<any>>>(
   fields: T,
 ) {
@@ -63,8 +64,8 @@ export function createSchema<T extends Record<string, FieldDefinition<any>>>(
 }
 
 export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
-  type: string;
   fields: T;
+  skeleton: React.ComponentType;
   component: React.ComponentType<
     z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>
   >;
@@ -78,3 +79,9 @@ export function defineBlock<T extends Record<string, FieldDefinition<any>>>(
     schema: createSchema(config.fields),
   };
 }
+
+export type BlockDefinitionResult = {
+  fields: Record<string, FieldDefinition<any>>;
+  component: React.ComponentType<any>;
+  schema: z.ZodObject<any>;
+};
