@@ -29,8 +29,8 @@ export function EditorSidebar({
   const { setOpen } = useSidebar();
 
   return (
-    <Sidebar className="pt-0 border-l" variant="inset" {...props}>
-      <SidebarHeader className="flex flex-row justify-between px-1 items-baseline z-10">
+    <Sidebar className="pl-2" {...props}>
+      <SidebarHeader className="flex flex-row justify-between pr-0 items-baseline z-10">
         <h2 className="text-sm font-semibold">Block Editor</h2>
         <Button
           size={"icon"}

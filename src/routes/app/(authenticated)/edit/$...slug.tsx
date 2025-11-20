@@ -59,12 +59,6 @@ function EditPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }} // Added exit animation for when blocks are removed
             transition={{ type: "spring", stiffness: 500, damping: 50 }} // Smoother transitions
-            whileDrag={
-              mode === "edit-layout"
-                ? { filter: "blur(5px)", scale: 0.98 }
-                : undefined
-            }
-            // whileTap={{ filter: "blur(5px)", scale: 0.98 }}
             className="relative z-0"
           >
             <BlockShell key={b.id} block={b}>

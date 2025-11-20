@@ -1,7 +1,5 @@
 import * as React from "react";
-import { cn } from "../../utils";
 import { BlockEditButton } from "../editor/toolbar/block-edit-button";
-import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
 
 type Props = {
@@ -10,32 +8,30 @@ type Props = {
 };
 
 export function BlockShell({ block, children }: Props) {
-  const mode = useEditorStore((s) => s.mode);
+  // const mode = useEditorStore((s) => s.mode);
   // const selectedId = useEditorStore((s) => s.selectedBlockId);
-  const setSelected = useEditorStore((s) => s.setSelected);
-
-  const isEdit = mode === "edit";
+  // const setSelected = useEditorStore((s) => s.setSelected);
+  // const isEdit = mode === "edit";
   // const isSelected = selectedId === block.id;
 
   return (
     <div
-      // onClick={(e) => {
-      //   if (!isEdit) return;
-      //   e.stopPropagation();
-      //   setSelected(block.id);
-      // }}
-      className={cn(
-        "group relative z-20",
-        // isEdit ? "cursor-pointer" : "",
-        // isEdit && isSelected ? "outline-pink-500" : "outline-transparent",
-      )}
+    // onClick={(e) => {
+    //   if (!isEdit) return;
+    //   e.stopPropagation();
+    //   setSelected(block.id);
+    // }}
+    // className={cn(
+    //   "group relative z-20",
+    //   isEdit && selectedId !== block.id ? "cursor-pointer" : "",
+    // )}
     >
       <BlockEditButton blockId={block.id} />
       {/*overlay replaces by edit button per clock*/}
       {/*<div
         className={cn(
-          "pointer-events-none absolute inset-0 z-20 rounded-xl bg-pink-500 opacity-0 transition-opacity",
-          isEdit && "group-hover:opacity-30",
+          "pointer-events-none absolute inset-0 z-20 rounded-xl bg-radial from-pink-400 from-30% to-pink-400/50 opacity-0 transition-opacity",
+          isEdit && selectedId !== block.id && "group-hover:opacity-50",
         )}
       ></div>*/}
       {children}
