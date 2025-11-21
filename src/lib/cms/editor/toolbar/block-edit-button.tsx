@@ -20,7 +20,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
   const isEdit = mode === "edit";
   const hasChanges = editedBlocks.has(blockId);
 
-  if (!isEdit) return null;
+  if (!hasChanges) return null;
 
   return (
     <motion.div

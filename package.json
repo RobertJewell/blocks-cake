@@ -13,7 +13,8 @@
     "db:migrate:prod": "wrangler d1 migrations apply blocks_cake_db --remote",
     "db:push:local": "pnpm db:generate && pnpm db:migrate:local",
     "db:push:prod": "pnpm db:generate && pnpm db:migrate:prod",
-    "db:seed": "wrangler d1 execute blocks_cake_db --local --file=src/scripts/seed-pages.sql"
+    "db:seed:local": "wrangler d1 execute blocks_cake_db --local --file=src/scripts/seed-pages.sql",
+    "db:seed:prod": "wrangler d1 execute blocks_cake_db --remote --file=src/scripts/seed-pages.sql"
   },
   "better-auth": {
     "config": "./src/lib/auth.config.ts"

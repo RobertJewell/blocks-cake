@@ -5,7 +5,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
   "vars": {
-    "MY_VAR": "Hello from Cloudflare",
+    "BETTER_AUTH_URL": "https://blocks-cakes.rjewellaudio.workers.dev",
+    "CLOUDFLARE_ACCOUNT_ID": "bcfacdd0f09674f8cae0297886b0ea76",
+    "CLOUDFLARE_D1_DATABASE_ID": "29d1f84b-e2bc-43b1-bde2-1ee5b0358ab8",
   },
   "d1_databases": [
     {
@@ -15,4 +17,12 @@
       // "remote": true,
     },
   ],
+  "observability": {
+    "logs": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true,
+    },
+  },
 }

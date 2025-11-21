@@ -31,7 +31,6 @@ function EditPage() {
   const setPage = useEditorStore((s) => s.setPage);
   const setInitialPage = useEditorStore((s) => s.setInitialPage);
   const page = useEditorStore((s) => s.page);
-  const mode = useEditorStore((s) => s.mode);
 
   if (!page) {
     setInitialPage(initialPage);
