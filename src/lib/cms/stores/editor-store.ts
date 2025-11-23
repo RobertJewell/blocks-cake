@@ -6,8 +6,8 @@ import {
 } from "@/lib/cms/blocks/block-registry.types";
 
 type EditorState = {
-  mode: "view" | "edit" | "edit-layout" | "edit-meta";
-  setMode: (mode: "view" | "edit" | "edit-layout" | "edit-meta") => void;
+  mode: "view" | "edit" | "edit-meta";
+  setMode: (mode: "view" | "edit" | "edit-meta") => void;
 
   // page
   page: PageData | null;

@@ -2,35 +2,27 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
 import { registry } from "@/lib/cms/blocks/block-registry";
+import { isValidSlugPath } from "@/lib/utils";
+
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/$")({
   ssr: true,
-  loader: async () => {
-    try {
-      const page = await getPageBySlug({ data: "index" });
+  loader: async ({ params }) => {
+    const slug = params._splat || "index";
 
-      if (!page) {
-        console.log(`[Slug Route: index] - Page not found in DB"`);
-        throw notFound();
-      }
-
-      return page;
-    } catch (err) {
-      if (
-        err instanceof Response ||
-        (err as any).status === 404 ||
-        (err as any).isNotFound
-      ) {
-        throw err;
-      }
-
-      console.error(`[Slug Route: index] error:`, err);
-      throw err;
+    if (
+      !isValidSlugPath(slug) ||
+      slug.startsWith("app") ||
+      slug.startsWith("api")
+    ) {
+      throw notFound();
     }
+    const page = await getPageBySlug({ data: params._splat || "index" });
+    if (!page) throw notFound();
+    return page;
   },
   component: RouteComponent,
-
   notFoundComponent: () => <NotFound />,
   errorComponent: DefaultCatchBoundary,
 });
@@ -49,6 +41,7 @@ function RouteComponent() {
             </div>
           );
         }
+
         const Component = def.component as React.ComponentType<
           typeof block.data
         >;
@@ -57,20 +50,3 @@ function RouteComponent() {
     </div>
   );
 }
-
-// export const Route = createFileRoute("/")({
-//   component: LandingPage,
-// });
-
-// function LandingPage() {
-//   return (
-//     <div className="min-h-screen bg-background">
-//       <NavigationBar />
-//       <main>
-//         <HeroSection />
-//         <MiddlewareDemo />
-//       </main>
-//       <Footer />
-//     </div>
-//   );
-// }

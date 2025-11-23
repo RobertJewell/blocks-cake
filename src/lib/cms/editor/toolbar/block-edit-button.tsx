@@ -20,7 +20,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
   const isEdit = mode === "edit";
   const hasChanges = editedBlocks.has(blockId);
 
-  if (!hasChanges) return null;
+  if (!isEdit) return null;
 
   return (
     <motion.div
@@ -28,7 +28,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
       initial={false}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "bg-background absolute bottom-6 mx-auto left-6 z-50 flex items-center gap-1 overflow-hidden rounded-full border p-1 shadow-lg",
+        "bg-background/70 backdrop-blur-xs absolute bottom-6 mx-auto left-6 z-50 flex items-center gap-1 overflow-hidden rounded-full border p-1 shadow-lg",
       )}
     >
       <AnimatePresence mode="popLayout" initial={false}>

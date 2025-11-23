@@ -9,18 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRegisterRouteImport } from './routes/app/register'
 import { Route as AppLoginRouteImport } from './routes/app/login'
-import { Route as SplatSlugRouteImport } from './routes/$...slug'
 import { Route as AppauthenticatedRouteRouteImport } from './routes/app/(authenticated)/route'
 import { Route as AppauthenticatedIndexRouteImport } from './routes/app/(authenticated)/index'
+import { Route as ApiPagesSplatRouteImport } from './routes/api/pages/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AppauthenticatedEditRouteRouteImport } from './routes/app/(authenticated)/edit/route'
-import { Route as ApiPagesSplatSlugRouteImport } from './routes/api/pages/$...slug'
-import { Route as AppauthenticatedEditSplatSlugRouteImport } from './routes/app/(authenticated)/edit/$...slug'
+import { Route as AppauthenticatedEditSplatRouteImport } from './routes/app/(authenticated)/edit/$'
 
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
   path: '/app',
@@ -41,11 +46,6 @@ const AppLoginRoute = AppLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const SplatSlugRoute = SplatSlugRouteImport.update({
-  id: '/$/slug',
-  path: '/$/slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AppauthenticatedRouteRoute = AppauthenticatedRouteRouteImport.update({
   id: '/(authenticated)',
   getParentRoute: () => AppRouteRoute,
@@ -54,6 +54,11 @@ const AppauthenticatedIndexRoute = AppauthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppauthenticatedRouteRoute,
+} as any)
+const ApiPagesSplatRoute = ApiPagesSplatRouteImport.update({
+  id: '/api/pages/$',
+  path: '/api/pages/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -66,104 +71,106 @@ const AppauthenticatedEditRouteRoute =
     path: '/edit',
     getParentRoute: () => AppauthenticatedRouteRoute,
   } as any)
-const ApiPagesSplatSlugRoute = ApiPagesSplatSlugRouteImport.update({
-  id: '/api/pages/$/slug',
-  path: '/api/pages/$/slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppauthenticatedEditSplatSlugRoute =
-  AppauthenticatedEditSplatSlugRouteImport.update({
-    id: '/$/slug',
-    path: '/$/slug',
+const AppauthenticatedEditSplatRoute =
+  AppauthenticatedEditSplatRouteImport.update({
+    id: '/$',
+    path: '/$',
     getParentRoute: () => AppauthenticatedEditRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppauthenticatedRouteRouteWithChildren
-  '/$/slug': typeof SplatSlugRoute
+  '/$': typeof SplatRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/edit': typeof AppauthenticatedEditRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/pages/$': typeof ApiPagesSplatRoute
   '/app/': typeof AppauthenticatedIndexRoute
-  '/api/pages/$/slug': typeof ApiPagesSplatSlugRoute
-  '/app/edit/$/slug': typeof AppauthenticatedEditSplatSlugRoute
+  '/app/edit/$': typeof AppauthenticatedEditSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppauthenticatedIndexRoute
-  '/$/slug': typeof SplatSlugRoute
+  '/$': typeof SplatRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/edit': typeof AppauthenticatedEditRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/pages/$/slug': typeof ApiPagesSplatSlugRoute
-  '/app/edit/$/slug': typeof AppauthenticatedEditSplatSlugRoute
+  '/api/pages/$': typeof ApiPagesSplatRoute
+  '/app/edit/$': typeof AppauthenticatedEditSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/app/(authenticated)': typeof AppauthenticatedRouteRouteWithChildren
-  '/$/slug': typeof SplatSlugRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/(authenticated)/edit': typeof AppauthenticatedEditRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/pages/$': typeof ApiPagesSplatRoute
   '/app/(authenticated)/': typeof AppauthenticatedIndexRoute
-  '/api/pages/$/slug': typeof ApiPagesSplatSlugRoute
-  '/app/(authenticated)/edit/$/slug': typeof AppauthenticatedEditSplatSlugRoute
+  '/app/(authenticated)/edit/$': typeof AppauthenticatedEditSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/app'
-    | '/$/slug'
+    | '/$'
     | '/app/login'
     | '/app/register'
     | '/app/edit'
     | '/api/auth/$'
+    | '/api/pages/$'
     | '/app/'
-    | '/api/pages/$/slug'
-    | '/app/edit/$/slug'
+    | '/app/edit/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/app'
-    | '/$/slug'
+    | '/$'
     | '/app/login'
     | '/app/register'
     | '/app/edit'
     | '/api/auth/$'
-    | '/api/pages/$/slug'
-    | '/app/edit/$/slug'
+    | '/api/pages/$'
+    | '/app/edit/$'
   id:
     | '__root__'
     | '/'
     | '/app'
+    | '/$'
     | '/app/(authenticated)'
-    | '/$/slug'
     | '/app/login'
     | '/app/register'
     | '/app/(authenticated)/edit'
     | '/api/auth/$'
+    | '/api/pages/$'
     | '/app/(authenticated)/'
-    | '/api/pages/$/slug'
-    | '/app/(authenticated)/edit/$/slug'
+    | '/app/(authenticated)/edit/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
-  SplatSlugRoute: typeof SplatSlugRoute
+  SplatRoute: typeof SplatRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiPagesSplatSlugRoute: typeof ApiPagesSplatSlugRoute
+  ApiPagesSplatRoute: typeof ApiPagesSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -192,13 +199,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLoginRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/$/slug': {
-      id: '/$/slug'
-      path: '/$/slug'
-      fullPath: '/$/slug'
-      preLoaderRoute: typeof SplatSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/app/(authenticated)': {
       id: '/app/(authenticated)'
       path: ''
@@ -212,6 +212,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppauthenticatedIndexRouteImport
       parentRoute: typeof AppauthenticatedRouteRoute
+    }
+    '/api/pages/$': {
+      id: '/api/pages/$'
+      path: '/api/pages/$'
+      fullPath: '/api/pages/$'
+      preLoaderRoute: typeof ApiPagesSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -227,30 +234,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppauthenticatedEditRouteRouteImport
       parentRoute: typeof AppauthenticatedRouteRoute
     }
-    '/api/pages/$/slug': {
-      id: '/api/pages/$/slug'
-      path: '/api/pages/$/slug'
-      fullPath: '/api/pages/$/slug'
-      preLoaderRoute: typeof ApiPagesSplatSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/(authenticated)/edit/$/slug': {
-      id: '/app/(authenticated)/edit/$/slug'
-      path: '/$/slug'
-      fullPath: '/app/edit/$/slug'
-      preLoaderRoute: typeof AppauthenticatedEditSplatSlugRouteImport
+    '/app/(authenticated)/edit/$': {
+      id: '/app/(authenticated)/edit/$'
+      path: '/$'
+      fullPath: '/app/edit/$'
+      preLoaderRoute: typeof AppauthenticatedEditSplatRouteImport
       parentRoute: typeof AppauthenticatedEditRouteRoute
     }
   }
 }
 
 interface AppauthenticatedEditRouteRouteChildren {
-  AppauthenticatedEditSplatSlugRoute: typeof AppauthenticatedEditSplatSlugRoute
+  AppauthenticatedEditSplatRoute: typeof AppauthenticatedEditSplatRoute
 }
 
 const AppauthenticatedEditRouteRouteChildren: AppauthenticatedEditRouteRouteChildren =
   {
-    AppauthenticatedEditSplatSlugRoute: AppauthenticatedEditSplatSlugRoute,
+    AppauthenticatedEditSplatRoute: AppauthenticatedEditSplatRoute,
   }
 
 const AppauthenticatedEditRouteRouteWithChildren =
@@ -292,9 +292,9 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
-  SplatSlugRoute: SplatSlugRoute,
+  SplatRoute: SplatRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiPagesSplatSlugRoute: ApiPagesSplatSlugRoute,
+  ApiPagesSplatRoute: ApiPagesSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

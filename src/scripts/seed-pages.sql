@@ -3,55 +3,94 @@ DELETE FROM page_blocks;
 DELETE FROM blocks;
 DELETE FROM pages;
 
--- Insert page
-INSERT INTO pages (
-  id,
-  slug,
-  title,
-  status,
-  updated_at
-) VALUES (
-  'home-1',
-  'home',
-  'Home',
+-- ==========================================
+-- 1. INSERT PAGES
+-- ==========================================
+
+-- Page 1: Root/Index (Matches slug "index" for path "/")
+INSERT INTO pages (id, slug, title, status, updated_at)
+VALUES (
+  'p_index',
+  'index',
+  'Home Page',
   'published',
   strftime('%s', 'now')
 );
 
--- Insert block 1 (Hero)
-INSERT INTO blocks (
-  id,
-  type,
-  data,
-  updated_at
-) VALUES (
-  'b1',
+-- Page 2: Nested Route (Matches path "/blog/post-1")
+INSERT INTO pages (id, slug, title, status, updated_at)
+VALUES (
+  'p_blog_1',
+  'blog/post-1',
+  'Delicious Cupcake Recipes',
+  'published',
+  strftime('%s', 'now')
+);
+
+-- ==========================================
+-- 2. INSERT BLOCKS
+-- ==========================================
+
+-- B1: Hero for Index
+INSERT INTO blocks (id, type, data, updated_at)
+VALUES (
+  'b_hero_1',
   'hero',
   json('{
       "heading": "Lets Eat Some Sweets!",
       "subheading": "Pracownia cukiernicza",
       "ctaText": "Learn More",
-      "ctaHref": "https://cakes.rjewellaudio.workers.dev/"
+      "ctaHref": "/blog/post-1"
   }'),
   strftime('%s', 'now')
 );
 
--- Insert block 2 (Rich Text)
-INSERT INTO blocks (
-  id,
-  type,
-  data,
-  updated_at
-) VALUES (
-  'b2',
+-- B2: Rich Text for Index
+INSERT INTO blocks (id, type, data, updated_at)
+VALUES (
+  'b_text_1',
   'richtext',
   json('{
-      "content": "<h1 class=\"heading-node\">We make great stuff with the best ingredients</h1><p class=\"text-node\">Quis tellus eget adipiscing convallis sit sit eget aliquet quis. Suspendisse eget egestas a elementum pulvinar et feugiat blandit at.</p><p class=\"text-node\">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p><p class=\"text-node\">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?</p>"
+      "content": "<h1 class=\"heading-node\">We make great stuff</h1><p class=\"text-node\">Welcome to the index page. This proves the root route works.</p>"
   }'),
   strftime('%s', 'now')
 );
 
--- Link blocks to page with ordered positions
+-- B3: Hero for Blog Post
+INSERT INTO blocks (id, type, data, updated_at)
+VALUES (
+  'b_hero_2',
+  'hero',
+  json('{
+      "heading": "The Art of Cupcakes",
+      "subheading": "November 2024",
+      "ctaText": "Back Home",
+      "ctaHref": "/"
+  }'),
+  strftime('%s', 'now')
+);
+
+-- B4: Rich Text for Blog Post
+INSERT INTO blocks (id, type, data, updated_at)
+VALUES (
+  'b_text_2',
+  'richtext',
+  json('{
+      "content": "<p class=\"text-node\">This is a <strong>nested route</strong> test.</p><p>If you can see this, the catch-all route properly handled the slash in the slug (blog/post-1).</p>"
+  }'),
+  strftime('%s', 'now')
+);
+
+-- ==========================================
+-- 3. LINK BLOCKS TO PAGES
+-- ==========================================
+
+-- Link Index Page (Hero -> Text)
 INSERT INTO page_blocks (page_id, block_id, "order") VALUES
-  ('home-1', 'b1', 0),
-  ('home-1', 'b2', 1);
+  ('p_index', 'b_hero_1', 0),
+  ('p_index', 'b_text_1', 1);
+
+-- Link Blog Page (Hero -> Text)
+INSERT INTO page_blocks (page_id, block_id, "order") VALUES
+  ('p_blog_1', 'b_hero_2', 0),
+  ('p_blog_1', 'b_text_2', 1);

@@ -1,7 +1,7 @@
 import { DrizzleDB } from "@/core/db/drizzle";
 import { pageBlocks, blocks } from "@/core/db/schema";
 import { eq } from "drizzle-orm";
-import { BlockType } from "../blocks/block-registry.types";
+import { Block } from "../blocks/block-registry.types";
 
 export async function loadPageData(
   db: DrizzleDB,
@@ -32,15 +32,11 @@ export async function loadPageData(
     .where(eq(pageBlocks.pageId, page.id))
     .orderBy(pageBlocks.order);
 
-  const blocksData = rows.map((row) => ({
-    id: row.block.id,
-    type: row.block.type as BlockType,
-    data: row.block.data,
-  }));
+  const blocksData = rows.map((row) => row.block);
 
   const pageWithBlocks = {
     ...page,
-    blocks: blocksData,
+    blocks: blocksData as Block[],
   };
 
   return pageWithBlocks;

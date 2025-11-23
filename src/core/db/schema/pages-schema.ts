@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import { blocks } from "./blocks-schema";
+import { Status } from "@/lib/cms/blocks/block-registry.types";
 
 export const pages = sqliteTable(
   "pages",
@@ -14,7 +15,7 @@ export const pages = sqliteTable(
     id: text("id").primaryKey(),
     slug: text("slug").notNull(),
     title: text("title").notNull(),
-    status: text("status").notNull().default("draft"),
+    status: text("status").notNull().$type<Status>().default("draft"),
 
     updatedAt: integer("updated_at", { mode: "timestamp" })
       .notNull()

@@ -1,63 +1,71 @@
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { blurUpVariants } from "../../blocks/shared/animations";
+import { ArrowLeft } from "lucide-react";
+import { AnimatePresence } from "motion/react";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockEditor } from "../content-editor/block-editor";
-import { BlockReorderList } from "./block-reorder-list";
 
 export function EditorSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
   const mode = useEditorStore((s) => s.mode);
-  const setMode = useEditorStore((s) => s.setMode);
+  const page = useEditorStore((s) => s.page);
+
+  const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
-    <Sidebar className="pl-2" {...props}>
-      <SidebarHeader className="flex flex-row justify-between pr-0 items-baseline z-10">
-        <h2 className="text-sm font-semibold">Block Editor</h2>
-        <Button
-          size={"icon"}
-          variant={"ghost"}
-          className="h-8 w-8"
-          onClick={() => {
-            setMode("view");
-            setSelected(undefined);
-          }}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+    <Sidebar className=" max-h-screen" {...props}>
+      <SidebarHeader className="flex px-2 h-14 flex-row justify-between  center z-10">
+        {currentBlock ? (
+          <div className="flex w-full items-center gap-2">
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              onClick={() => setSelected("")}
+              className="p-2 mx-0 transition-colors"
+              aria-label="Back to list"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex gap-3 items-center">
+              <h3 className=" font-medium capitalize">
+                {currentBlock.type} Block
+              </h3>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-between w-full items-center gap-2 ">
+            <h2 className="font-medium px-2">Editor</h2>
+            {/*<Button
+              size={"icon"}
+              variant={"ghost"}
+              onClick={() => {
+                setMode("view");
+                setSelected(undefined);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>*/}
+          </div>
+        )}
       </SidebarHeader>
 
       <Separator />
 
       <SidebarContent>
-        <div className="h-full relative overflow-y-auto px-1  py-4">
-          <AnimatePresence mode="popLayout">
-            {}
+        <AnimatePresence mode="popLayout">
+          <ScrollArea className="h-full px-2 max-h-full relative overflow-y-auto ">
             {mode === "edit" && <BlockEditor />}
-            {mode === "edit-layout" && (
-              <motion.div
-                key="layout"
-                variants={blurUpVariants}
-                initial="hidden"
-                animate="visible"
-                custom={{ y: -10, blur: 8, duration: 0.2, exitDuration: 0.1 }}
-                exit="hidden"
-                className="flex flex-col items-center justify-center text-center space-y-2"
-              >
-                <BlockReorderList />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+          </ScrollArea>
+        </AnimatePresence>
       </SidebarContent>
     </Sidebar>
   );

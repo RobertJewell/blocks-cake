@@ -1,8 +1,8 @@
 import { useSidebar } from "@/components/ui/sidebar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { Route } from "@/routes/app/(authenticated)/edit/$...slug";
-import { Layers, Pencil, Save } from "lucide-react";
+import { Route } from "@/routes/app/(authenticated)/edit/$";
+import { Pencil, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { blurUpVariants } from "../../blocks/shared/animations";
 import { useSavePage } from "../../hooks/useSavePage";
@@ -38,8 +38,10 @@ export function EditorToolbar() {
       initial={false}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "bg-background/70 backdrop-blur-xs fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 overflow-hidden rounded-full border p-1.5 shadow-lg",
+        "bg-background/70 backdrop-blur-xs fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center  overflow-hidden rounded-full border p-1.5 shadow-lg",
       )}
+      // set explictily to stop weird warping on resize
+      style={{ height: 46, borderRadius: 23 }}
     >
       {/* Mode Toggle Group */}
       <motion.div layoutId={"edit"} layout="position">
@@ -64,19 +66,22 @@ export function EditorToolbar() {
             value="edit"
             variant={"link"}
             aria-label="Edit Content"
-            className="p-0 rounded-full"
+            className={cn(
+              "p-0 rounded-full transition-colors",
+              mode === "edit" && "",
+            )}
             style={{ width: 32, height: 32 }}
           >
             <Pencil className="h-4 w-4" />
           </ToggleGroupItem>
-          <ToggleGroupItem
+          {/*<ToggleGroupItem
             value="edit-layout"
             aria-label="Edit Layout"
             className="h-8 w-8 p-0 rounded"
             style={{ width: 32, height: 32 }}
           >
             <Layers className="h-4 w-4" />
-          </ToggleGroupItem>
+          </ToggleGroupItem>*/}
         </ToggleGroup>
       </motion.div>
 
@@ -91,7 +96,7 @@ export function EditorToolbar() {
             animate="visible"
             exit="hidden"
             custom={{ x: 10, duration: 0.2 }}
-            className="ml-1 pl-2 border-l"
+            className="ml-1  border-l"
           >
             <ToolbarButton
               id="save"

@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { registry } from "./block-registry";
+import { InferSelectModel } from "drizzle-orm";
+import { pages } from "@/core/db/schema";
 
 export type Registry = typeof registry;
 
@@ -18,10 +20,8 @@ export type PropsOf<T extends Block["type"]> = Extract<
   { type: T }
 >["data"];
 
-export type PageData = {
-  id: string;
-  slug: string;
-  title: string;
+export type Status = "draft" | "published";
+
+export interface PageData extends InferSelectModel<typeof pages> {
   blocks: Block[];
-  status: "draft" | "published";
-};
+}

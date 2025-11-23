@@ -11,7 +11,7 @@ import { registry } from "@/lib/cms/blocks/block-registry";
 
 type UpdatePagePayload = PageData;
 
-export const Route = createFileRoute("/api/pages/$/slug")({
+export const Route = createFileRoute("/api/pages/$")({
   server: {
     middleware: [drizzleMiddleware, authRequestMiddleware],
     handlers: {

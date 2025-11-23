@@ -15,7 +15,7 @@ export const Route = createFileRoute("/app/(authenticated)/edit")({
 // 1. Outer Container: Handles Horizontal Squeeze
 const containerVariants: Variants = {
   expanded: {
-    paddingLeft: 8, // px-2
+    paddingLeft: 0, // px-2
     paddingRight: 8, // px-2
     transition: { type: "spring", bounce: 0, duration: 0.3 },
   },
@@ -29,9 +29,7 @@ const containerVariants: Variants = {
 // 2. Inner Window: Handles Vertical Squeeze + Radius
 const windowVariants: Variants = {
   expanded: {
-    borderRadius: 12, // rounded-xl
-    // Instead of calc(), we simply add margin.
-    // If parent is 100vh, adding 8px top/bottom margin MAKES the height calc(100vh - 16px)
+    borderRadius: 12,
     marginTop: 8,
     marginBottom: 8,
     transition: { type: "spring", bounce: 0, duration: 0.3 },
@@ -61,7 +59,6 @@ function EditLayout() {
     >
       <EditorSidebar />
 
-      {/* h-svh and overflow-hidden are CRITICAL here to lock the viewport */}
       <SidebarInset className="h-svh overflow-hidden bg-sidebar">
         <motion.div
           className={cn("flex min-h-0 flex-1 flex-col")}
