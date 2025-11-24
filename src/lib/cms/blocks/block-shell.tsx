@@ -1,4 +1,7 @@
 import { cn } from "@/lib/utils";
+import { useDroppable } from "@dnd-kit/core";
+import { Plus } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
@@ -13,7 +16,16 @@ export function BlockShell({ block, children }: Props) {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
   const isEdit = mode === "edit";
-  // const isSelected = selectedId === block.id;
+
+  // We only enable the hook if we are in 'add' mode to save resources
+  const { setNodeRef, isOver } = useDroppable({
+    id: `drop-after-${block.id}`, // Unique ID for the drop zone
+    data: {
+      type: "insert-after",
+      blockId: block.id, // We pass this so onDragEnd knows WHERE to insert
+    },
+    disabled: mode !== "add",
+  });
 
   return (
     <div
@@ -24,19 +36,43 @@ export function BlockShell({ block, children }: Props) {
         setSelected(block.id);
       }}
       className={cn(
-        "group relative z-20",
+        "group relative font-editor z-20 transition-all duration-200",
         isEdit && selectedId !== block.id ? "cursor-pointer" : "",
       )}
     >
-      {/*<BlockEditButton blockId={block.id} />*/}
-      {/*overlay replaces by edit button per clock*/}
-      {/*<div
-        className={cn(
-          "pointer-events-none absolute inset-0 z-20 rounded-xl bg-radial from-pink-400 from-30% to-pink-400/50 opacity-0 transition-opacity",
-          isEdit && selectedId !== block.id && "group-hover:opacity-50",
-        )}
-      ></div>*/}
       {children}
+
+      {/* Drop Zone */}
+      <AnimatePresence>
+        {mode === "add" && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="overflow-hidden px-2"
+          >
+            <div
+              ref={setNodeRef}
+              className={cn(
+                "w-full h-32 rounded-xl text-muted-foreground border-2 bg-muted border-muted-foreground border-dashed flex items-center justify-center transition-all",
+                isOver
+                  ? "border-primary shadow-sm scale-[1.02]"
+                  : "border-muted-foreground/50 ",
+              )}
+            >
+              <span
+                className={cn(
+                  "flex text-sm gap-2 items-center font-medium transition-colors",
+                )}
+              >
+                <Plus className="size-5" />
+                {isOver ? "Drop to Add Block" : "Insert Block"}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

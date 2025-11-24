@@ -1,30 +1,30 @@
 import { create } from "zustand";
 import {
   Block,
+  BlockType,
   PageData,
   PropsOf,
 } from "@/lib/cms/blocks/block-registry.types";
 
 type EditorState = {
-  mode: "view" | "edit" | "edit-meta";
-  setMode: (mode: "view" | "edit" | "edit-meta") => void;
+  mode: "view" | "edit" | "add" | "edit-meta";
+  setMode: (mode: "view" | "edit" | "add" | "edit-meta") => void;
 
   // page
   page: PageData | null;
   setPage: (page: PageData) => void;
 
   editedBlocks: Set<string>;
-
   updateBlock: <T extends Block["type"]>(
     id: string,
     type: T,
     patch: Partial<PropsOf<T>>,
   ) => void;
-
+  addBlock: (type: BlockType, insertAfterId: string) => void;
   resetEditedBlocks: () => void;
+  reorderBlocks: (blocks: Block[]) => void;
   resetPage: () => void;
   resetBlock: (id: string) => void;
-  reorderBlocks: (blocks: Block[]) => void;
 
   // initial page
   initialPage: PageData | null;
@@ -60,6 +60,38 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         editedBlocks,
       };
     }),
+  addBlock: (type, insertAfterId) =>
+    set((s) => {
+      if (!s.page) return {};
+
+      // 1. Create the new block structure
+      const newBlock = {
+        id: crypto.randomUUID(),
+        type,
+        data: {}, // Initialize with empty data; FormRenderer handles defaults
+      } as Block;
+
+      // 2. Find insertion index
+      const index = s.page.blocks.findIndex((b) => b.id === insertAfterId);
+      if (index === -1) return {};
+
+      // 3. Insert into array
+      const newBlocks = [...s.page.blocks];
+      newBlocks.splice(index + 1, 0, newBlock);
+
+      // 4. Mark as edited
+      const editedBlocks = new Set(s.editedBlocks);
+      editedBlocks.add(newBlock.id);
+
+      return {
+        page: { ...s.page, blocks: newBlocks },
+        editedBlocks,
+        // Auto-select the new block and switch back to edit mode
+        selectedBlockId: newBlock.id,
+        mode: "edit",
+      };
+    }),
+
   reorderBlocks: (blocks) =>
     set((s) => {
       if (!s.page) return {};

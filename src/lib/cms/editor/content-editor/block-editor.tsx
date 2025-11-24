@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { AnimatePresence, motion, Variants } from "motion/react";
+import { motion, Variants } from "motion/react";
 import { useEffect, useRef } from "react";
 import { FormRenderer } from "../form-renderer";
 import { BlockItem } from "./block-item";
@@ -130,67 +130,65 @@ export const BlockEditor = () => {
   }
 
   return (
-    <div className="relative py-4 px-1 w-full h-full overflow-hidden ">
-      <AnimatePresence mode="popLayout" custom={mode} initial={false}>
-        {currentBlock ? (
-          // --- View 1: Edit Mode (Form) ---
-          <motion.div
-            key={currentBlock.id} // Keying by ID ensures fade triggers on block switch
-            custom={mode}
-            variants={editorVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="h-full flex flex-col"
+    <>
+      {currentBlock ? (
+        // --- View 1: Edit Mode (Form) ---
+        <motion.div
+          key={currentBlock.id} // Keying by ID ensures fade triggers on block switch
+          custom={mode}
+          variants={editorVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="h-full flex flex-col"
+        >
+          <FormRenderer
+            key={currentBlock.id}
+            block={currentBlock}
+            onChange={(patch) =>
+              updateBlock(currentBlock.id, currentBlock.type, patch)
+            }
+          />
+        </motion.div>
+      ) : (
+        // --- View 2: List Mode (Sortable) ---
+        <motion.div
+          key="list-mode"
+          custom={mode}
+          variants={editorVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="flex flex-col gap-4 w-full px-2 min-h-full pb-20"
+        >
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            onDragOver={handleDragOver}
+            modifiers={[restrictToVerticalAxis]}
           >
-            <FormRenderer
-              key={currentBlock.id}
-              block={currentBlock}
-              onChange={(patch) =>
-                updateBlock(currentBlock.id, currentBlock.type, patch)
-              }
-            />
-          </motion.div>
-        ) : (
-          // --- View 2: List Mode (Sortable) ---
-          <motion.div
-            key="list-mode"
-            custom={mode}
-            variants={editorVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="flex flex-col gap-4 w-full px-2 min-h-full pb-20"
-          >
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-              onDragOver={handleDragOver}
-              modifiers={[restrictToVerticalAxis]}
+            <SortableContext
+              items={page?.blocks.map((b) => b.id) || []}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={page?.blocks.map((b) => b.id) || []}
-                strategy={verticalListSortingStrategy}
-              >
-                {page?.blocks.map((block) => (
-                  <BlockItem
-                    key={block.id}
-                    block={block}
-                    onSelect={() => setSelected(block.id)}
-                  />
-                ))}
+              {page?.blocks.map((block) => (
+                <BlockItem
+                  key={block.id}
+                  block={block}
+                  onSelect={() => setSelected(block.id)}
+                />
+              ))}
 
-                {(!page?.blocks || page.blocks.length === 0) && (
-                  <div className="text-center text-muted-foreground py-10">
-                    No blocks yet. Click "+" to add one.
-                  </div>
-                )}
-              </SortableContext>
-            </DndContext>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+              {(!page?.blocks || page.blocks.length === 0) && (
+                <div className="text-center text-muted-foreground py-10">
+                  No blocks yet. Click "+" to add one.
+                </div>
+              )}
+            </SortableContext>
+          </DndContext>
+        </motion.div>
+      )}
+    </>
   );
 };

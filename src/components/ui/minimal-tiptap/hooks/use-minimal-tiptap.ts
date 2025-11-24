@@ -202,7 +202,7 @@ export const useMinimalTiptapEditor = ({
 
   const handleCreate = React.useCallback(
     (editor: Editor) => {
-      if (value && editor.isEmpty) {
+      if (value !== undefined && editor.isEmpty) {
         editor.commands.setContent(value);
       }
     },

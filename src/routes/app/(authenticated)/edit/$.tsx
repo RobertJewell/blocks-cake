@@ -8,7 +8,6 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 export const Route = createFileRoute("/app/(authenticated)/edit/$")({
   loader: async ({ context, params }): Promise<PageData> => {
     const page = await getPageBySlug({ data: params._splat || "index" });
-    console.log(page);
     if (!page) throw notFound();
     context.editorStore.getState().setPage(page);
     return page;

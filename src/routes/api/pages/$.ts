@@ -98,7 +98,7 @@ export const Route = createFileRoute("/api/pages/$")({
               type: b.type,
               // Safe Cast: We successfully parsed it, so we know it's valid.
               // We cast to 'unknown' then 'Block' to satisfy Drizzle's union type.
-              data: parseResult.data as unknown as Block,
+              data: parseResult.data as unknown as Block["data"],
               updatedAt: new Date(),
             };
           });
