@@ -53,7 +53,7 @@ export function DraggableBlockItem({ type }: { type: BlockType }) {
 }
 
 // --- New Component: Pure Visuals ---
-// We export this so the DragOverlay can use it
+
 export function SidebarBlockPreview({ type }: { type: BlockType }) {
   const def = registry[type];
   const Skeleton = def?.skeleton;

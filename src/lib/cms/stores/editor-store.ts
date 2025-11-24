@@ -21,6 +21,7 @@ type EditorState = {
     patch: Partial<PropsOf<T>>,
   ) => void;
   addBlock: (type: BlockType, insertAfterId: string) => void;
+  deleteBlock: (id: string) => void;
   resetEditedBlocks: () => void;
   reorderBlocks: (blocks: Block[]) => void;
   resetPage: () => void;
@@ -89,6 +90,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         // Auto-select the new block and switch back to edit mode
         selectedBlockId: newBlock.id,
         mode: "edit",
+      };
+    }),
+  deleteBlock: (id) =>
+    set((s) => {
+      if (!s.page) return {};
+
+      // 1. Filter out the block
+      const newBlocks = s.page.blocks.filter((b) => b.id !== id);
+
+      // 2. If the deleted block was selected, deselect it (returns user to List view)
+      const selectedBlockId =
+        s.selectedBlockId === id ? undefined : s.selectedBlockId;
+
+      return {
+        page: { ...s.page, blocks: newBlocks },
+        selectedBlockId,
       };
     }),
 
