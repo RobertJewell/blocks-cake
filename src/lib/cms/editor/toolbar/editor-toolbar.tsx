@@ -2,8 +2,9 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { Route } from "@/routes/app/(authenticated)/edit/$";
-import { Pencil, Save } from "lucide-react";
+import { Pencil, Plus, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { blurUpVariants } from "../../blocks/shared/animations";
 import { useSavePage } from "../../hooks/useSavePage";
 import { useEditorStore } from "../../stores/editor-store";
@@ -24,6 +25,11 @@ export function EditorToolbar() {
   const { _splat } = Route.useParams();
   const { setOpen } = useSidebar();
   const savePageMutation = useSavePage();
+
+  useHotkeys("meta+e", () => setMode("edit"), [setMode]);
+  useHotkeys("meta+a", () => setMode("add"), [setMode], {
+    preventDefault: true,
+  });
 
   //block order
   const currentOrder = page?.blocks.map((b) => b.id).join("|") ?? "";
@@ -74,14 +80,14 @@ export function EditorToolbar() {
           >
             <Pencil className="h-4 w-4" />
           </ToggleGroupItem>
-          {/*<ToggleGroupItem
-            value="edit-layout"
-            aria-label="Edit Layout"
+          <ToggleGroupItem
+            value="add"
+            aria-label="Add Blocks"
             className="h-8 w-8 p-0 rounded"
             style={{ width: 32, height: 32 }}
           >
-            <Layers className="h-4 w-4" />
-          </ToggleGroupItem>*/}
+            <Plus className="h-4 w-4" />
+          </ToggleGroupItem>
         </ToggleGroup>
       </motion.div>
 
