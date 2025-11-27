@@ -1,29 +1,25 @@
-import { useSidebar } from "@/components/ui/sidebar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { Route } from "@/routes/app/(authenticated)/edit/$";
-import { Pencil, Plus, Save } from "lucide-react";
+import { Eye, Pencil, Plus, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { blurUpVariants } from "../../blocks/shared/animations";
 import { useSavePage } from "../../hooks/useSavePage";
-import { useEditorStore } from "../../stores/editor-store";
+import { useEditorShortcuts } from "../../hooks/useShortcuts";
+import { useEditorStore, ViewMode } from "../../stores/editor-store";
 import { ToolbarButton } from "./toolbar-button";
 
 export function EditorToolbar() {
   const mode = useEditorStore((s) => s.mode);
   const setMode = useEditorStore((s) => s.setMode);
-
   const page = useEditorStore((s) => s.page);
   const initialPage = useEditorStore((s) => s.initialPage);
   const setInitialPage = useEditorStore((s) => s.setInitialPage);
-
-  const setSelected = useEditorStore((s) => s.setSelected);
   const editedBlocks = useEditorStore((s) => s.editedBlocks);
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
 
   const { _splat } = Route.useParams();
-  const { setOpen } = useSidebar();
   const savePageMutation = useSavePage();
 
   useHotkeys("meta+e", () => setMode("edit"), [setMode]);
@@ -38,6 +34,29 @@ export function EditorToolbar() {
 
   const showSave = editedBlocks.size > 0 || hasReordered;
 
+  const handleSave = () => {
+    page &&
+      showSave &&
+      savePageMutation.mutate(
+        { slug: _splat!, data: page, status: "published" },
+        {
+          onSuccess: () => {
+            resetEditedBlocks();
+            setMode("view");
+            setInitialPage(page);
+          },
+        },
+      );
+  };
+
+  useEditorShortcuts({ onSave: handleSave });
+
+  const items = [
+    { value: "view", icon: Eye, label: "View Mode" },
+    { value: "edit", icon: Pencil, label: "Edit Mode" },
+    { value: "add", icon: Plus, label: "Add Mode" },
+  ];
+
   return (
     <motion.div
       layout
@@ -50,44 +69,50 @@ export function EditorToolbar() {
       style={{ height: 46, borderRadius: 23 }}
     >
       {/* Mode Toggle Group */}
-      <motion.div layoutId={"edit"} layout="position">
+      <motion.div layoutId={"edit"} layout="position" className="relative z-10">
         <ToggleGroup
           type="single"
           value={mode}
-          variant={"link"}
-          onValueChange={(val: typeof mode | "") => {
-            if (!val) {
-              setMode("view");
-              setOpen(false);
-              setSelected(undefined);
-              return;
-            }
-            const newMode = val;
-            setMode(newMode);
-            setOpen(true);
+          onValueChange={(val: ViewMode) => {
+            if (val) setMode(val);
           }}
-          className="gap-1"
+          className="gap-2"
         >
-          <ToggleGroupItem
-            value="edit"
-            variant={"link"}
-            aria-label="Edit Content"
-            className={cn(
-              "p-0 rounded-full transition-colors",
-              mode === "edit" && "",
-            )}
-            style={{ width: 32, height: 32 }}
-          >
-            <Pencil className="h-4 w-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="add"
-            aria-label="Add Blocks"
-            className="h-8 w-8 p-0 rounded"
-            style={{ width: 32, height: 32 }}
-          >
-            <Plus className="h-4 w-4" />
-          </ToggleGroupItem>
+          {items.map((item) => {
+            const isSelected = mode === item.value;
+            const Icon = item.icon;
+
+            return (
+              <ToggleGroupItem
+                key={item.value}
+                value={item.value}
+                aria-label={item.label}
+                className={cn(
+                  "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                  isSelected ? "text-background" : "text-muted-foreground",
+                )}
+              >
+                {isSelected && (
+                  <motion.div
+                    layoutId="active-mode-bg"
+                    className="absolute inset-0 rounded-full bg-muted-foreground"
+                    initial={false}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                  />
+                )}
+
+                <div className="relative z-10">
+                  <Icon
+                    className={cn("h-4 w-4", isSelected && "text-background")}
+                  />
+                </div>
+              </ToggleGroupItem>
+            );
+          })}
         </ToggleGroup>
       </motion.div>
 
@@ -104,20 +129,7 @@ export function EditorToolbar() {
             custom={{ x: 10, duration: 0.2 }}
             className="ml-1  border-l"
           >
-            <ToolbarButton
-              id="save"
-              onClick={() => {
-                savePageMutation.mutate(
-                  { slug: _splat!, data: page, status: "published" },
-                  {
-                    onSuccess: () => {
-                      resetEditedBlocks();
-                      setInitialPage(page);
-                    },
-                  },
-                );
-              }}
-            >
+            <ToolbarButton id="save" onClick={handleSave}>
               <Save className="size-4" />
               {savePageMutation.isPending ? "Saving…" : "Save"}
             </ToolbarButton>

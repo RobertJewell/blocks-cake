@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
+import { BlockPickerDialog } from "../editor/content-editor/block-picker-dialog";
 import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
 
@@ -15,17 +15,9 @@ export function BlockShell({ block, children }: Props) {
   const mode = useEditorStore((s) => s.mode);
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
+  const addBlock = useEditorStore((s) => s.addBlock);
+  const [open, setOpen] = React.useState(false);
   const isEdit = mode === "edit";
-
-  // We only enable the hook if we are in 'add' mode to save resources
-  const { setNodeRef, isOver } = useDroppable({
-    id: `drop-after-${block.id}`, // Unique ID for the drop zone
-    data: {
-      type: "insert-after",
-      blockId: block.id, // We pass this so onDragEnd knows WHERE to insert
-    },
-    disabled: mode !== "add",
-  });
 
   return (
     <div
@@ -36,7 +28,7 @@ export function BlockShell({ block, children }: Props) {
         setSelected(block.id);
       }}
       className={cn(
-        "group relative font-editor z-20 transition-all duration-200",
+        "relative font-editor z-20 transition-all duration-200",
         isEdit && selectedId !== block.id ? "cursor-pointer" : "",
       )}
     >
@@ -50,16 +42,18 @@ export function BlockShell({ block, children }: Props) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="overflow-hidden px-2"
+            className="overflow-hidden px-2 font-editor"
           >
+            <BlockPickerDialog
+              open={open}
+              setOpen={setOpen}
+              onSelect={(type) => addBlock(type, block.id)}
+            />
             <div
-              ref={setNodeRef}
               className={cn(
-                "w-full h-32 rounded-xl text-muted-foreground border-2 bg-muted border-muted-foreground border-dashed flex items-center justify-center transition-all",
-                isOver
-                  ? "border-primary shadow-sm scale-[1.02]"
-                  : "border-muted-foreground/50 ",
+                "w-full group h-32 cursor-pointer rounded-xl text-muted-foreground border-2 backdrop-blur-xs bg-muted border-muted-foreground/50 border-dashed hover:scale-99 flex items-center justify-center transition-all",
               )}
+              onClick={() => setOpen(true)}
             >
               <span
                 className={cn(
@@ -67,7 +61,7 @@ export function BlockShell({ block, children }: Props) {
                 )}
               >
                 <Plus className="size-5" />
-                {isOver ? "Drop to Add Block" : "Insert Block"}
+                Insert Block
               </span>
             </div>
           </motion.div>

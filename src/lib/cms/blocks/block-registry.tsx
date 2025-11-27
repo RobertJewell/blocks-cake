@@ -8,12 +8,15 @@ import {
 
 export const registry = {
   hero: defineBlock({
+    name: "Hero with 2 images",
+    category: "Heros",
     fields: heroConfig,
     component: HeroComponent,
     skeleton: HeroSkeleton,
   }),
 
   richtext: defineBlock({
+    name: "Rich Text",
     fields: richTextConfig,
     component: RichTextComponent,
     skeleton: RichTextSkeleton,
