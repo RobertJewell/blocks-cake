@@ -6,9 +6,11 @@ import {
   PropsOf,
 } from "@/lib/cms/blocks/block-registry.types";
 
+export type ViewMode = "view" | "edit" | "add" | "edit-meta";
+
 type EditorState = {
-  mode: "view" | "edit" | "add" | "edit-meta";
-  setMode: (mode: "view" | "edit" | "add" | "edit-meta") => void;
+  mode: ViewMode;
+  setMode: (mode: ViewMode) => void;
 
   // page
   page: PageData | null;

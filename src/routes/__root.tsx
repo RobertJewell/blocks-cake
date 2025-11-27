@@ -12,6 +12,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useLocation,
 } from "@tanstack/react-router";
 import * as React from "react";
 
@@ -83,8 +84,10 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const isAppRoute = location.pathname.startsWith("/app");
   return (
-    <html>
+    <html className={isAppRoute ? "overflow-hidden" : ""}>
       <head>
         <HeadContent />
       </head>

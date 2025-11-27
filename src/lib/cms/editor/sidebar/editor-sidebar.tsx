@@ -6,30 +6,43 @@ import {
   SidebarContent,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { ArrowLeft, Pencil, Plus } from "lucide-react";
-import { AnimatePresence } from "motion/react";
-import { registry } from "../../blocks/block-registry";
-import { BlockType } from "../../blocks/block-registry.types";
+
+import { ArrowLeft } from "lucide-react";
+import { motion } from "motion/react";
+import { useAnimationMode } from "../../hooks/useAnimationMode";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockEditor } from "../content-editor/block-editor";
-import { DraggableBlockItem } from "../content-editor/block-library-view";
 
 export function EditorSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
-  const mode = useEditorStore((s) => s.mode);
-  const setMode = useEditorStore((s) => s.setMode);
   const page = useEditorStore((s) => s.page);
+  const mode = useEditorStore((s) => s.mode);
+
+  // Use the hook to determine animation direction
+  const animationMode = useAnimationMode(selectedId);
 
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
     <Sidebar className="max-h-screen font-editor" {...props}>
-      <SidebarHeader className="flex px-2 h-14 flex-row justify-between center z-10">
-        {currentBlock ? (
-          <div className="flex w-full items-center gap-2">
+      {/* Pass mode to AnimatePresence.
+        It will be accessible to direct motion children via context,
+        but we also pass it explicitly to BlockEditor for clarity.
+      */}
+
+      <SidebarHeader className="flex px-2 h-14 flex-row justify-between center z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+        {mode === "edit" && currentBlock ? (
+          <motion.div
+            key="header-detail"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+            className="flex w-full items-center gap-2"
+          >
             <Button
               variant={"ghost"}
               size={"icon"}
@@ -40,59 +53,30 @@ export function EditorSidebar({
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="flex gap-3 items-center">
-              <h3 className=" font-medium capitalize">
+              <h3 className="font-medium capitalize">
                 {currentBlock.type} Block
               </h3>
             </div>
-          </div>
+          </motion.div>
         ) : (
-          <div className="flex justify-between w-full items-center gap-2 ">
+          <motion.div
+            key="header-list"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            className="flex justify-between w-full items-center gap-2"
+          >
             <h2 className="font-medium px-2">Editor</h2>
-            {mode === "add" ? (
-              <Button
-                variant={"ghost"}
-                className="flex items-center"
-                onClick={() => {
-                  setMode("edit");
-                  setSelected(undefined);
-                }}
-              >
-                <Pencil className="h-4 w-4" />
-                Edit Blocks
-              </Button>
-            ) : (
-              <Button
-                variant={"ghost"}
-                className="flex items-center"
-                onClick={() => {
-                  setMode("add");
-                  setSelected(undefined);
-                }}
-              >
-                <Plus className="h-4 w-4" />
-                Add Block
-              </Button>
-            )}
-          </div>
+          </motion.div>
         )}
       </SidebarHeader>
 
       <Separator />
 
-      <SidebarContent>
-        <ScrollArea className="h-full px-2 max-h-full relative overflow-y-auto ">
-          <div className="relative py-4 px-1 w-full h-full overflow-hidden ">
-            <AnimatePresence mode="popLayout" custom={mode} initial={false}>
-              {mode === "edit" && <BlockEditor />}
-              {mode === "add" && (
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {Object.keys(registry).map((type) => (
-                    <DraggableBlockItem key={type} type={type as BlockType} />
-                  ))}
-                </div>
-              )}
-            </AnimatePresence>
-          </div>
+      <SidebarContent className="overflow-hidden py-4">
+        <ScrollArea className="h-full px-2 max-h-full relative">
+          {mode === "edit" && <BlockEditor mode={animationMode} />}
         </ScrollArea>
       </SidebarContent>
     </Sidebar>

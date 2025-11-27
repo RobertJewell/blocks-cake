@@ -31,83 +31,45 @@ export const blurUpVariants: Variants = {
   }),
 };
 
-export const slideVariants: Variants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 50 : -50, // Enter from Right (1) or Left (-1)
-    opacity: 0,
-    filter: "blur(4px)",
-  }),
+export type AnimationMode = "push" | "pop" | "fade";
+
+export const editorVariants: Variants = {
+  enter: (mode: AnimationMode) => {
+    if (mode === "fade") {
+      return { opacity: 0, scale: 0.98, x: 0, filter: "blur(4px)" };
+    }
+    // Push: Enter from Right (50). Pop: Enter from Left (-50)
+    return {
+      x: mode === "push" ? 50 : -50,
+      opacity: 0,
+      filter: "blur(4px)",
+    };
+  },
   center: {
     x: 0,
     opacity: 1,
+    scale: 1,
     filter: "blur(0px)",
     transition: {
       x: { type: "spring", stiffness: 300, damping: 30 },
       opacity: { duration: 0.2 },
+      scale: { duration: 0.2 },
     },
   },
-  exit: (direction: number) => ({
-    x: direction < 0 ? 50 : -50, // Exit to Right (-1) or Left (1)
-    opacity: 0,
-    filter: "blur(3px)",
-    transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
-    },
-  }),
-};
-
-// Generic slide variants generator
-// Supports x/y axis and dynamic direction (1 or -1)
-export const getSlideVariants = (
-  axis: "x" | "y" = "x",
-  distance = 50,
-): Variants => {
-  // We define the transition settings with 'as const' to fix the "string is not assignable to 'spring'" error
-  const springTransition = {
-    type: "spring" as const,
-    stiffness: 300,
-    damping: 30,
-  };
-
-  return {
-    enter: (direction: number) => ({
-      [axis]: direction > 0 ? distance : -distance,
+  exit: (mode: AnimationMode) => {
+    if (mode === "fade") {
+      return { opacity: 0, scale: 0.98, x: 0, filter: "blur(4px)" };
+    }
+    // Push: Exit to Left (-50). Pop: Exit to Right (50)
+    return {
+      x: mode === "push" ? -50 : 50,
       opacity: 0,
       filter: "blur(4px)",
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-    }),
-    center: {
-      [axis]: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      zIndex: 1,
-      position: "relative",
-      // We cast to 'any' here because dynamic keys ([axis]) often conflict with
-      // Framer Motion's strict Transition type definitions in TypeScript.
       transition: {
-        [axis]: springTransition,
+        x: { type: "spring", stiffness: 300, damping: 30 },
         opacity: { duration: 0.2 },
-      } as any,
-    },
-    exit: (direction: number) => ({
-      [axis]: direction < 0 ? distance : -distance,
-      opacity: 0,
-      filter: "blur(4px)",
-      zIndex: 0,
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-      transition: {
-        [axis]: springTransition,
-        opacity: { duration: 0.2 },
-      } as any,
-    }),
-  };
+        scale: { duration: 0.2 },
+      },
+    };
+  },
 };
-
-// Pre-defined instances for convenience
-export const slideVariantsX = getSlideVariants("x");
-export const slideVariantsY = getSlideVariants("y");

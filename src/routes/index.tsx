@@ -2,6 +2,7 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
 import { registry } from "@/lib/cms/blocks/block-registry";
+import { useSiteShortcuts } from "@/lib/cms/hooks/useShortcuts";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   const page = Route.useLoaderData();
+  useSiteShortcuts();
 
   return (
     <div className="bg-white">

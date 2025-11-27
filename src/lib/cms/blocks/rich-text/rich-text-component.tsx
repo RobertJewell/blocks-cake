@@ -50,7 +50,11 @@ export function RichTextComponent({ content }: RichTextProps) {
 
   return (
     <div className="mx-auto max-w-3xl p-4 py-12 text-gray-700">
-      {domToReact(doc.children as DOMNode[], { replace })}
+      {content ? (
+        domToReact(doc.children as DOMNode[], { replace })
+      ) : (
+        <span className="text-muted-foreground">Enter content...</span>
+      )}
     </div>
   );
 }

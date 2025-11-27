@@ -64,6 +64,8 @@ export function createSchema<T extends Record<string, FieldDefinition<any>>>(
 }
 
 export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
+  name: string;
+  category?: string;
   fields: T;
   skeleton: React.ComponentType;
   component: React.ComponentType<
@@ -81,6 +83,8 @@ export function defineBlock<T extends Record<string, FieldDefinition<any>>>(
 }
 
 export type BlockDefinitionResult = {
+  name: string;
+  category?: string;
   fields: Record<string, FieldDefinition<any>>;
   component: React.ComponentType<any>;
   schema: z.ZodObject<any>;

@@ -17,55 +17,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { motion, Variants } from "motion/react";
-import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
+import { AnimationMode, editorVariants } from "../../blocks/shared/animations";
 import { FormRenderer } from "../form-renderer";
 import { BlockItem } from "./block-item";
 
-type AnimationMode = "push" | "pop" | "fade";
+interface BlockEditorProps {
+  mode: AnimationMode;
+}
 
-const editorVariants: Variants = {
-  enter: (mode: AnimationMode) => {
-    if (mode === "fade") {
-      return { opacity: 0, scale: 0.98, x: 0, filter: "blur(4px)" };
-    }
-    // Push: Enter from Right (50). Pop: Enter from Left (-50)
-    return {
-      x: mode === "push" ? 50 : -50,
-      opacity: 0,
-      filter: "blur(4px)",
-    };
-  },
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
-      scale: { duration: 0.2 },
-    },
-  },
-  exit: (mode: AnimationMode) => {
-    if (mode === "fade") {
-      return { opacity: 0, scale: 0.98, x: 0, filter: "blur(4px)" };
-    }
-    // Push: Exit to Left (-50). Pop: Exit to Right (50)
-    return {
-      x: mode === "push" ? -50 : 50,
-      opacity: 0,
-      filter: "blur(4px)",
-      transition: {
-        x: { type: "spring", stiffness: 300, damping: 30 },
-        opacity: { duration: 0.2 },
-        scale: { duration: 0.2 },
-      },
-    };
-  },
-};
-
-export const BlockEditor = () => {
+export const BlockEditor = ({ mode }: BlockEditorProps) => {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
   const page = useEditorStore((s) => s.page);
@@ -73,28 +34,6 @@ export const BlockEditor = () => {
   const reorderBlocks = useEditorStore((s) => s.reorderBlocks);
 
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
-
-  // --- Simplified Animation State ---
-  const prevIdRef = useRef<string | null>(null);
-
-  // Default to "push" (List -> Edit)
-  let mode: AnimationMode = "push";
-
-  const isEditMode = !!selectedId;
-  const wasEditMode = !!prevIdRef.current;
-
-  if (isEditMode && !wasEditMode) {
-    mode = "push";
-  } else if (!isEditMode && wasEditMode) {
-    mode = "pop";
-  } else if (isEditMode && wasEditMode && selectedId !== prevIdRef.current) {
-    mode = "fade";
-  }
-
-  // Update history for next render
-  useEffect(() => {
-    prevIdRef.current = selectedId ?? null;
-  }, [selectedId]);
 
   // --- DnD Sensors ---
   const sensors = useSensors(
@@ -132,7 +71,7 @@ export const BlockEditor = () => {
   return (
     <>
       {currentBlock ? (
-        // --- View 1: Edit Mode (Form) ---
+        // Form Editor
         <motion.div
           key={currentBlock.id} // Keying by ID ensures fade triggers on block switch
           custom={mode}
@@ -151,7 +90,7 @@ export const BlockEditor = () => {
           />
         </motion.div>
       ) : (
-        // --- View 2: List Mode (Sortable) ---
+        // Block view
         <motion.div
           key="list-mode"
           custom={mode}
