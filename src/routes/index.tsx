@@ -3,10 +3,6 @@ import { NotFound } from "@/components/not-found";
 import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
 import { registry } from "@/lib/cms/blocks/block-registry";
 import { useSiteShortcuts } from "@/lib/cms/hooks/useShortcuts";
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
