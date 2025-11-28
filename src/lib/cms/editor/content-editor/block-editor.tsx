@@ -20,7 +20,7 @@ import {
 import { motion } from "motion/react";
 import { AnimationMode, editorVariants } from "../../blocks/shared/animations";
 import { FormRenderer } from "../form-renderer";
-import { BlockItem } from "./block-item";
+import { BlockItem } from "./blocks/editible-block-item";
 
 interface BlockEditorProps {
   mode: AnimationMode;
@@ -98,7 +98,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="flex flex-col gap-4 w-full px-2 min-h-full pb-20"
+          className="flex flex-col gap-2 w-full px-2 min-h-full pb-20"
         >
           <DndContext
             sensors={sensors}

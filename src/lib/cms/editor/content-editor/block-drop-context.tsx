@@ -11,7 +11,7 @@ import {
 } from "@dnd-kit/core";
 import { ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
-import { SidebarBlockPreview } from "./block-library-view";
+import { SidebarBlockPreview } from "./blocks/block-picker-dialog";
 
 export function BlockDropContext({ children }: { children: ReactNode }) {
   const addBlock = useEditorStore((s) => s.addBlock);

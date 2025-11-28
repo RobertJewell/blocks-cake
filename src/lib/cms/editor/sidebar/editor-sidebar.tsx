@@ -12,6 +12,7 @@ import { motion } from "motion/react";
 import { useAnimationMode } from "../../hooks/useAnimationMode";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockEditor } from "../content-editor/block-editor";
+import { BlockLibrary } from "../content-editor/blocks/block-library";
 
 export function EditorSidebar({
   ...props
@@ -77,6 +78,7 @@ export function EditorSidebar({
       <SidebarContent className="overflow-hidden py-4">
         <ScrollArea className="h-full px-2 max-h-full relative">
           {mode === "edit" && <BlockEditor mode={animationMode} />}
+          {mode === "add" && <BlockLibrary />}
         </ScrollArea>
       </SidebarContent>
     </Sidebar>

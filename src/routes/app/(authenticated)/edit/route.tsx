@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { BlockDropContext } from "@/lib/cms/editor/content-editor/block-drop-context";
 import { EditorSidebar } from "@/lib/cms/editor/sidebar/editor-sidebar";
 import { EditorToolbar } from "@/lib/cms/editor/toolbar/editor-toolbar";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
@@ -48,37 +49,39 @@ function EditLayout() {
   const isMobile = useIsMobile();
 
   return (
-    <SidebarProvider
-      className="bg-sidebar"
-      open={mode !== "view"}
-      onOpenChange={(open) => {
-        if (!open) {
-          setMode("view");
-        }
-      }}
-    >
-      <EditorSidebar />
+    <BlockDropContext>
+      <SidebarProvider
+        className="bg-sidebar"
+        open={mode !== "view"}
+        onOpenChange={(open) => {
+          if (!open) {
+            setMode("view");
+          }
+        }}
+      >
+        <EditorSidebar />
 
-      <SidebarInset className="h-svh overflow-hidden bg-sidebar">
-        <motion.div
-          className={cn("flex min-h-0 flex-1 flex-col")}
-          initial="collapsed"
-          animate={mode === "edit" && !isMobile ? "expanded" : "collapsed"}
-          variants={containerVariants}
-        >
-          <EditorToolbar />
-
-          {/* The Window Frame */}
+        <SidebarInset className="h-svh overflow-hidden bg-sidebar">
           <motion.div
-            className="flex flex-1 flex-col overflow-hidden bg-background shadow-sm border-border"
-            variants={windowVariants}
+            className={cn("flex min-h-0 flex-1 flex-col")}
+            initial="collapsed"
+            animate={mode === "edit" && !isMobile ? "expanded" : "collapsed"}
+            variants={containerVariants}
           >
-            <ScrollArea className="flex-1 bg-white h-full">
-              <Outlet />
-            </ScrollArea>
+            <EditorToolbar />
+
+            {/* The Window Frame */}
+            <motion.div
+              className="flex flex-1 flex-col overflow-hidden bg-background shadow-sm border-border"
+              variants={windowVariants}
+            >
+              <ScrollArea className="flex-1 bg-white h-full">
+                <Outlet />
+              </ScrollArea>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </SidebarInset>
-    </SidebarProvider>
+        </SidebarInset>
+      </SidebarProvider>
+    </BlockDropContext>
   );
 }

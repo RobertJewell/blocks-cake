@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
+import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
-import { BlockPickerDialog } from "../editor/content-editor/block-picker-dialog";
+import { BlockPickerDialog } from "../editor/content-editor/blocks/block-picker-dialog";
 import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
 
@@ -18,6 +19,17 @@ export function BlockShell({ block, children }: Props) {
   const addBlock = useEditorStore((s) => s.addBlock);
   const [open, setOpen] = React.useState(false);
   const isEdit = mode === "edit";
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: `drop-after-${block.id}`,
+
+    data: {
+      type: "insert-after",
+      blockId: block.id,
+    },
+
+    disabled: mode !== "add",
+  });
 
   return (
     <div
@@ -50,8 +62,10 @@ export function BlockShell({ block, children }: Props) {
               onSelect={(type) => addBlock(type, block.id)}
             />
             <div
+              ref={setNodeRef}
               className={cn(
                 "w-full group h-32 cursor-pointer rounded-xl text-muted-foreground border-2 backdrop-blur-xs bg-muted border-muted-foreground/50 border-dashed hover:scale-99 flex items-center justify-center transition-all",
+                isOver && "scale-98",
               )}
               onClick={() => setOpen(true)}
             >
@@ -61,7 +75,7 @@ export function BlockShell({ block, children }: Props) {
                 )}
               >
                 <Plus className="size-5" />
-                Insert Block
+                {isOver ? "Drop to add block" : "Insert Block"}
               </span>
             </div>
           </motion.div>

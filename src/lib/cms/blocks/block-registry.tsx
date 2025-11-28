@@ -17,6 +17,7 @@ export const registry = {
 
   richtext: defineBlock({
     name: "Rich Text",
+    category: "Rich Text",
     fields: richTextConfig,
     component: RichTextComponent,
     skeleton: RichTextSkeleton,

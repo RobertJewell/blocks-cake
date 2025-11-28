@@ -65,9 +65,9 @@ export function createSchema<T extends Record<string, FieldDefinition<any>>>(
 
 export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
   name: string;
-  category?: string;
+  category: string;
   fields: T;
-  skeleton: React.ComponentType;
+  skeleton: React.ComponentType<{ className?: string }>;
   component: React.ComponentType<
     z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>
   >;
