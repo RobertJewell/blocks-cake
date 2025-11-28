@@ -1,4 +1,3 @@
-import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { Pencil } from "lucide-react";
@@ -14,8 +13,6 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
   const editedBlocks = useEditorStore((s) => s.editedBlocks);
   const resetBlock = useEditorStore((s) => s.resetBlock);
   const selectedId = useEditorStore((s) => s.selectedBlockId);
-
-  const { setOpen } = useSidebar();
 
   const isEdit = mode === "edit";
   const hasChanges = editedBlocks.has(blockId);
@@ -45,7 +42,6 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
             id={blockId}
             onClick={() => {
               setSelected(blockId);
-              setOpen(true);
             }}
           >
             <Pencil className="size-4" />

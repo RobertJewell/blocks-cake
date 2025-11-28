@@ -1,11 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-} from "@/components/ui/sidebar";
+import { Sidebar } from "@/components/ui/sidebar";
 
 import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
@@ -28,13 +24,10 @@ export function EditorSidebar({
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
-    <Sidebar className="max-h-screen font-editor" {...props}>
-      {/* Pass mode to AnimatePresence.
-        It will be accessible to direct motion children via context,
-        but we also pass it explicitly to BlockEditor for clarity.
-      */}
-
-      <SidebarHeader className="flex px-2 h-14 flex-row justify-between center z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    // Changed to flex column to enforce height constraints
+    <div className="flex h-full w-full flex-col font-editor" {...props}>
+      {/* Header: shrink-0 ensures it never collapses */}
+      <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         {mode === "edit" && currentBlock ? (
           <motion.div
             key="header-detail"
@@ -48,12 +41,12 @@ export function EditorSidebar({
               variant={"ghost"}
               size={"icon"}
               onClick={() => setSelected("")}
-              className="p-2 mx-0 transition-colors"
+              className="mx-0 p-2 transition-colors"
               aria-label="Back to list"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div className="flex gap-3 items-center">
+            <div className="flex items-center gap-3">
               <h3 className="font-medium capitalize">
                 {currentBlock.type} Block
               </h3>
@@ -66,21 +59,22 @@ export function EditorSidebar({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 10 }}
             transition={{ duration: 0.2 }}
-            className="flex justify-between w-full items-center gap-2"
+            className="flex w-full items-center justify-between gap-2"
           >
-            <h2 className="font-medium px-2">Editor</h2>
+            <h2 className="px-2 font-medium">Editor</h2>
           </motion.div>
         )}
-      </SidebarHeader>
+      </div>
 
-      <Separator />
+      <Separator className="shrink-0" />
 
-      <SidebarContent className="overflow-hidden py-4">
-        <ScrollArea className="h-full px-2 max-h-full relative">
+      {/* ScrollArea: flex-1 takes remaining height, min-h-0 allows shrinking */}
+      <ScrollArea className="flex-1 min-h-0">
+        <div className="px-2 py-4 pb-20">
           {mode === "edit" && <BlockEditor mode={animationMode} />}
           {mode === "add" && <BlockLibrary />}
-        </ScrollArea>
-      </SidebarContent>
-    </Sidebar>
+        </div>
+      </ScrollArea>
+    </div>
   );
 }
