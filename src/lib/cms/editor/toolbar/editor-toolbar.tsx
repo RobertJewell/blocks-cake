@@ -34,7 +34,7 @@ export function EditorToolbar() {
   //block order
   const currentOrder = page?.blocks.map((b) => b.id).join("|") ?? "";
   const initialOrder = initialPage?.blocks.map((b) => b.id).join("|") ?? "";
-  const hasReordered = currentOrder !== initialOrder;
+  const hasReordered = initialOrder && currentOrder !== initialOrder;
 
   const showSave = editedBlocks.size > 0 || hasReordered;
 
