@@ -5,6 +5,7 @@ import {
   PageData,
   PropsOf,
 } from "@/lib/cms/blocks/block-registry.types";
+import { registry } from "../blocks/block-registry";
 
 export type ViewMode = "view" | "edit" | "add" | "edit-meta";
 
@@ -71,7 +72,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       const newBlock = {
         id: crypto.randomUUID(),
         type,
-        data: {}, // Initialize with empty data; FormRenderer handles defaults
+        data: registry[type].defaultValues,
       } as Block;
 
       // 2. Find insertion index

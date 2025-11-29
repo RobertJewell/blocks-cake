@@ -71,6 +71,7 @@ export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
   component: React.ComponentType<
     z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>
   >;
+  defaultValues: z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>;
 };
 
 export function defineBlock<T extends Record<string, FieldDefinition<any>>>(

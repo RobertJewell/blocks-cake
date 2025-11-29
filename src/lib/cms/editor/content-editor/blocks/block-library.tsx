@@ -1,4 +1,8 @@
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { BlockType } from "@/lib/cms/blocks/block-registry.types";
 import {
@@ -8,6 +12,7 @@ import {
 import { useBlockCategories } from "@/lib/cms/hooks/blocks/use-block-categories";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
+import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { BlockPreview } from "./block-preview";
@@ -32,13 +37,17 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
     >
       {/* Search Header */}
       <div className="sticky flex flex-col gap-4 top-0 z-10 ">
-        <Input
-          type="text"
-          placeholder="Search blocks..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex h-9 bg-background! w-full rounded-md border border-input px-3 py-1 pl-9 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
-        />
+        <InputGroup className="bg-background">
+          <InputGroupInput
+            type="text"
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search blocks..."
+          />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+        </InputGroup>
+
         <Separator />
       </div>
 
