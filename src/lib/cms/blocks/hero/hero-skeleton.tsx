@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils";
 
 export const HeroSkeleton = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("w-full max-w-72 mx-auto max-h-48 h-48", className)}>
-      <div className="relative flex h-full w-full flex-col items-center overflow-hidden rounded-xl bg-muted/20 p-3">
+    <div className={cn("w-full max-w-xs mx-auto max-h-48 h-48", className)}>
+      <div className="relative flex h-full w-full flex-col items-center overflow-hidden rounded-xl  p-3">
         {/* Mini Heading */}
         <Skeleton className="mt-8 h-4 w-3/4 rounded-sm" />
         {/* Mini Subheading & CTA Area */}

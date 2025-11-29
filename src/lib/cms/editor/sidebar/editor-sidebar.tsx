@@ -2,23 +2,23 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/ui/sidebar";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useAnimationMode } from "../../hooks/useAnimationMode";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockEditor } from "../content-editor/block-editor";
 import { BlockLibrary } from "../content-editor/blocks/block-library";
 
-// 1. Extract the Header to isolate header re-renders
 const SidebarHeader = () => {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
   const mode = useEditorStore((s) => s.mode);
+  const setMode = useEditorStore((s) => s.setMode);
   const page = useEditorStore((s) => s.page);
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
-    <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       {mode === "edit" && currentBlock ? (
         <motion.div
           key="header-detail"
@@ -53,6 +53,13 @@ const SidebarHeader = () => {
           className="flex w-full items-center justify-between gap-2"
         >
           <h2 className="px-2 font-medium">Editor</h2>
+          <Button
+            size={"icon"}
+            variant={"link"}
+            onClick={() => setMode("view")}
+          >
+            <X />
+          </Button>
         </motion.div>
       )}
     </div>
@@ -62,12 +69,8 @@ const SidebarHeader = () => {
 export function EditorSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  // 2. We only need specific selectors here to switch views.
-  // We do NOT subscribe to 'page' here anymore to prevent re-rendering the whole tree on drag.
   const mode = useEditorStore((s) => s.mode);
   const selectedId = useEditorStore((s) => s.selectedBlockId);
-
-  // This hook is fine, assuming it returns a stable string
   const animationMode = useAnimationMode(selectedId);
 
   return (
@@ -78,9 +81,6 @@ export function EditorSidebar({
 
       <ScrollArea className="flex-1 min-h-0">
         <div className="px-2 py-4 pb-20">
-          {/* BlockEditor connects to the store internally.
-             It will handle its own updates.
-          */}
           {mode === "edit" && <BlockEditor mode={animationMode} />}
           {mode === "add" && <BlockLibrary mode={animationMode} />}
         </div>

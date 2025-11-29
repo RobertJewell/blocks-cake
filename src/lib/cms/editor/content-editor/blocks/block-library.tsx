@@ -37,7 +37,7 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
           placeholder="Search blocks..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 pl-9 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
+          className="flex h-9 bg-background! w-full rounded-md border border-input px-3 py-1 pl-9 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground"
         />
         <Separator />
       </div>
@@ -83,7 +83,7 @@ export function DraggableBlockItem({ type }: { type: BlockType }) {
       {...attributes}
       className={cn(
         "cursor-grab active:cursor-grabbing touch-none transition-opacity",
-        isDragging ? "opacity-40" : "opacity-100",
+        isDragging ? "opacity-20" : "opacity-100",
       )}
     >
       <BlockPreview type={type} />

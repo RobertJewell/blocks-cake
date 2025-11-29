@@ -4,7 +4,7 @@ import { AnimationMode } from "../blocks/shared/animations";
 export function useAnimationMode(selectedId?: string | null) {
   const prevIdRef = useRef<string | null>(null);
 
-  let mode: AnimationMode = "push";
+  let mode: AnimationMode = "fade";
 
   const isEditMode = !!selectedId;
   const wasEditMode = !!prevIdRef.current;

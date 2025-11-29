@@ -39,7 +39,7 @@ type EditorState = {
 };
 
 export const useEditorStore = create<EditorState>((set, get) => ({
-  mode: "view",
+  mode: "edit",
   setMode: (mode) => set({ mode }),
 
   // page

@@ -17,7 +17,7 @@ export function BlockPreview({ type, className, ...props }: BlockPreviewProps) {
         // Base Layout
         "relative w-full overflow-hidden rounded-lg border transition-none  duration-200",
         // Colors & Backgrounds
-        "bg-background hover:border-primary/50",
+        "bg-background hover:border-border",
 
         className,
       )}

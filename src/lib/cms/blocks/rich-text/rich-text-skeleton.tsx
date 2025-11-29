@@ -3,7 +3,12 @@ import { cn } from "@/lib/utils";
 
 export const RichTextSkeleton = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("p-2 h-48 flex items-center", className)}>
+    <div
+      className={cn(
+        "p-2 max-w-xs justify-center mx-auto h-48 flex items-center",
+        className,
+      )}
+    >
       <div className="flex w-full items flex-col gap-4 px-8 rounded-lg border border-transparent p-2">
         {/* Heading-like Skeleton */}
         <Skeleton className="h-4 mt-4 w-3/4 max-w-lg rounded-md " />
