@@ -15,11 +15,10 @@ import { BlockPreview } from "./block-preview";
 export interface BlockItemProps extends React.HTMLAttributes<HTMLDivElement> {
   block: Block;
   onSelect?: () => void;
-  isOverlay?: boolean;
 }
 
 export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
-  ({ block, onSelect, isOverlay, style, className, ...props }, ref) => {
+  ({ block, onSelect, style, className, ...props }, ref) => {
     const resetBlock = useEditorStore((s) => s.resetBlock);
     const deleteBlock = useEditorStore((s) => s.deleteBlock);
     const selectedBlockId = useEditorStore((s) => s.selectedBlockId);
@@ -36,10 +35,7 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
         {...props}
         className={cn(
           "group relative outline-none touch-none my-1",
-          // Overlay styles: Pop up, rotate slightly, shadow
-          isOverlay &&
-            "scale-105 rotate-2 shadow-xl z-50 cursor-grabbing opacity-90",
-          !isOverlay && "cursor-grab",
+          "border-none! hover:border-none!",
           className,
         )}
       >
@@ -47,7 +43,8 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
           <ContextMenuTrigger>
             <div
               className={cn(
-                "bg-background rounded-md border transition-colors",
+                "bg-background rounded-md ",
+                "border-none! hover:border-none!",
               )}
             >
               <BlockPreview type={block.type} />

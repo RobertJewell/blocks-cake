@@ -5,17 +5,9 @@ import React from "react";
 
 interface BlockPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   type: BlockType;
-  isActive?: boolean;
-  isDragging?: boolean;
 }
 
-export function BlockPreview({
-  type,
-  isActive,
-  isDragging,
-  className,
-  ...props
-}: BlockPreviewProps) {
+export function BlockPreview({ type, className, ...props }: BlockPreviewProps) {
   const def = registry[type];
   const Skeleton = def?.skeleton;
 
@@ -23,7 +15,7 @@ export function BlockPreview({
     <div
       className={cn(
         // Base Layout
-        "relative w-full overflow-hidden rounded-lg border transition-all duration-200",
+        "relative w-full overflow-hidden rounded-lg border transition-none  duration-200",
         // Colors & Backgrounds
         "bg-background hover:border-primary/50",
 
@@ -35,8 +27,7 @@ export function BlockPreview({
       <div className="absolute left-0 top-0 flex w-full justify-center pointer-events-none">
         <span
           className={cn(
-            "rounded-b-md border border-t-0 bg-gray-50/90 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-gray-500 backdrop-blur-sm select-none",
-            isActive && "bg-primary/10 text-primary border-primary/20",
+            "rounded-b-md border bg-muted border-t-0 px-2 py-0.5 text-xs font-mono capitalize text-foreground select-none",
           )}
         >
           {def?.name || type}

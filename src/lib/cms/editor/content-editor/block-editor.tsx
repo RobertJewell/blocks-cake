@@ -23,7 +23,6 @@ interface BlockEditorProps {
 
 export const BlockEditor = ({ mode }: BlockEditorProps) => {
   const selectedId = useEditorStore((s) => s.selectedBlockId);
-  const setSelected = useEditorStore((s) => s.setSelected);
   const page = useEditorStore((s) => s.page);
   const updateBlock = useEditorStore((s) => s.updateBlock);
   const reorderBlocks = useEditorStore((s) => s.reorderBlocks);

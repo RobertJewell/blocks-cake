@@ -1,19 +1,35 @@
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { BlockType } from "@/lib/cms/blocks/block-registry.types";
+import {
+  AnimationMode,
+  editorVariants,
+} from "@/lib/cms/blocks/shared/animations";
 import { useBlockCategories } from "@/lib/cms/hooks/blocks/use-block-categories";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { BlockPreview } from "./block-preview";
 
-export function BlockLibrary() {
-  const [query, setQuery] = useState("");
+interface BlockEditorProps {
+  mode: AnimationMode;
+}
 
+export function BlockLibrary({ mode }: BlockEditorProps) {
+  const [query, setQuery] = useState("");
   const groups = useBlockCategories(query);
 
   return (
-    <div className="flex h-full flex-col px-2">
+    <motion.div
+      key="list-mode"
+      custom={mode}
+      variants={editorVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      className="flex flex-col gap-2 w-full px-2 min-h-full pb-20"
+    >
       {/* Search Header */}
       <div className="sticky flex flex-col gap-4 top-0 z-10 ">
         <Input
@@ -50,11 +66,9 @@ export function BlockLibrary() {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
-
-// In BlockLibrary.tsx or similar
 
 export function DraggableBlockItem({ type }: { type: BlockType }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({

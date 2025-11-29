@@ -72,6 +72,7 @@ export function BlockDropContext({ children }: { children: ReactNode }) {
       {typeof document !== "undefined" &&
         createPortal(
           <DragOverlay
+            key="addblock"
             dropAnimation={dropAnimation}
             className="cursor-grabbing"
           >

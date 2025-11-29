@@ -59,7 +59,6 @@ export const BlockList = () => {
     setActiveId(event.active.id as string);
   }
 
-  // Live reordering (updates the Preview/Canvas instantly)
   function handleDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id || !page) return;
@@ -76,7 +75,6 @@ export const BlockList = () => {
     const { active, over } = event;
     setActiveId(null);
 
-    // Final sync
     if (over && active.id !== over.id && page) {
       const oldIndex = page.blocks.findIndex((b) => b.id === active.id);
       const newIndex = page.blocks.findIndex((b) => b.id === over.id);
@@ -117,12 +115,7 @@ export const BlockList = () => {
       {typeof document !== "undefined" &&
         createPortal(
           <DragOverlay dropAnimation={dropAnimationConfig}>
-            {activeBlock ? (
-              <BlockItem
-                block={activeBlock}
-                isOverlay // Tells the item to look "lifted"
-              />
-            ) : null}
+            {activeBlock ? <BlockItem block={activeBlock} /> : null}
           </DragOverlay>,
           document.body,
         )}

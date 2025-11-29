@@ -82,7 +82,7 @@ export function EditorSidebar({
              It will handle its own updates.
           */}
           {mode === "edit" && <BlockEditor mode={animationMode} />}
-          {mode === "add" && <BlockLibrary />}
+          {mode === "add" && <BlockLibrary mode={animationMode} />}
         </div>
       </ScrollArea>
     </div>
