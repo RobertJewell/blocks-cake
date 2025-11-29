@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, Variants } from "motion/react";
 import { ReactNode } from "react";
+import { BlockDropContext } from "../content-editor/block-drop-context";
 
 // Configuration
 const SIDEBAR_WIDTH = 280;
@@ -43,32 +44,34 @@ export const DesktopEditorLayout = ({
   children: ReactNode;
 }) => {
   return (
-    <div className="relative bg-background h-svh w-full overflow-hidden  border-border">
-      {/* LAYER 0: The Underlay (Sidebar) */}
-      <div
-        className="h-full border-r border-transparent"
-        style={{ width: SIDEBAR_WIDTH }}
-      >
-        <div className="h-full w-full overflow-hidden">{sidebar}</div>
-      </div>
-
-      {/* LAYER 1: The Overlay (Content Window) */}
-      <motion.div
-        className="absolute z-10 flex flex-col overflow-hidden border border-border "
-        initial="collapsed"
-        animate={isOpen ? "expanded" : "collapsed"}
-        variants={windowVariants}
-      >
-        {/* Header */}
-        {toolbar}
-
-        {/* Scrollable Content */}
-        <div className="flex-1 min-h-0 overflow-hidden bg-white">
-          <ScrollArea className="h-full inset-shadow-2xs">
-            {children}
-          </ScrollArea>
+    <BlockDropContext>
+      <div className="relative bg-background h-svh w-full overflow-hidden border-border">
+        {/* LAYER 0: The Underlay (Sidebar) */}
+        <div
+          className="h-full border-r border-transparent"
+          style={{ width: SIDEBAR_WIDTH }}
+        >
+          <div className="h-full w-full overflow-hidden">{sidebar}</div>
         </div>
-      </motion.div>
-    </div>
+
+        {/* LAYER 1: The Overlay (Content Window) */}
+        <motion.div
+          className="absolute z-10 flex flex-col overflow-hidden border border-border "
+          initial="collapsed"
+          animate={isOpen ? "expanded" : "collapsed"}
+          variants={windowVariants}
+        >
+          {/* Header */}
+          {toolbar}
+
+          {/* Scrollable Content */}
+          <div className="flex-1 min-h-0 overflow-hidden bg-white">
+            <ScrollArea className="h-full inset-shadow-2xs">
+              {children}
+            </ScrollArea>
+          </div>
+        </motion.div>
+      </div>
+    </BlockDropContext>
   );
 };

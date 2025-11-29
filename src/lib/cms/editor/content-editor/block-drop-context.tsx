@@ -11,7 +11,7 @@ import {
 } from "@dnd-kit/core";
 import { ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
-import { SidebarBlockPreview } from "./blocks/block-picker-dialog";
+import { BlockPreview } from "./blocks/block-preview";
 
 export function BlockDropContext({ children }: { children: ReactNode }) {
   const addBlock = useEditorStore((s) => s.addBlock);
@@ -79,8 +79,8 @@ export function BlockDropContext({ children }: { children: ReactNode }) {
             {activeType ? (
               // We force a specific width because in the sidebar it might be constrained,
               // but when dragging we want it to look like a solid card.
-              <div className="w-[300px] shadow-2xl rotate-2 cursor-grabbing opacity-90">
-                <SidebarBlockPreview type={activeType} />
+              <div className="w-[247px] shadow-2xl rotate-1 cursor-grabbing opacity-90">
+                <BlockPreview type={activeType} />
               </div>
             ) : null}
           </DragOverlay>,
