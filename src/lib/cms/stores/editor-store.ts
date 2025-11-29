@@ -157,7 +157,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   initialPage: null,
   setInitialPage: (page) => set({ initialPage: page }),
 
-  setSelected: (id) => set({ selectedBlockId: id }),
+  setSelected: (id) => {
+    set({ selectedBlockId: id });
+    scrollToId(id);
+  },
 }));
 
 // --- Helpers ---
@@ -174,3 +177,17 @@ const mergeData = <T extends Block["type"]>(
   ...b,
   data: { ...b.data, ...patch },
 });
+
+function scrollToId(id?: string) {
+  if (!id) return;
+  setTimeout(() => {
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center", // Scrolls the element to the center of the viewport
+      });
+    }
+  }, 0);
+}
