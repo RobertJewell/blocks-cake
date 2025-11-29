@@ -10,17 +10,12 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 
 import { motion } from "motion/react";
 import { AnimationMode, editorVariants } from "../../blocks/shared/animations";
 import { FormRenderer } from "../form-renderer";
-import { BlockItem } from "./blocks/editible-block-item";
+import { BlockList } from "./blocks/block-list";
 
 interface BlockEditorProps {
   mode: AnimationMode;
@@ -35,7 +30,6 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
 
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
-  // --- DnD Sensors ---
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
@@ -73,7 +67,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
       {currentBlock ? (
         // Form Editor
         <motion.div
-          key={currentBlock.id} // Keying by ID ensures fade triggers on block switch
+          key={currentBlock.id}
           custom={mode}
           variants={editorVariants}
           initial="enter"
@@ -107,24 +101,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
             onDragOver={handleDragOver}
             modifiers={[restrictToVerticalAxis]}
           >
-            <SortableContext
-              items={page?.blocks.map((b) => b.id) || []}
-              strategy={verticalListSortingStrategy}
-            >
-              {page?.blocks.map((block) => (
-                <BlockItem
-                  key={block.id}
-                  block={block}
-                  onSelect={() => setSelected(block.id)}
-                />
-              ))}
-
-              {(!page?.blocks || page.blocks.length === 0) && (
-                <div className="text-center text-muted-foreground py-10">
-                  No blocks yet. Click "+" to add one.
-                </div>
-              )}
-            </SortableContext>
+            <BlockList />
           </DndContext>
         </motion.div>
       )}

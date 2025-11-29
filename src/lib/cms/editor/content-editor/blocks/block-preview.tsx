@@ -26,17 +26,13 @@ export function BlockPreview({
         "relative w-full overflow-hidden rounded-lg border transition-all duration-200",
         // Colors & Backgrounds
         "bg-background hover:border-primary/50",
-        // State: Dragging
-        isDragging &&
-          "scale-[1.02] shadow-2xl ring-2 ring-primary/20 bg-card z-50",
-        // State: Active/Selected
-        isActive && "ring-2 ring-primary border-primary",
+
         className,
       )}
       {...props}
     >
-      {/* Label Badge */}
-      <div className="absolute left-0 top-0 z-20 flex w-full justify-center pointer-events-none">
+      {/* Label Badge - TODO this pops in for some blocks only after the animation finishes */}
+      <div className="absolute left-0 top-0 flex w-full justify-center pointer-events-none">
         <span
           className={cn(
             "rounded-b-md border border-t-0 bg-gray-50/90 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-gray-500 backdrop-blur-sm select-none",

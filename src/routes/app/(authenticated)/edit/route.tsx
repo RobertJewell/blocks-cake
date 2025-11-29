@@ -1,5 +1,4 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BlockDropContext } from "@/lib/cms/editor/content-editor/block-drop-context";
 import { DesktopEditorLayout } from "@/lib/cms/editor/edit-page/edit-layout";
 import { EditorSidebar } from "@/lib/cms/editor/sidebar/editor-sidebar";
 import { EditorToolbar } from "@/lib/cms/editor/toolbar/editor-toolbar";
@@ -16,14 +15,14 @@ function EditLayout() {
   const isSidebarOpen = mode !== "view" && !isMobile;
 
   return (
-    <BlockDropContext>
-      <DesktopEditorLayout
-        isOpen={isSidebarOpen}
-        sidebar={<EditorSidebar />}
-        toolbar={<EditorToolbar />}
-      >
-        <Outlet />
-      </DesktopEditorLayout>
-    </BlockDropContext>
+    // <BlockDropContext>
+    <DesktopEditorLayout
+      isOpen={isSidebarOpen}
+      sidebar={<EditorSidebar />}
+      toolbar={<EditorToolbar />}
+    >
+      <Outlet />
+    </DesktopEditorLayout>
+    // </BlockDropContext>
   );
 }

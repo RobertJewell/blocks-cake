@@ -8,92 +8,85 @@ import {
 import { Block } from "@/lib/cms/blocks/block-registry.types";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
 import { cn } from "@/lib/utils";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { ResetIcon } from "@radix-ui/react-icons";
+import { forwardRef } from "react";
 import { BlockPreview } from "./block-preview";
 
-interface BlockItemProps {
+export interface BlockItemProps extends React.HTMLAttributes<HTMLDivElement> {
   block: Block;
-  onSelect: () => void;
+  onSelect?: () => void;
+  isOverlay?: boolean;
 }
 
-export const BlockItem = ({ block, onSelect }: BlockItemProps) => {
-  const resetBlock = useEditorStore((s) => s.resetBlock);
-  const deleteBlock = useEditorStore((s) => s.deleteBlock);
-  const selectedId = useEditorStore((s) => s.selectedBlockId);
-  const setSelected = useEditorStore((s) => s.setSelected);
-  const editedBlocks = useEditorStore((s) => s.editedBlocks);
+export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
+  ({ block, onSelect, isOverlay, style, className, ...props }, ref) => {
+    const resetBlock = useEditorStore((s) => s.resetBlock);
+    const deleteBlock = useEditorStore((s) => s.deleteBlock);
+    const selectedBlockId = useEditorStore((s) => s.selectedBlockId);
+    const setSelected = useEditorStore((s) => s.setSelected);
+    const editedBlocks = useEditorStore((s) => s.editedBlocks);
 
-  const hasChanges = editedBlocks.has(block.id);
-  const isSelected = selectedId === block.id;
+    const hasChanges = editedBlocks.has(block.id);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: block.id });
+    return (
+      <div
+        ref={ref}
+        style={style}
+        onClick={onSelect}
+        {...props}
+        className={cn(
+          "group relative outline-none touch-none my-1",
+          // Overlay styles: Pop up, rotate slightly, shadow
+          isOverlay &&
+            "scale-105 rotate-2 shadow-xl z-50 cursor-grabbing opacity-90",
+          !isOverlay && "cursor-grab",
+          className,
+        )}
+      >
+        <ContextMenu>
+          <ContextMenuTrigger>
+            <div
+              className={cn(
+                "bg-background rounded-md border transition-colors",
+              )}
+            >
+              <BlockPreview type={block.type} />
+            </div>
+          </ContextMenuTrigger>
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 50 : "auto",
-    position: "relative" as const,
-    touchAction: "none",
-  };
+          <ContextMenuContent className="w-52">
+            <ContextMenuItem
+              inset
+              disabled={!hasChanges}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (selectedBlockId === block.id && setSelected)
+                  setSelected(undefined);
+                resetBlock(block.id);
+              }}
+            >
+              Reset
+              <ContextMenuShortcut>
+                <ResetIcon className="size-3" />
+              </ContextMenuShortcut>
+            </ContextMenuItem>
+            <ContextMenuItem
+              inset
+              onClick={(e) => {
+                e.stopPropagation();
+                if (selectedBlockId === block.id && setSelected)
+                  setSelected(undefined);
+                deleteBlock(block.id);
+              }}
+            >
+              Delete
+              <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
+      </div>
+    );
+  },
+);
 
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      onClick={onSelect}
-      className={cn(
-        "group relative outline-none touch-none", // Add margin if needed
-        isDragging ? "cursor-grabbing" : "cursor-grab",
-      )}
-    >
-      <ContextMenu>
-        <ContextMenuTrigger>
-          <BlockPreview
-            type={block.type}
-            isActive={isSelected}
-            isDragging={isDragging}
-          />
-        </ContextMenuTrigger>
-
-        <ContextMenuContent className="w-52">
-          <ContextMenuItem
-            inset
-            disabled={!hasChanges}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isSelected) setSelected(undefined);
-              resetBlock(block.id);
-            }}
-          >
-            Reset
-            <ContextMenuShortcut>
-              <ResetIcon className="size-3" />
-            </ContextMenuShortcut>
-          </ContextMenuItem>
-          <ContextMenuItem
-            inset
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isSelected) setSelected(undefined);
-              deleteBlock(block.id);
-            }}
-          >
-            Delete
-            <ContextMenuShortcut>⌘]</ContextMenuShortcut>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-    </div>
-  );
-};
+BlockItem.displayName = "BlockItem";

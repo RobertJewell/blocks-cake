@@ -43,10 +43,10 @@ export const DesktopEditorLayout = ({
   children: ReactNode;
 }) => {
   return (
-    <div className="relative h-svh w-full overflow-hidden bg-sidebar border-border">
+    <div className="relative bg-background h-svh w-full overflow-hidden  border-border">
       {/* LAYER 0: The Underlay (Sidebar) */}
       <div
-        className="absolute left-0 top-0 h-full border-r border-transparent"
+        className="h-full border-r border-transparent"
         style={{ width: SIDEBAR_WIDTH }}
       >
         <div className="h-full w-full overflow-hidden">{sidebar}</div>
@@ -54,7 +54,7 @@ export const DesktopEditorLayout = ({
 
       {/* LAYER 1: The Overlay (Content Window) */}
       <motion.div
-        className="absolute z-10 flex flex-col overflow-hidden bg-background border border-border shadow-sm"
+        className="absolute z-10 flex flex-col overflow-hidden border border-border "
         initial="collapsed"
         animate={isOpen ? "expanded" : "collapsed"}
         variants={windowVariants}
@@ -64,7 +64,9 @@ export const DesktopEditorLayout = ({
 
         {/* Scrollable Content */}
         <div className="flex-1 min-h-0 overflow-hidden bg-white">
-          <ScrollArea className="h-full">{children}</ScrollArea>
+          <ScrollArea className="h-full inset-shadow-2xs">
+            {children}
+          </ScrollArea>
         </div>
       </motion.div>
     </div>
