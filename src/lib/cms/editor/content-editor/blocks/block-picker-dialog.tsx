@@ -34,7 +34,7 @@ export function BlockPickerDialog({
           A filterable list of blicks that can be added to the page
         </DialogDescription>
         <Command className="w-full px-0">
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput autoFocus={false} placeholder="Search blocks..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Blocks">

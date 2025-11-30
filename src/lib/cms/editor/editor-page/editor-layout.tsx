@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useIsMobile } from "@/lib/utils/hooks/use-mobile";
 import { motion, Variants } from "motion/react";
 import { ReactNode } from "react";
+import { useIsMobile } from "../../hooks/use-is-mobile";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockDropContext } from "../content-editor/block-drop-context";
 
@@ -33,7 +33,7 @@ const windowVariants: Variants = {
  * Reusable Desktop Layout Wrapper
  * Handles the "Underlay" sidebar and "Overlay" content window animations.
  */
-export const DesktopEditorLayout = ({
+export const EditorLayout = ({
   sidebar,
   toolbar,
   children,

@@ -1,5 +1,5 @@
+import { cn } from "@/components/ui/utils/cn";
 import { Block } from "@/lib/cms/blocks/block-registry.types";
-import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BlockItem } from "./editible-block-item";

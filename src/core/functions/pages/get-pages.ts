@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { drizzleMiddleware } from "@/core/middleware/db-middleware";
+import { drizzleMiddleware } from "@/core/middleware/db/db-middleware";
 import { pages } from "@/core/db/schema";
 
 export const getPages = createServerFn({ method: "GET" })

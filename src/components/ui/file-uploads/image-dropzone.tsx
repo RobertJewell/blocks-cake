@@ -1,5 +1,5 @@
-import { Asset } from "@/lib/cms/blocks/block-builder";
 import { blurUpVariants } from "@/lib/cms/blocks/shared/animations";
+import { Asset } from "@/lib/cms/blocks/shared/assets/asset-schema";
 import { useUploadFiles } from "@better-upload/client";
 import { AnimatePresence, motion } from "motion/react";
 import { AssetPreview } from "./image-preview";

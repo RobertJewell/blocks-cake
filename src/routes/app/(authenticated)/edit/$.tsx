@@ -2,7 +2,8 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
 import { PageData } from "@/lib/cms/blocks/block-registry.types";
-import { EditPage } from "@/lib/cms/editor/edit-page/edit-page";
+import { EditorPageRenderer } from "@/lib/cms/editor/editor-page/editor-page-renderer";
+
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/(authenticated)/edit/$")({
@@ -14,7 +15,7 @@ export const Route = createFileRoute("/app/(authenticated)/edit/$")({
   },
   component: () => {
     const data = Route.useLoaderData();
-    return <EditPage initialPage={data} />;
+    return <EditorPageRenderer initialPage={data} />;
   },
   notFoundComponent: () => <NotFound />,
   errorComponent: DefaultCatchBoundary,

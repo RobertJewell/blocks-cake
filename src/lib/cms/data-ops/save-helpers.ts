@@ -1,6 +1,6 @@
 import { registry } from "@/lib/cms/blocks/block-registry";
-import { Asset } from "@/lib/cms/blocks/block-builder";
 import { Block, BlockType } from "../blocks/block-registry.types";
+import { Asset } from "../blocks/shared/assets/asset-schema";
 
 /**
  * Helper: Converts Runtime Data (Asset Objects) -> DB Data (UUID Strings)

@@ -1,22 +1,22 @@
-import { Link, rootRouteId, useMatch, useRouter } from "@tanstack/react-router";
-import type { ErrorComponentProps } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  RefreshCw,
-  ArrowLeft,
-  Home,
-  ChevronDown,
-  Bug,
-  Mail,
-} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import type { ErrorComponentProps } from "@tanstack/react-router";
+import { Link, rootRouteId, useMatch, useRouter } from "@tanstack/react-router";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Bug,
+  ChevronDown,
+  Home,
+  Mail,
+  RefreshCw,
+} from "lucide-react";
 import { useState } from "react";
 
 export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
@@ -118,7 +118,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
                   <h4 className="text-sm font-medium mb-2">
                     Error Stack Trace:
                   </h4>
-                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words max-h-40 overflow-y-auto">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap wrap-break-word max-h-40 overflow-y-auto">
                     {errorStack}
                   </pre>
                 </div>

@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { toggleVariants } from "@/components/ui/toggle";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils/cn";
 import { CaretDownIcon, LetterCaseCapitalizeIcon } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/react";
 import type { VariantProps } from "class-variance-authority";

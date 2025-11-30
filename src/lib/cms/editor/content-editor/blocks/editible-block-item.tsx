@@ -5,9 +5,9 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { cn } from "@/components/ui/utils/cn";
 import { Block } from "@/lib/cms/blocks/block-registry.types";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
-import { cn } from "@/lib/utils";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { forwardRef } from "react";
 import { BlockPreview } from "./block-preview";

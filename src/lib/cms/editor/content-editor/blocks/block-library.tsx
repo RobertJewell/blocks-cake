@@ -4,13 +4,13 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/components/ui/utils/cn";
 import { BlockType } from "@/lib/cms/blocks/block-registry.types";
 import {
   AnimationMode,
   editorVariants,
 } from "@/lib/cms/blocks/shared/animations";
-import { useBlockCategories } from "@/lib/cms/hooks/blocks/use-block-categories";
-import { cn } from "@/lib/utils";
+import { useBlockCategories } from "@/lib/cms/blocks/shared/use-block-categories";
 import { useDraggable } from "@dnd-kit/core";
 import { Search } from "lucide-react";
 import { motion } from "motion/react";

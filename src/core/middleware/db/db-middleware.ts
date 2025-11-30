@@ -1,5 +1,5 @@
 import { createMiddleware } from "@tanstack/react-start";
-import { getDB } from "../db/drizzle";
+import { getDB } from "../../db/drizzle";
 import { env } from "cloudflare:workers";
 
 export const drizzleMiddleware = createMiddleware().server(

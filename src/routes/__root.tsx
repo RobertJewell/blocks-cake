@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
+import { cn } from "@/components/ui/utils/cn";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
-import { cn } from "@/lib/utils";
-import { seo } from "@/lib/utils/seo";
+import { seo } from "@/lib/cms/utils/seo";
 import appCss from "@/styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";

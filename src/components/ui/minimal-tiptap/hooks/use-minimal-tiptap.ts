@@ -13,10 +13,10 @@ import {
   ResetMarksOnEnter,
   FileHandler,
 } from "../extensions";
-import { cn } from "@/lib/utils";
 import { fileToBase64, getOutput, randomId } from "../utils";
 import { useThrottle } from "../hooks/use-throttle";
 import { toast } from "sonner";
+import { cn } from "../../utils/cn";
 
 export interface UseMinimalTiptapEditorProps extends UseEditorOptions {
   value?: Content;

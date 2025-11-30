@@ -1,4 +1,4 @@
-import { Asset } from "../blocks/block-builder";
+import { Asset } from "../blocks/shared/assets/asset-schema";
 
 // Base URL for assets - this could be pulled from an environment variable
 const ASSET_BASE_URL = "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";

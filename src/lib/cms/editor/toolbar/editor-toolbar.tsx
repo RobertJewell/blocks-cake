@@ -1,11 +1,11 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/lib/utils/hooks/use-mobile";
+import { cn } from "@/components/ui/utils/cn";
 import { Route } from "@/routes/app/(authenticated)/edit/$";
 import { Eye, Pencil, Plus, Save } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { blurUpVariants } from "../../blocks/shared/animations";
+import { useIsMobile } from "../../hooks/use-is-mobile";
 import { useSavePage } from "../../hooks/useSavePage";
 import { useEditorShortcuts } from "../../hooks/useShortcuts";
 import { useEditorStore, ViewMode } from "../../stores/editor-store";

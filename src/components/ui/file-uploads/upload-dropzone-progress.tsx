@@ -1,12 +1,12 @@
 import { Progress } from "@/components/ui/progress";
 import { blurUpVariants } from "@/lib/cms/blocks/shared/animations";
-import { cn } from "@/lib/utils/index";
 import type { UploadHookControl } from "@better-upload/client";
 import { formatBytes } from "@better-upload/client/helpers";
 import { Dot, File, Upload } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useId } from "react";
 import { useDropzone } from "react-dropzone";
+import { cn } from "../utils/cn";
 
 type UploadDropzoneProgressProps = {
   control: UploadHookControl<true>;

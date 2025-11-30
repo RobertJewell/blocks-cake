@@ -1,6 +1,6 @@
-import { Asset } from "@/lib/cms/blocks/block-builder";
+import { Asset } from "@/lib/cms/blocks/shared/assets/asset-schema";
 import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react"; // Assuming you use lucide or similar
+import { X } from "lucide-react";
 import { Button } from "../button";
 
 interface AssetPreviewProps {

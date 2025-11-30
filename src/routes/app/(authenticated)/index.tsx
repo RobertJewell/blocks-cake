@@ -10,16 +10,8 @@ export const Route = createFileRoute("/app/(authenticated)/")({
 });
 
 function RouteComponent() {
-  // const { user } = Route.useRouteContext();
   const pages = Route.useLoaderData();
 
-  // if (user) {
-  //   return (
-  //     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
-  //       <UserConfirmationCard user={user} />
-  //     </div>
-  //   );
-  // }
   return (
     <div className="p-4">
       <h2 className="text-xl">Available pages</h2>

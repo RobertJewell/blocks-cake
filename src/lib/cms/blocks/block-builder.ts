@@ -1,17 +1,10 @@
 import { z } from "zod";
 import React from "react";
-
-export const assetSchema = z.object({
-  id: z.string(),
-  filename: z.string().optional(),
-  url: z.string().optional(),
-  alt: z.string().nullable().optional(),
-  blurhash: z.string().nullable().optional(),
-  width: z.number().default(0),
-  height: z.number().default(0),
-});
-
-export type Asset = z.infer<typeof assetSchema>;
+import {
+  Asset,
+  assetSchema,
+} from "@/lib/cms/blocks/shared/assets/asset-schema";
+import { HydratedBlockProps } from "./shared/assets/asset-type-helpers";
 
 export type FieldTypeMap = {
   text: string;
@@ -77,20 +70,17 @@ export const fields = {
     defaultValue: "",
   }),
 
-  url: (
-    label: string,
-    options?: { optional?: boolean },
-  ): FieldDefinition<"url"> => ({
-    type: "url",
-    label,
-    // By default, we allow empty strings for URLs to be 'optional' in usage,
-    // but the 'optional' flag will strictly allow undefined.
-    schema: applyOptions(
-      z.string().url().optional().or(z.literal("")),
-      options,
-    ),
-    defaultValue: "",
-  }),
+  // url: (
+  //   label: string,
+  //   options?: { optional?: boolean },
+  // ): FieldDefinition<"url"> => ({
+  //   type: "url",
+  //   label,
+  //   // By default, we allow empty strings for URLs to be 'optional' in usage,
+  //   // but the 'optional' flag will strictly allow undefined.
+  //   schema: applyOptions(z.string().optional().or(z.literal("")), options),
+  //   defaultValue: "",
+  // }),
 };
 
 // Converts a map of FieldDefinitions into a Zod Object Schema
@@ -114,15 +104,6 @@ export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
   component: React.ComponentType<HydratedBlockProps<T>>;
   defaultValues: z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>;
 };
-
-type RuntimeValue<T extends FieldDefinition<any>> = T["type"] extends
-  | "image"
-  | "gallery"
-  ? Asset[]
-  : z.infer<T["schema"]>;
-
-export type HydratedBlockProps<T extends Record<string, FieldDefinition<any>>> =
-  { [K in keyof T]: RuntimeValue<T[K]> };
 
 export function defineBlock<T extends Record<string, FieldDefinition<any>>>(
   config: BlockConfig<T>,

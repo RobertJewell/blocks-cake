@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils/cn";
 import { InfoCircledIcon, TrashIcon } from "@radix-ui/react-icons";
 import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 import * as React from "react";

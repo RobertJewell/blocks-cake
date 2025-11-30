@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import type { Content, Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../utils/cn";
 import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu";
 import { MeasuredContainer } from "./components/measured-container";
 import { SectionOne } from "./components/section/one";
@@ -39,26 +39,6 @@ const Toolbar = ({ editor }: { editor: Editor }) => (
         ]}
         mainActionCount={3}
       />
-
-      {/*<Separator orientation="vertical" className="mx-2" />
-
-      <SectionThree editor={editor} />
-
-      <Separator orientation="vertical" className="mx-2" />
-
-      <SectionFour
-        editor={editor}
-        activeActions={["orderedList", "bulletList"]}
-        mainActionCount={0}
-      />
-
-      <Separator orientation="vertical" className="mx-2" />
-
-      <SectionFive
-        editor={editor}
-        activeActions={["codeBlock", "blockquote", "horizontalRule"]}
-        mainActionCount={0}
-      />*/}
     </div>
   </div>
 );

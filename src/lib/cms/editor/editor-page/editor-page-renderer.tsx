@@ -4,7 +4,7 @@ import { BlockShell } from "@/lib/cms/blocks/block-shell";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
 import { motion } from "motion/react";
 
-export function EditPage({ initialPage }: { initialPage: PageData }) {
+export function EditorPageRenderer({ initialPage }: { initialPage: PageData }) {
   const setPage = useEditorStore((s) => s.setPage);
   const setInitialPage = useEditorStore((s) => s.setInitialPage);
   const page = useEditorStore((s) => s.page);

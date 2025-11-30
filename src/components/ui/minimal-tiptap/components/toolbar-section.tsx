@@ -5,12 +5,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { toggleVariants } from "@/components/ui/toggle";
-import { cn } from "@/lib/utils";
-
 import type { Editor } from "@tiptap/react";
 import type { VariantProps } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
+import { cn } from "../../utils/cn";
 import type { FormatAction } from "../types";
 import { getShortcutKey } from "../utils";
 import { ShortcutKey } from "./shortcut-key";

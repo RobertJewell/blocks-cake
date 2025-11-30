@@ -8,7 +8,7 @@ import {
 import { cloudflare } from "@better-upload/server/clients";
 import { authRequestMiddleware } from "@/core/middleware/auth/auth-request-middleware";
 import { env } from "cloudflare:workers";
-import { drizzleMiddleware } from "@/core/middleware/db-middleware";
+import { drizzleMiddleware } from "@/core/middleware/db/db-middleware";
 import { assets } from "@/core/db/schema";
 import { uuidv7 } from "uuidv7";
 

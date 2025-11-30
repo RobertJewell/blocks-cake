@@ -1,6 +1,4 @@
-import * as React from "react";
-import { Link } from "@tanstack/react-router";
-import { Menu, Github, ExternalLink } from "lucide-react";
+import { ThemeToggle } from "@/components/theme";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,9 +8,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/theme";
-
+import { Link } from "@tanstack/react-router";
+import { ExternalLink, Github, Menu } from "lucide-react";
+import * as React from "react";
+import { cn } from "../ui/utils/cn";
 interface NavigationItem {
   label: string;
   href: string;

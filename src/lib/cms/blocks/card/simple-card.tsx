@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { HydratedBlockProps } from "../block-builder";
-
+import { cn } from "@/components/ui/utils/cn";
+import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
 import { simpleCardConfig } from "./simple-card-config";
 
 export type SimpleCardProps = HydratedBlockProps<typeof simpleCardConfig>;
@@ -18,7 +17,7 @@ export const SimpleCard = ({
 }: SimpleCardProps) => {
   console.log(image);
   return (
-    <div className="my-16 overflow-hidden bg-white py-12">
+    <div className="my-4 overflow-hidden bg-white py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
           className={cn(
@@ -66,7 +65,7 @@ export const SimpleCard = ({
                 reverse ? "lg:order-first" : "",
               )}
             >
-              <div className="aspect-square relative w-full overflow-hidden rounded-xl shadow-xl ring-1 ring-gray-400/10">
+              <div className="aspect-square relative w-full overflow-hidden rounded-xl shadow-lg ring-1 ring-gray-400/10">
                 <img
                   alt={image[0].alt || ""}
                   src={image[0].url}

@@ -1,10 +1,8 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
-import { HydratedBlockProps } from "../block-builder";
 import { blurUpVariants } from "../shared/animations";
+import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
 import { heroConfig } from "./hero-config";
 
 export type HeroProps = HydratedBlockProps<typeof heroConfig>;

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/ui/sidebar";
 import { ArrowLeft, X } from "lucide-react";
 import { motion } from "motion/react";
-import { useAnimationMode } from "../../hooks/useAnimationMode";
+import { useAnimationMode } from "../../hooks/use-animation-mode";
 import { useEditorStore } from "../../stores/editor-store";
 import { BlockEditor } from "../content-editor/block-editor";
 import { BlockLibrary } from "../content-editor/blocks/block-library";

@@ -7,7 +7,7 @@ export function useSiteShortcuts() {
   const location = useLocation();
 
   useHotkeys(
-    "meta+e",
+    "alt+e",
     () => {
       const currentPath = location.pathname;
       let targetPath = "";
@@ -30,24 +30,24 @@ export function useEditorShortcuts({ onSave }: { onSave: () => void }) {
   const setMode = useEditorStore((s) => s.setMode);
 
   // Mode switching
-  useHotkeys("meta+1", () => setMode("view"), [setMode], {
+  useHotkeys("alt+1", () => setMode("view"), [setMode], {
     preventDefault: true,
   });
-  useHotkeys("meta+2", () => setMode("edit"), [setMode], {
+  useHotkeys("alt+2", () => setMode("edit"), [setMode], {
     preventDefault: true,
   });
-  useHotkeys("meta+3", () => setMode("add"), [setMode], {
+  useHotkeys("alt+3", () => setMode("add"), [setMode], {
     preventDefault: true,
   });
 
   // Save
-  useHotkeys("meta+s", onSave, {
+  useHotkeys("alt+s", onSave, {
     preventDefault: true,
   });
 
   // Exit Editor (Go to View/Public Route)
   useHotkeys(
-    "shift+meta+e",
+    "shift+alt+e",
     () => {
       const currentPath = location.pathname;
       if (currentPath === "/app/edit/index") {

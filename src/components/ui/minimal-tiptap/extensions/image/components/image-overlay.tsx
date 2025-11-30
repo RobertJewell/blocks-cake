@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils/cn";
 import * as React from "react";
 import { Spinner } from "../../../components/spinner";
 

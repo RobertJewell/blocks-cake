@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils/cn";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { Pencil } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
