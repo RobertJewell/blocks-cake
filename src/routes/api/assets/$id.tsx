@@ -18,20 +18,7 @@ export const Route = createFileRoute("/api/assets/$id")({
           return new Response("Not found", { status: 404 });
         }
 
-        // Helper to construct the full URL
-        const baseUrl = "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
-
-        // Use the variant key if available, otherwise fallback
-        // The ? operator handles null/undefined safely
-        const key = asset.variants?.original?.key || asset.filename;
-        const publicUrl = `${baseUrl}/${key}`;
-
-        const responseData = {
-          ...asset,
-          publicUrl,
-        };
-
-        return new Response(JSON.stringify(responseData), {
+        return new Response(JSON.stringify(asset), {
           headers: {
             "Content-Type": "application/json",
           },

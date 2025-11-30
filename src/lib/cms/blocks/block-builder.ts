@@ -3,7 +3,6 @@ import React from "react";
 
 export const assetSchema = z.object({
   id: z.string(),
-  url: z.string(),
   filename: z.string().optional(),
   alt: z.string().nullable().optional(),
   blurhash: z.string().nullable().optional(),

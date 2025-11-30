@@ -1,3 +1,4 @@
+import { Asset } from "@/lib/cms/blocks/block-builder";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react"; // Assuming you use lucide or similar
 import { Button } from "../button";
@@ -7,6 +8,9 @@ interface AssetPreviewProps {
   onRemove: () => void;
 }
 
+const CLOUDFLARE_R2_BASE_URL =
+  "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
+
 export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
   // Fetch asset details by ID
   const { data: asset, isLoading } = useQuery({
@@ -14,14 +18,12 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
     queryFn: async () => {
       const res = await fetch(`/api/assets/${assetId}`);
       if (!res.ok) throw new Error("Failed to load asset");
-      return res.json() as Promise<{
-        id: string;
-        publicUrl: string;
-        filename: string;
-      }>;
+      return res.json() as Promise<Asset>;
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
+
+  console.log(asset);
 
   if (isLoading) {
     return (
@@ -51,11 +53,10 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
 
   return (
     <div className="relative group aspect-square bg-gray-100 rounded-md overflow-hidden border border-gray-200">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={asset.publicUrl}
-        alt={asset.filename}
-        className="w-full h-full object-cover transition-transform  duration-300"
+        src={`${CLOUDFLARE_R2_BASE_URL}/${asset.id}`}
+        alt={asset.alt || ""}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
 
       {/* Gradient Overlay for text readability */}
