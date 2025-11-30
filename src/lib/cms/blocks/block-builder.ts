@@ -29,40 +29,66 @@ export type FieldDefinition<K extends FieldType> = {
   defaultValue?: FieldTypeMap[K];
 };
 
+const applyOptions = <T extends z.ZodTypeAny>(
+  schema: T,
+  options?: { optional?: boolean },
+) => {
+  return options?.optional ? schema.optional() : schema;
+};
+
 export const fields = {
   text: (
     label: string,
-    options?: { min?: number },
-  ): FieldDefinition<"text"> => ({
-    type: "text",
-    label,
-    schema: options?.min ? z.string().min(options.min) : z.string(),
-    defaultValue: "",
-  }),
+    options?: { min?: number; optional?: boolean },
+  ): FieldDefinition<"text"> => {
+    let schema = z.string();
+    if (options?.min) schema = schema.min(options.min);
+
+    return {
+      type: "text",
+      label,
+      schema: applyOptions(schema, options),
+      defaultValue: "",
+    };
+  },
 
   image: (
     label: string,
-    options?: { max?: number },
-  ): FieldDefinition<"image"> => ({
-    type: "image",
-    label,
-    schema: options?.max
-      ? z.array(assetSchema).max(options?.max)
-      : z.array(assetSchema),
-    defaultValue: [],
-  }),
+    options?: { max?: number; optional?: boolean },
+  ): FieldDefinition<"image"> => {
+    let schema = z.array(assetSchema);
+    if (options?.max) schema = schema.max(options.max);
 
-  richtext: (label: string): FieldDefinition<"richtext"> => ({
+    return {
+      type: "image",
+      label,
+      schema: applyOptions(schema, options),
+      defaultValue: [],
+    };
+  },
+
+  richtext: (
+    label: string,
+    options?: { optional?: boolean },
+  ): FieldDefinition<"richtext"> => ({
     type: "richtext",
     label,
-    schema: z.string(),
+    schema: applyOptions(z.string(), options),
     defaultValue: "",
   }),
 
-  url: (label: string): FieldDefinition<"url"> => ({
+  url: (
+    label: string,
+    options?: { optional?: boolean },
+  ): FieldDefinition<"url"> => ({
     type: "url",
     label,
-    schema: z.url().optional().or(z.literal("")),
+    // By default, we allow empty strings for URLs to be 'optional' in usage,
+    // but the 'optional' flag will strictly allow undefined.
+    schema: applyOptions(
+      z.string().url().optional().or(z.literal("")),
+      options,
+    ),
     defaultValue: "",
   }),
 };

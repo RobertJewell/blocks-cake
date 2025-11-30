@@ -1,4 +1,5 @@
 import { BlockDefinitionResult, defineBlock } from "./block-builder";
+import { SimpleCard, simpleCardConfig, SimpleCardSkeleton } from "./card";
 import { HeroComponent, heroConfig, HeroSkeleton } from "./hero";
 import {
   RichTextComponent,
@@ -35,11 +36,22 @@ export const registry = {
     },
   }),
 
-  // theseshouldmatch: defineBlock({
-  //   fields: richTextConfig,
-  //   component: RichTextComponent,
-  //   skeleton: RichTextSkeleton,
-  // }),
+  simpleCard: defineBlock({
+    name: "Simple card",
+    category: "cards",
+    fields: simpleCardConfig,
+    component: SimpleCard,
+    skeleton: SimpleCardSkeleton,
+    defaultValues: {
+      heading: "Lorem Ipsum",
+      subheading: undefined,
+      description:
+        "Duis pariatur ex fugiat Lorem anim ullamco aliqua amet sit exercitation",
+      ctaText: undefined,
+      ctaHref: undefined,
+      image: undefined,
+    },
+  }),
 } satisfies Record<string, BlockDefinitionResult>;
 
 export type Registry = typeof registry;
