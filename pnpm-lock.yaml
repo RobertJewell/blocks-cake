@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@better-upload/client':
+        specifier: ^3.0.4
+        version: 3.0.4(react@19.2.0)
+      '@better-upload/server':
+        specifier: ^3.0.4
+        version: 3.0.4
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -203,6 +209,9 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
+      react-dropzone:
+        specifier: ^14.3.8
+        version: 14.3.8(react@19.2.0)
       react-hook-form:
         specifier: ^7.66.0
         version: 7.66.0(react@19.2.0)
@@ -455,6 +464,14 @@ packages:
 
   '@better-fetch/fetch@1.1.18':
     resolution: {integrity: sha512-rEFOE1MYIsBmoMJtQbl32PGHHXuG2hDxvEd7rUHE0vCBoFQVSDqaVs9hkZEtHCxRoY+CljXKFCOuJ8uxqw1LcA==}
+
+  '@better-upload/client@3.0.4':
+    resolution: {integrity: sha512-Vhwo3+ir7ClldvI+s5cNTmhhLomfQQuRbR+WGFdXzESkoPYhtPJKFrx/wmK1DAV7PADvvnqxqTalp7hO+EynlQ==}
+    peerDependencies:
+      react: '*'
+
+  '@better-upload/server@3.0.4':
+    resolution: {integrity: sha512-36I8DaiWjTW4LfZ+8W79HOofrH9L5cweS124OZtrFWjyTsvnmqeinpxapUvVgF0AF/FxyBqW6YPxlY14otdyiA==}
 
   '@cloudflare/kv-asset-handler@0.4.0':
     resolution: {integrity: sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==}
@@ -2628,6 +2645,13 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
+  attr-accept@2.2.5:
+    resolution: {integrity: sha512-0bDNnY/u6pPwHDMoF0FieU354oBi0a8rD9FcsLwzcGWbc8KS8KPIi7y+s13OlVY+gMWc/9xEMUgNE6Qm8ZllYQ==}
+    engines: {node: '>=4'}
+
+  aws4fetch@1.0.20:
+    resolution: {integrity: sha512-/djoAN709iY65ETD6LKCtyyEI04XIBP5xVvfmNxsEP0uJB5tyaGBztSryRr4HqMStr9R06PisQE7m9zDTXKu6g==}
+
   babel-dead-code-elimination@1.0.10:
     resolution: {integrity: sha512-DV5bdJZTzZ0zn0DC24v3jD7Mnidh6xhKa4GfKCbq3sfW8kaWhDdZjP3i81geA8T33tdYqWKw4D3fVv0CwEgKVA==}
 
@@ -3103,6 +3127,10 @@ packages:
     resolution: {integrity: sha512-/boTcHZeIAQ2r/tL11voclBHDeP9WPxLt+tyAbVSyyXuUFyh0Tne7gJZTqGbxnvj79TjLdCXLOY7UIPhyG5MTw==}
     engines: {node: '>=6.0.0'}
 
+  fast-xml-parser@5.3.2:
+    resolution: {integrity: sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==}
+    hasBin: true
+
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -3114,6 +3142,10 @@ packages:
 
   fetchdts@0.1.7:
     resolution: {integrity: sha512-YoZjBdafyLIop9lSxXVI33oLD5kN31q4Td+CasofLLYeLXRFeOsuOw0Uo+XNRi9PZlbfdlN2GmRtm4tCEQ9/KA==}
+
+  file-selector@2.1.2:
+    resolution: {integrity: sha512-QgXo+mXTe8ljeqUFaX3QVHc5osSItJ/Km+xpocx0aSqWGMSCf6qYs/VnzZgS864Pjn5iceMRFigeAV7AfTlaig==}
+    engines: {node: '>= 12'}
 
   file-uri-to-path@1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
@@ -3653,6 +3685,12 @@ packages:
     peerDependencies:
       react: ^19.2.0
 
+  react-dropzone@14.3.8:
+    resolution: {integrity: sha512-sBgODnq+lcA4P296DY4wacOZz3JFpD99fp+hb//iBO2HHnyeZU3FwWyXJ6salNpqQdsZrgMrotuko/BdJMV8Ug==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+
   react-hook-form@7.66.0:
     resolution: {integrity: sha512-xXBqsWGKrY46ZqaHDo+ZUYiMUgi8suYu5kdrS20EG8KiL7VRQitEbNjm+UcrDYrNi1YLyfpmAeGjCZYXLT9YBw==}
     engines: {node: '>=18.0.0'}
@@ -3886,6 +3924,9 @@ packages:
 
   strip-literal@3.1.0:
     resolution: {integrity: sha512-8r3mkIM/2+PpjHoOtiAW8Rg3jJLHaV7xPwG+YRGrv6FP0wwk/toTpATxWYOW0BKdWwl82VT2tFYi5DlROa0Mxg==}
+
+  strnum@2.1.1:
+    resolution: {integrity: sha512-7ZvoFTiCnGxBtDqJ//Cu6fWtZtc7Y3x+QOirG15wztbdngGSkht27o2pyGWrVy0b4WAy3jbKmnoK6g5VlVNUUw==}
 
   style-to-js@1.1.21:
     resolution: {integrity: sha512-RjQetxJrrUJLQPHbLku6U/ocGtzyjbJMP9lCNK7Ag0CNh690nSH8woqWH9u16nMjYBAok+i7JO1NP2pOy8IsPQ==}
@@ -4560,6 +4601,16 @@ snapshots:
   '@better-auth/utils@0.3.0': {}
 
   '@better-fetch/fetch@1.1.18': {}
+
+  '@better-upload/client@3.0.4(react@19.2.0)':
+    dependencies:
+      react: 19.2.0
+
+  '@better-upload/server@3.0.4':
+    dependencies:
+      aws4fetch: 1.0.20
+      fast-xml-parser: 5.3.2
+      zod: 4.1.12
 
   '@cloudflare/kv-asset-handler@0.4.0':
     dependencies:
@@ -6667,6 +6718,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  attr-accept@2.2.5: {}
+
+  aws4fetch@1.0.20: {}
+
   babel-dead-code-elimination@1.0.10:
     dependencies:
       '@babel/core': 7.28.5
@@ -7130,11 +7185,19 @@ snapshots:
 
   fast-equals@5.3.3: {}
 
+  fast-xml-parser@5.3.2:
+    dependencies:
+      strnum: 2.1.1
+
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
       picomatch: 4.0.3
 
   fetchdts@0.1.7: {}
+
+  file-selector@2.1.2:
+    dependencies:
+      tslib: 2.8.1
 
   file-uri-to-path@1.0.0:
     optional: true
@@ -7691,6 +7754,13 @@ snapshots:
       react: 19.2.0
       scheduler: 0.27.0
 
+  react-dropzone@14.3.8(react@19.2.0):
+    dependencies:
+      attr-accept: 2.2.5
+      file-selector: 2.1.2
+      prop-types: 15.8.1
+      react: 19.2.0
+
   react-hook-form@7.66.0(react@19.2.0):
     dependencies:
       react: 19.2.0
@@ -7950,6 +8020,8 @@ snapshots:
   strip-literal@3.1.0:
     dependencies:
       js-tokens: 9.0.1
+
+  strnum@2.1.1: {}
 
   style-to-js@1.1.21:
     dependencies:

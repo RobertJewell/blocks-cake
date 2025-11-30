@@ -4,7 +4,7 @@ import { env } from "cloudflare:workers";
 
 export const drizzleMiddleware = createMiddleware().server(
   async ({ context, next }) => {
-    const db = getDB(env.blocks_cake_db);
+    const db = getDB(env.database);
     return await next({ context: { ...context, db } });
   },
 );

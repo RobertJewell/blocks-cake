@@ -1,3 +1,4 @@
+import { ImageDropzone } from "@/components/ui/file-uploads/image-dropzone";
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap";
 import { ControllerRenderProps, Path } from "react-hook-form";
@@ -17,13 +18,8 @@ type FieldRenderers = {
 export const fieldRenderers: FieldRenderers = {
   text: ({ field }) => <Input {...field} />,
   url: ({ field }) => <Input {...field} />,
-
   image: ({ field }) => (
-    <Input
-      type="file"
-      accept="image/*"
-      onChange={(e) => field.onChange(e.target.files?.[0]?.name ?? "")}
-    />
+    <ImageDropzone onChange={(urls) => field.onChange(urls[0])} />
   ),
 
   richtext: ({ field }) => {

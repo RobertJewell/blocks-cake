@@ -3,6 +3,7 @@ import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
+import { cn } from "@/lib/utils";
 import { seo } from "@/lib/utils/seo";
 import appCss from "@/styles.css?url";
 
@@ -86,8 +87,15 @@ function RootComponent() {
 function RootDocument({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAppRoute = location.pathname.startsWith("/app");
+  const mode = useEditorStore((s) => s.mode);
+
   return (
-    <html className={isAppRoute ? "overflow-hidden" : ""}>
+    <html
+      className={cn(
+        "bg-white",
+        isAppRoute && mode !== "view" ? "overflow-hidden " : "",
+      )}
+    >
       <head>
         <HeadContent />
       </head>

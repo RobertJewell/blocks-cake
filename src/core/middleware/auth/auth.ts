@@ -5,7 +5,7 @@ import { reactStartCookies } from "better-auth/react-start";
 import { env } from "cloudflare:workers";
 
 export function createAuthInstance() {
-  const db = getDB(env.blocks_cake_db);
+  const db = getDB(env.database);
 
   return betterAuth({
     database: drizzleAdapter(db, { provider: "sqlite" }),

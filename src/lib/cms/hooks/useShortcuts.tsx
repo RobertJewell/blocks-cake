@@ -25,7 +25,11 @@ export function useSiteShortcuts() {
 }
 
 export function useEditorShortcuts({ onSave }: { onSave: () => void }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const setMode = useEditorStore((s) => s.setMode);
+
+  // Mode switching
   useHotkeys("meta+1", () => setMode("view"), [setMode], {
     preventDefault: true,
   });
@@ -35,7 +39,26 @@ export function useEditorShortcuts({ onSave }: { onSave: () => void }) {
   useHotkeys("meta+3", () => setMode("add"), [setMode], {
     preventDefault: true,
   });
+
+  // Save
   useHotkeys("meta+s", onSave, {
     preventDefault: true,
   });
+
+  // Exit Editor (Go to View/Public Route)
+  useHotkeys(
+    "shift+meta+e",
+    () => {
+      const currentPath = location.pathname;
+      if (currentPath === "/app/edit/index") {
+        navigate({ to: "/" });
+        return;
+      }
+      // Remove the /app/edit prefix
+      const targetPath = currentPath.replace("/app/edit", "");
+      navigate({ to: targetPath || "/" });
+    },
+    [location.pathname],
+    { preventDefault: true },
+  );
 }

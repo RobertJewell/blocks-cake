@@ -14,6 +14,7 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRegisterRouteImport } from './routes/app/register'
 import { Route as AppLoginRouteImport } from './routes/app/login'
+import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as AppauthenticatedRouteRouteImport } from './routes/app/(authenticated)/route'
 import { Route as AppauthenticatedIndexRouteImport } from './routes/app/(authenticated)/index'
 import { Route as ApiPagesSplatRouteImport } from './routes/api/pages/$'
@@ -45,6 +46,11 @@ const AppLoginRoute = AppLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AppRouteRoute,
+} as any)
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppauthenticatedRouteRoute = AppauthenticatedRouteRouteImport.update({
   id: '/(authenticated)',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppauthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
+  '/api/upload': typeof ApiUploadRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/edit': typeof AppauthenticatedEditRouteRouteWithChildren
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppauthenticatedIndexRoute
   '/$': typeof SplatRoute
+  '/api/upload': typeof ApiUploadRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/edit': typeof AppauthenticatedEditRouteRouteWithChildren
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/app/(authenticated)': typeof AppauthenticatedRouteRouteWithChildren
+  '/api/upload': typeof ApiUploadRoute
   '/app/login': typeof AppLoginRoute
   '/app/register': typeof AppRegisterRoute
   '/app/(authenticated)/edit': typeof AppauthenticatedEditRouteRouteWithChildren
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/$'
+    | '/api/upload'
     | '/app/login'
     | '/app/register'
     | '/app/edit'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/$'
+    | '/api/upload'
     | '/app/login'
     | '/app/register'
     | '/app/edit'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/$'
     | '/app/(authenticated)'
+    | '/api/upload'
     | '/app/login'
     | '/app/register'
     | '/app/(authenticated)/edit'
@@ -158,6 +170,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
+  ApiUploadRoute: typeof ApiUploadRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiPagesSplatRoute: typeof ApiPagesSplatRoute
 }
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/login'
       preLoaderRoute: typeof AppLoginRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/(authenticated)': {
       id: '/app/(authenticated)'
@@ -293,6 +313,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
   SplatRoute: SplatRoute,
+  ApiUploadRoute: ApiUploadRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiPagesSplatRoute: ApiPagesSplatRoute,
 }

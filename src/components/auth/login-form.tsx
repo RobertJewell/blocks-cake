@@ -1,7 +1,8 @@
 import { authClient } from "@/core/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "lucide-react";
+
+import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Button } from "../ui/button";
@@ -97,10 +98,7 @@ export const LoginForm = () => {
 
             <FieldDescription className="text-center">
               Don&apos;t have an account?{" "}
-              <Link
-                to="/auth/register"
-                className="underline underline-offset-4"
-              >
+              <Link to="/app/register" className="underline underline-offset-4">
                 Sign up
               </Link>
             </FieldDescription>
