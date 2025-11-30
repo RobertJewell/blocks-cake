@@ -1,10 +1,22 @@
 import { z } from "zod";
-import React, { ReactNode } from "react";
+import React from "react";
+
+export const assetSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  filename: z.string().optional(),
+  alt: z.string().nullable().optional(),
+  blurhash: z.string().nullable().optional(),
+  width: z.number().default(0),
+  height: z.number().default(0),
+});
+
+export type Asset = z.infer<typeof assetSchema>;
 
 export type FieldTypeMap = {
   text: string;
   richtext: string;
-  image: string;
+  image: Asset[];
   url: string;
 };
 
@@ -28,11 +40,16 @@ export const fields = {
     defaultValue: "",
   }),
 
-  image: (label: string): FieldDefinition<"image"> => ({
+  image: (
+    label: string,
+    options?: { max?: number },
+  ): FieldDefinition<"image"> => ({
     type: "image",
     label,
-    schema: z.url().optional().or(z.literal("")),
-    defaultValue: "",
+    schema: options?.max
+      ? z.array(assetSchema).max(options?.max)
+      : z.array(assetSchema),
+    defaultValue: [],
   }),
 
   richtext: (label: string): FieldDefinition<"richtext"> => ({
@@ -68,11 +85,18 @@ export type BlockConfig<T extends Record<string, FieldDefinition<any>>> = {
   category: string;
   fields: T;
   skeleton: React.ComponentType<{ className?: string }>;
-  component: React.ComponentType<
-    z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>
-  >;
+  component: React.ComponentType<HydratedBlockProps<T>>;
   defaultValues: z.infer<z.ZodObject<{ [K in keyof T]: T[K]["schema"] }>>;
 };
+
+type RuntimeValue<T extends FieldDefinition<any>> = T["type"] extends
+  | "image"
+  | "gallery"
+  ? Asset[]
+  : z.infer<T["schema"]>;
+
+export type HydratedBlockProps<T extends Record<string, FieldDefinition<any>>> =
+  { [K in keyof T]: RuntimeValue<T[K]> };
 
 export function defineBlock<T extends Record<string, FieldDefinition<any>>>(
   config: BlockConfig<T>,

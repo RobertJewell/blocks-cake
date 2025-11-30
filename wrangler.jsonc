@@ -8,6 +8,7 @@
     "BETTER_AUTH_URL": "https://blocks-cakes.rjewellaudio.workers.dev",
     "CLOUDFLARE_ACCOUNT_ID": "bcfacdd0f09674f8cae0297886b0ea76",
     "CLOUDFLARE_D1_DATABASE_ID": "29d1f84b-e2bc-43b1-bde2-1ee5b0358ab8",
+    "CLOUDFLARE_R2_BASE_URL": "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev",
   },
   "d1_databases": [
     {

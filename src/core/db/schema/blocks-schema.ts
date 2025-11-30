@@ -1,6 +1,8 @@
 import { Block } from "@/lib/cms/blocks/block-registry.types";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { pageBlocks } from "./pages-schema";
+import { assetUsages } from "./assets-schema";
 
 export const blocks = sqliteTable("blocks", {
   id: text("id").primaryKey(),
@@ -11,3 +13,11 @@ export const blocks = sqliteTable("blocks", {
     .$onUpdate(() => new Date())
     .default(sql`(unixepoch())`),
 });
+
+export const blocksRelations = relations(blocks, ({ many }) => ({
+  // The block is used on many pages
+  pages: many(pageBlocks),
+
+  // The block uses many assets
+  usages: many(assetUsages),
+}));

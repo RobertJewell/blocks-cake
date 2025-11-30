@@ -1,7 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { drizzleMiddleware } from "@/core/middleware/db-middleware";
-import { loadPageData } from "@/lib/cms/loaders/slug";
-import { isValidSlugPath } from "@/lib/utils";
 import { pages } from "@/core/db/schema";
 
 export const getPages = createServerFn({ method: "GET" })

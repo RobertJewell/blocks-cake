@@ -19,7 +19,11 @@ export const fieldRenderers: FieldRenderers = {
   text: ({ field }) => <Input {...field} />,
   url: ({ field }) => <Input {...field} />,
   image: ({ field }) => (
-    <ImageDropzone onChange={(urls) => field.onChange(urls[0])} />
+    <ImageDropzone
+      maxFiles={1}
+      value={field.value ? field.value : []}
+      onChange={(imageIds) => field.onChange(imageIds || [])}
+    />
   ),
 
   richtext: ({ field }) => {

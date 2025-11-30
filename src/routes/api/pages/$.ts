@@ -1,15 +1,12 @@
 import { drizzleMiddleware } from "@/core/middleware/db-middleware";
 import { authRequestMiddleware } from "@/core/middleware/auth/auth-request-middleware";
-import { pages, blocks, pageBlocks } from "@/core/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { pages, blocks, pageBlocks, assetUsages } from "@/core/db/schema";
+import { eq, inArray, sql } from "drizzle-orm";
 import { json } from "@tanstack/react-start";
 import { isValidSlugPath } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { loadPageData } from "@/lib/cms/loaders/slug";
-import { PageData, Block } from "@/lib/cms/blocks/block-registry.types";
-import { registry } from "@/lib/cms/blocks/block-registry";
-
-type UpdatePagePayload = PageData;
+import { loadPageData } from "@/lib/cms/data-conversion/slug";
+import { processBlocksForSave } from "@/lib/cms/data-conversion/save-helpers";
 
 export const Route = createFileRoute("/api/pages/$")({
   server: {
@@ -37,16 +34,21 @@ export const Route = createFileRoute("/api/pages/$")({
         const { auth, db } = context;
         const slug = params._splat;
 
-        // Auth & Validation
+        // 1. Auth & Validation
         const session = await auth.api.getSession(request);
         if (!session?.user)
           return new Response("Unauthorized", { status: 401 });
         if (!slug || !isValidSlugPath(slug))
           return new Response("Invalid slug", { status: 400 });
 
-        const body = (await request.json()) as UpdatePagePayload;
+        // 2. Parse Body
+        const body = (await request.json()) as {
+          title?: string;
+          status?: "draft" | "published";
+          blocks: any[];
+        };
 
-        // PRE-FETCH: We need the Page ID
+        // 3. Find Page ID
         const existingPage = await db.query.pages.findFirst({
           where: eq(pages.slug, slug),
           columns: { id: true },
@@ -56,10 +58,15 @@ export const Route = createFileRoute("/api/pages/$")({
           return new Response("Page not found", { status: 404 });
         }
 
-        // PREPARE BATCH
+        // 4. Process Blocks (Dehydrate & Validate)
+        // This helper handles all the logic we moved out
+        const { validBlocks, usageRecords, blockIdsToDeleteUsagesFor } =
+          processBlocksForSave(body.blocks);
+
+        // 5. Prepare Database Batch
         const batchStatements: any[] = [];
 
-        // Update Page Metadata
+        // A. Update Page Metadata
         batchStatements.push(
           db
             .update(pages)
@@ -71,42 +78,12 @@ export const Route = createFileRoute("/api/pages/$")({
             .where(eq(pages.id, existingPage.id)),
         );
 
-        // Upsert Blocks (With Zod Validation)
-        if (body.blocks.length > 0) {
-          const blockValues = body.blocks.map((b) => {
-            // 1. Get the definition for this block type
-            const blockDef = registry[b.type];
-
-            if (!blockDef) {
-              throw new Error(`Unknown block type: ${b.type}`);
-            }
-
-            // Validate the data payload using the block's Zod schema
-            // This ensures 'b.data' matches exactly what the block expects
-            const parseResult = blockDef.schema.safeParse(b.data);
-
-            if (!parseResult.success) {
-              console.error(
-                `Validation failed for block ${b.id} (${b.type}):`,
-                parseResult.error,
-              );
-              throw new Error(`Invalid data for block type: ${b.type}`);
-            }
-
-            return {
-              id: b.id,
-              type: b.type,
-              // Safe Cast: We successfully parsed it, so we know it's valid.
-              // We cast to 'unknown' then 'Block' to satisfy Drizzle's union type.
-              data: parseResult.data as unknown as Block["data"],
-              updatedAt: new Date(),
-            };
-          });
-
+        // B. Upsert Blocks
+        if (validBlocks.length > 0) {
           batchStatements.push(
             db
               .insert(blocks)
-              .values(blockValues)
+              .values(validBlocks)
               .onConflictDoUpdate({
                 target: blocks.id,
                 set: {
@@ -117,14 +94,24 @@ export const Route = createFileRoute("/api/pages/$")({
           );
         }
 
-        // C. "Nuke" old links
+        // C. Clean up Old Links
+        // 1. Unlink blocks from this page
         batchStatements.push(
           db.delete(pageBlocks).where(eq(pageBlocks.pageId, existingPage.id)),
         );
 
-        // D. Insert new links
-        if (body.blocks.length > 0) {
-          const newLinks = body.blocks.map((b, index) => ({
+        // 2. Clear old asset usages for the blocks we are touching
+        if (blockIdsToDeleteUsagesFor.length > 0) {
+          batchStatements.push(
+            db
+              .delete(assetUsages)
+              .where(inArray(assetUsages.blockId, blockIdsToDeleteUsagesFor)),
+          );
+        }
+
+        // D. Insert New Page Links (Restore Order)
+        if (validBlocks.length > 0) {
+          const newLinks = validBlocks.map((b, index) => ({
             pageId: existingPage.id,
             blockId: b.id,
             order: index,
@@ -133,7 +120,12 @@ export const Route = createFileRoute("/api/pages/$")({
           batchStatements.push(db.insert(pageBlocks).values(newLinks));
         }
 
-        // 4. EXECUTE
+        // E. Insert New Asset Usages
+        if (usageRecords.length > 0) {
+          batchStatements.push(db.insert(assetUsages).values(usageRecords));
+        }
+
+        // 6. Execute Transaction
         if (batchStatements.length > 0) {
           await db.batch(batchStatements as [any, ...any[]]);
         }

@@ -5,7 +5,7 @@ import {
   uniqueIndex,
   index,
 } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { blocks } from "./blocks-schema";
 import { Status } from "@/lib/cms/blocks/block-registry.types";
 
@@ -46,3 +46,18 @@ export const pageBlocks = sqliteTable(
     index("page_blocks_order_idx").on(table.order),
   ],
 );
+
+export const pagesRelations = relations(pages, ({ many }) => ({
+  pageBlocks: many(pageBlocks),
+}));
+
+export const pageBlocksRelations = relations(pageBlocks, ({ one }) => ({
+  page: one(pages, {
+    fields: [pageBlocks.pageId],
+    references: [pages.id],
+  }),
+  block: one(blocks, {
+    fields: [pageBlocks.blockId],
+    references: [blocks.id],
+  }),
+}));

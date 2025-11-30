@@ -5,8 +5,8 @@ export const heroConfig = {
   subheading: fields.text("Subheading"),
   ctaText: fields.text("Call to Action Text"),
   ctaHref: fields.text("Link URL"),
-  leftImage: fields.image("Left Image"),
-  rightImage: fields.image("Right Image"),
+  leftImage: fields.image("Left Image", { max: 1 }),
+  rightImage: fields.image("Right Image", { max: 1 }),
 };
 
 export const HeroSchema = createSchema(heroConfig);

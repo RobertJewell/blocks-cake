@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
-import z from "zod";
+import { HydratedBlockProps } from "../block-builder";
 import { blurUpVariants } from "../shared/animations";
-import { HeroSchema } from "./hero-config";
+import { heroConfig } from "./hero-config";
 
-export type HeroProps = z.infer<typeof HeroSchema>;
+export type HeroProps = HydratedBlockProps<typeof heroConfig>;
 
 export const HeroComponent = ({
   heading,
@@ -88,7 +88,7 @@ export const HeroComponent = ({
 
         <div className="absolute bottom-0 mx-auto w-full max-w-4xl px-4">
           {/* Left Image */}
-          {leftImage && (
+          {leftImage?.[0] && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -97,7 +97,7 @@ export const HeroComponent = ({
               className="absolute top-1/2 left-1/2 z-10 size-56 -translate-x-1/2 -translate-y-full md:size-80 [@media(max-height:48rem)]:left-0 [@media(max-height:48rem)]:translate-x-0"
             >
               <img
-                src={leftImage}
+                src={leftImage[0].url}
                 alt="Left Image"
                 className="rounded-2xl object-cover"
               />
@@ -105,7 +105,7 @@ export const HeroComponent = ({
           )}
 
           {/* Right Image */}
-          {rightImage && (
+          {rightImage?.[0] && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -114,7 +114,7 @@ export const HeroComponent = ({
               className="absolute top-1/2 left-1/2 size-56 -translate-x-1/2 -translate-y-full md:size-80 [@media(max-height:48rem)]:right-0 [@media(max-height:48rem)]:left-auto [@media(max-height:48rem)]:translate-x-0"
             >
               <img
-                src={rightImage}
+                src={rightImage[0].url}
                 alt="Right Image"
                 className="rounded-2xl object-cover"
               />
