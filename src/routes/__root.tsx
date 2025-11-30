@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
-import { ThemeProvider } from "@/components/theme";
 import { useEditorStore } from "@/lib/cms/stores/editor-store";
 import { cn } from "@/lib/utils";
 import { seo } from "@/lib/utils/seo";
@@ -72,14 +71,14 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <ThemeProvider
+      {/*<ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
+        defaultTheme="light"
+        // enableSystem
         disableTransitionOnChange={false}
-      >
-        <Outlet />
-      </ThemeProvider>
+      >*/}
+      <Outlet />
+      {/*</ThemeProvider>*/}
     </RootDocument>
   );
 }

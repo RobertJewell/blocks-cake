@@ -61,7 +61,7 @@ function RegisterPage() {
       return res;
     },
     onSuccess: () => {
-      window.location.href = "/login";
+      window.location.href = "/app";
     },
   });
 
@@ -75,7 +75,7 @@ function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
+    <div className="flex min-h-screen bg-background items-center justify-center p-4">
       <RegisterForm
         form={form}
         registerMutation={registerMutation}
