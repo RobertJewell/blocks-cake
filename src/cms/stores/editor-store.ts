@@ -41,7 +41,7 @@ type EditorState = {
 
 export const useEditorStore = create<EditorState>((set, get) => ({
   mode: "view",
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) => set({ mode, selectedBlockId: undefined }),
 
   // page
   page: null,
