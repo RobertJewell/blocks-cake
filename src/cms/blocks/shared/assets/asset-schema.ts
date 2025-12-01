@@ -8,21 +8,25 @@ const imageVariantSchema = z.object({
   size: z.number(),
 });
 
-export const assetVariants = z.object({
+export const assetVariantsSchema = z.object({
   sm: imageVariantSchema.optional(),
   md: imageVariantSchema.optional(),
   lg: imageVariantSchema.optional(),
   xl: imageVariantSchema.optional(),
+  original: imageVariantSchema,
 });
 
 export const assetSchema = z.object({
   id: z.string(),
-  filename: z.string().optional(),
-  variants: assetVariants,
-  alt: z.string().nullable().optional(),
-  blurhash: z.string().nullable().optional(),
-  width: z.number().default(0),
-  height: z.number().default(0),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  filename: z.string(),
+  mimeType: z.string(),
+  isOptimized: z.boolean(),
+  variants: assetVariantsSchema.nullable(),
+  blurhash: z.string().nullable(),
+  altText: z.string().nullable(),
+  tags: z.array(z.string()).nullable(),
 });
 
 export type Asset = typeof assets.$inferSelect;

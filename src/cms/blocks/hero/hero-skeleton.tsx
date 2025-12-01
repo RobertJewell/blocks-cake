@@ -15,7 +15,7 @@ export const HeroSkeleton = ({ className }: { className?: string }) => {
 
         {/* Mini Images Area */}
         <div className="absolute bottom-0 w-full h-full pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 z-10 size-20 -translate-x-[120%] translate-y-[20%]">
+          <div className="absolute bottom-0 left-1/2 size-20 -translate-x-[120%] translate-y-[20%]">
             <Skeleton className="h-full w-full -rotate-6 rounded-lg " />
           </div>
 

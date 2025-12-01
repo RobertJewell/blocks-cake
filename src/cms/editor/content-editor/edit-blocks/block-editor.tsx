@@ -71,7 +71,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="h-full flex flex-col"
+          className="h-full flex flex-col py-4"
         >
           <FormRenderer
             key={currentBlock.id}
@@ -90,7 +90,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="flex flex-col gap-2 w-full px-2 min-h-full pb-20"
+          className="flex flex-col gap-2 w-full p-2 min-h-full pb-20"
         >
           <DndContext
             sensors={sensors}

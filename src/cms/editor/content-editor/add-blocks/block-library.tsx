@@ -6,7 +6,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/components/ui/utils/cn";
 import { useDraggable } from "@dnd-kit/core";
 import { Search } from "lucide-react";
@@ -30,32 +29,34 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
       initial="enter"
       animate="center"
       exit="exit"
-      className="flex flex-col gap-2 w-full px-2 min-h-full pb-20"
+      className="flex flex-col w-full px-2 min-h-full pb-20"
     >
       {/* Search Header */}
-      <div className="sticky flex flex-col gap-4 top-0 z-10 ">
-        <InputGroup className="bg-background">
-          <InputGroupInput
-            type="text"
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search blocks..."
-          />
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-        </InputGroup>
+      <div className="sticky flex flex-col top-0 z-10 ">
+        <div className="bg-sidebar py-2">
+          <InputGroup className="bg-background">
+            <InputGroupInput
+              type="text"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search blocks..."
+            />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
 
-        <Separator />
+        <div className="h-6 w-full bg-linear-to-b from-sidebar to bg-transparent"></div>
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto  pb-4">
+      <div className="flex-1 overflow-y-auto pb-4">
         {groups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center text-sm text-muted-foreground">
             <p>No blocks found</p>
           </div>
         ) : (
-          <div className="space-y-6 pt-4">
+          <div className="space-y-6">
             {groups.map((group) => (
               <div key={group.category}>
                 <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">

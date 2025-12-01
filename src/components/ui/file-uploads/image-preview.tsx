@@ -1,5 +1,5 @@
+import { AssetImage } from "@/cms/blocks/shared/assets/asset-image";
 import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
-import { AssetImage } from "@/cms/blocks/shared/assets/image";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Button } from "../button";

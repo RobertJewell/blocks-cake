@@ -80,7 +80,7 @@ export function EditorSidebar({
       <Separator className="shrink-0" />
 
       <ScrollArea className="flex-1 min-h-0">
-        <div className="px-2 py-4 pb-20">
+        <div className="px-2  pb-20">
           {mode === "edit" && <BlockEditor mode={animationMode} />}
           {mode === "add" && <BlockLibrary mode={animationMode} />}
         </div>
