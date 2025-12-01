@@ -21,8 +21,6 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
-  console.log(asset);
-
   if (isLoading) {
     return (
       <div className="aspect-square bg-gray-50 animate-pulse rounded-md flex items-center justify-center border border-gray-100">

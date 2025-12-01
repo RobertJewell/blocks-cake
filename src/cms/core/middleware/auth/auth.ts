@@ -1,8 +1,8 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { reactStartCookies } from "better-auth/react-start";
 import { env } from "cloudflare:workers";
 import { getDB } from "../../db/drizzle";
+import { betterAuth } from "better-auth";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export function createAuthInstance() {
   const db = getDB(env.database);
@@ -10,6 +10,6 @@ export function createAuthInstance() {
   return betterAuth({
     database: drizzleAdapter(db, { provider: "sqlite" }),
     emailAndPassword: { enabled: true },
-    plugins: [reactStartCookies()],
+    plugins: [tanstackStartCookies()],
   });
 }

@@ -15,11 +15,10 @@ export const AssetImage: React.FC<AssetImageProps> = ({
   style,
   ...props
 }) => {
-  console.log(asset);
   if (!asset.variants) return null;
   // if (!process.env.CLOUDFLARE_R2_URL) return null;
   const variant = asset.variants[preferredSize] ?? asset.variants.original;
-  console.log({ variant });
+
   if (!variant) return null;
   const src = `${"https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev"}/${variant.key}`;
 
