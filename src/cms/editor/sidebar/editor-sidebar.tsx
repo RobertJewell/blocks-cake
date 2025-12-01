@@ -26,21 +26,23 @@ const SidebarHeader = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -10 }}
           transition={{ duration: 0.2 }}
-          className="flex w-full items-center gap-2"
+          className="flex w-full items-center justify-between gap-2"
         >
-          <Button
-            variant={"ghost"}
-            size={"icon"}
-            onClick={() => setSelected("")}
-            className="mx-0 p-2 transition-colors"
-            aria-label="Back to list"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="flex items-center gap-3">
-            <h3 className="font-medium capitalize">
-              {currentBlock.type} Block
-            </h3>
+          <div className="flex w-full items-center gap-2">
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              onClick={() => setSelected("")}
+              className="mx-0 p-2 transition-colors"
+              aria-label="Back to list"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div className="flex items-center gap-3">
+              <h3 className="font-medium capitalize">
+                {currentBlock.type} Block
+              </h3>
+            </div>
           </div>
         </motion.div>
       ) : (
@@ -53,15 +55,11 @@ const SidebarHeader = () => {
           className="flex w-full items-center justify-between gap-2"
         >
           <h2 className="px-2 font-medium">Editor</h2>
-          <Button
-            size={"icon"}
-            variant={"link"}
-            onClick={() => setMode("view")}
-          >
-            <X />
-          </Button>
         </motion.div>
       )}
+      <Button size={"icon"} variant={"ghost"} onClick={() => setMode("view")}>
+        <X />
+      </Button>
     </div>
   );
 };
