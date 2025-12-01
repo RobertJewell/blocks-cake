@@ -1,4 +1,4 @@
-import { loadPageData } from "@/cms/lib/data-ops/slug";
+import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 import { createServerFn } from "@tanstack/react-start";
 import { drizzleMiddleware } from "../../middleware/db/db-middleware";

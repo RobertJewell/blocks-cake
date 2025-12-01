@@ -3,6 +3,7 @@ import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef } from "react";
 import { blurUpVariants } from "../shared/animations";
 import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
+import { AssetImage } from "../shared/assets/image";
 import { heroConfig } from "./hero-config";
 
 export type HeroProps = HydratedBlockProps<typeof heroConfig>;
@@ -94,9 +95,8 @@ export const HeroComponent = ({
               style={{ x: leftImageX, rotate: leftImageRotate }}
               className="absolute top-1/2 left-1/2 z-10 size-56 -translate-x-1/2 -translate-y-full md:size-80 [@media(max-height:48rem)]:left-0 [@media(max-height:48rem)]:translate-x-0"
             >
-              <img
-                src={leftImage[0].url}
-                alt="Left Image"
+              <AssetImage
+                asset={leftImage[0]}
                 className="rounded-2xl object-cover"
               />
             </motion.div>
@@ -111,9 +111,8 @@ export const HeroComponent = ({
               style={{ x: rightImageX, rotate: rightImageRotate }}
               className="absolute top-1/2 left-1/2 size-56 -translate-x-1/2 -translate-y-full md:size-80 [@media(max-height:48rem)]:right-0 [@media(max-height:48rem)]:left-auto [@media(max-height:48rem)]:translate-x-0"
             >
-              <img
-                src={rightImage[0].url}
-                alt="Right Image"
+              <AssetImage
+                asset={rightImage[0]}
                 className="rounded-2xl object-cover"
               />
             </motion.div>

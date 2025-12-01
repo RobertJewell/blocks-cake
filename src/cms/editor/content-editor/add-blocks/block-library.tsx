@@ -1,6 +1,6 @@
 import { BlockType } from "@/cms/blocks/block-registry.types";
 import { AnimationMode, editorVariants } from "@/cms/blocks/shared/animations";
-import { useBlockCategories } from "@/cms/blocks/shared/use-block-categories";
+import { useBlockCategories } from "@/cms/blocks/shared/hooks/use-block-categories";
 import {
   InputGroup,
   InputGroupAddon,

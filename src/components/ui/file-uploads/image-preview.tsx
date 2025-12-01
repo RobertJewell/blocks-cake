@@ -1,4 +1,5 @@
 import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
+import { AssetImage } from "@/cms/blocks/shared/assets/image";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Button } from "../button";
@@ -7,9 +8,6 @@ interface AssetPreviewProps {
   assetId: string;
   onRemove: () => void;
 }
-
-const CLOUDFLARE_R2_BASE_URL =
-  "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
 
 export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
   // Fetch asset details by ID
@@ -53,9 +51,8 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
 
   return (
     <div className="relative group aspect-square bg-gray-100 rounded-md overflow-hidden border border-gray-200">
-      <img
-        src={`${CLOUDFLARE_R2_BASE_URL}/${asset.id}`}
-        alt={asset.alt || ""}
+      <AssetImage
+        asset={asset}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
 

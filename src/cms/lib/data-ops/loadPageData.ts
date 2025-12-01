@@ -1,7 +1,7 @@
 import { DrizzleDB } from "@/cms/core/db/drizzle";
-import { hydrateAssets } from "./asset-hydration";
 import { registry } from "@/cms/blocks/block-registry";
 import { Block } from "@/cms/blocks/block-registry.types";
+import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
 
 export async function loadPageData(
   db: DrizzleDB,
@@ -45,7 +45,7 @@ export async function loadPageData(
     const hydratedData = { ...block.data } as Record<string, any>;
 
     // If we have usages, create a quick lookup map (AssetID -> DBAsset)
-    const assetMap = new Map();
+    const assetMap = new Map<string, Asset>();
     if (block.usages) {
       block.usages.forEach((u) => {
         if (u.asset) assetMap.set(u.assetId, u.asset);
@@ -57,20 +57,10 @@ export async function loadPageData(
       Object.entries(def.fields).forEach(([key, fieldDef]) => {
         if (fieldDef.type === "image" || fieldDef.type === "gallery") {
           // Get the array of IDs (e.g. ["uuid-1"]) from the raw JSON
-          const rawIds = hydratedData[key];
-
-          hydratedData[key] = hydrateAssets(rawIds, (id) => {
-            const dbAsset = assetMap.get(id);
-            if (!dbAsset) return undefined;
-
-            return {
-              filename: dbAsset.filename,
-              alt: dbAsset.altText,
-              blurhash: dbAsset.blurhash,
-              width: dbAsset.variants?.original?.width,
-              height: dbAsset.variants?.original?.height,
-            };
-          });
+          const rawIds: string[] = hydratedData[key];
+          hydratedData[key] = rawIds
+            .map((id) => assetMap.get(id))
+            .filter((a): a is Asset => a !== null);
         }
       });
     }

@@ -5,7 +5,7 @@ import { drizzleMiddleware } from "@/cms/core/middleware/db";
 import { authRequestMiddleware } from "@/cms/core/middleware/auth";
 import { pages, blocks, pageBlocks, assetUsages } from "@/cms/core/db/schema";
 import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
-import { loadPageData } from "@/cms/lib/data-ops/slug";
+import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 
 export const Route = createFileRoute("/api/pages/$")({

@@ -35,7 +35,9 @@ export const assets = sqliteTable("assets", {
     .notNull(),
 
   // Stores all generated sizes + original path
-  variants: text("variants", { mode: "json" }).$type<AssetVariants>(),
+  variants: text("variants", { mode: "json" }).$type<
+    AssetVariants | undefined
+  >(),
   blurhash: text("blurhash"),
 
   // Image Metadata

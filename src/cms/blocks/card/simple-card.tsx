@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/components/ui/utils/cn";
+import { AssetImage } from "../shared/assets/asset-image";
 import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
 import { simpleCardConfig } from "./simple-card-config";
 
@@ -65,9 +66,8 @@ export const SimpleCard = ({
               )}
             >
               <div className="aspect-square relative w-full overflow-hidden rounded-xl shadow-lg ring-1 ring-gray-400/10">
-                <img
-                  alt={image[0].alt || ""}
-                  src={image[0].url}
+                <AssetImage
+                  asset={image[0]}
                   className="h-full w-full absolute inset-0 object-cover"
                 />
               </div>
