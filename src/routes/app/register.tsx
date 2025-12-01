@@ -1,3 +1,4 @@
+import { authClient } from "@/cms/core/auth/auth-client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +14,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/core/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";

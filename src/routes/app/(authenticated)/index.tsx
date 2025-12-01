@@ -1,4 +1,4 @@
-import { getPages } from "@/core/functions/pages/get-pages";
+import { getPages } from "@/cms/core/functions";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/(authenticated)/")({

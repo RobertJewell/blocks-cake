@@ -6,11 +6,11 @@ import {
   type Router,
 } from "@better-upload/server";
 import { cloudflare } from "@better-upload/server/clients";
-import { authRequestMiddleware } from "@/core/middleware/auth/auth-request-middleware";
 import { env } from "cloudflare:workers";
-import { drizzleMiddleware } from "@/core/middleware/db/db-middleware";
-import { assets } from "@/core/db/schema";
 import { uuidv7 } from "uuidv7";
+import { drizzleMiddleware } from "@/cms/core/middleware/db";
+import { authRequestMiddleware } from "@/cms/core/middleware/auth";
+import { assets } from "@/cms/core/db/schema";
 
 export const Route = createFileRoute("/api/upload")({
   server: {

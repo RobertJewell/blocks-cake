@@ -1,5 +1,5 @@
+import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { Progress } from "@/components/ui/progress";
-import { blurUpVariants } from "@/lib/cms/blocks/shared/animations";
 import type { UploadHookControl } from "@better-upload/client";
 import { formatBytes } from "@better-upload/client/helpers";
 import { Dot, File, Upload } from "lucide-react";

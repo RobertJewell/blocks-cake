@@ -1,7 +1,6 @@
-import { authClient } from "@/core/auth/auth-client";
+import { authClient } from "@/cms/core/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import z from "zod";

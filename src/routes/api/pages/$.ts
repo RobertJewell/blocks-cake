@@ -1,12 +1,12 @@
-import { drizzleMiddleware } from "@/core/middleware/db/db-middleware";
-import { authRequestMiddleware } from "@/core/middleware/auth/auth-request-middleware";
-import { pages, blocks, pageBlocks, assetUsages } from "@/core/db/schema";
 import { eq, inArray, sql } from "drizzle-orm";
 import { json } from "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
-import { loadPageData } from "@/lib/cms/data-ops/slug";
-import { processBlocksForSave } from "@/lib/cms/data-ops/save-helpers";
-import { isValidSlugPath } from "@/lib/cms/utils/slugs";
+import { drizzleMiddleware } from "@/cms/core/middleware/db";
+import { authRequestMiddleware } from "@/cms/core/middleware/auth";
+import { pages, blocks, pageBlocks, assetUsages } from "@/cms/core/db/schema";
+import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
+import { loadPageData } from "@/cms/lib/data-ops/slug";
+import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 
 export const Route = createFileRoute("/api/pages/$")({
   server: {

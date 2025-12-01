@@ -1,9 +1,7 @@
-import * as TanstackQuery from "@/lib/integrations/tanstack-query/root-provider";
+import * as TanstackQuery from "@/cms/lib/integrations/tanstack-query/root-provider";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-
-// Import the generated route tree
-import { useEditorStore } from "./lib/cms/stores/editor-store";
+import { useEditorStore } from "./cms/stores/editor-store";
 import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance

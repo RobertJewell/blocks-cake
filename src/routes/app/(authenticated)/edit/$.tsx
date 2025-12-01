@@ -1,9 +1,8 @@
+import { PageData } from "@/cms/blocks/block-registry.types";
+import { getPageBySlug } from "@/cms/core/functions";
+import { EditorPageRenderer } from "@/cms/editor/editor-page/editor-page-renderer";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
-import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
-import { PageData } from "@/lib/cms/blocks/block-registry.types";
-import { EditorPageRenderer } from "@/lib/cms/editor/editor-page/editor-page-renderer";
-
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/(authenticated)/edit/$")({

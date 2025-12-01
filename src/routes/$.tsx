@@ -1,9 +1,10 @@
+import { registry } from "@/cms/blocks/block-registry";
+import { getPageBySlug } from "@/cms/core/functions";
+import { useSiteShortcuts } from "@/cms/hooks/useShortcuts";
+import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
-import { getPageBySlug } from "@/core/functions/pages/get-page-by-slug";
-import { registry } from "@/lib/cms/blocks/block-registry";
-import { useSiteShortcuts } from "@/lib/cms/hooks/useShortcuts";
-import { isValidSlugPath } from "@/lib/cms/utils/slugs";
+
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$")({

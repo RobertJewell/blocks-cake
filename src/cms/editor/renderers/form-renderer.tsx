@@ -1,0 +1,80 @@
+import { registry } from "@/cms/blocks/block-registry";
+import { Block, PropsOf } from "@/cms/blocks/block-registry.types";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ReactNode } from "react";
+import { DefaultValues, Path, SubmitHandler, useForm } from "react-hook-form";
+import { fieldRenderers } from "./field-renderer";
+
+type FormRendererProps<T extends Block["type"]> = {
+  block: Block;
+  onSubmit?: SubmitHandler<PropsOf<T>>;
+  onChange?: (patch: Partial<PropsOf<T>>) => void;
+  children?: ReactNode;
+};
+
+export function FormRenderer<T extends Block["type"]>({
+  block,
+  onSubmit,
+  onChange,
+  children,
+}: FormRendererProps<T>) {
+  const blockDef = registry[block.type];
+
+  const form = useForm<PropsOf<T>>({
+    mode: "onChange",
+    resolver: zodResolver(blockDef.schema as any),
+    defaultValues: block.data as DefaultValues<PropsOf<T>>,
+  });
+
+  form.watch((values) => {
+    return onChange?.(values as Partial<PropsOf<T>>);
+  });
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={onSubmit && form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
+        {Object.entries(blockDef.fields).map(([key, def]) => {
+          const Renderer =
+            fieldRenderers[def.type as keyof typeof fieldRenderers];
+          if (!Renderer) {
+            return (
+              <p key={key} className="text-sm text-red-600">
+                Unknown field type: {def.type}
+              </p>
+            );
+          }
+
+          return (
+            <FormField
+              key={key}
+              control={form.control}
+              name={key as Path<PropsOf<T>>}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{def.label}</FormLabel>
+                  <FormControl>
+                    {/* this will always match */}
+                    {Renderer({ field: field as any })}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          );
+        })}
+        {children}
+      </form>
+    </Form>
+  );
+}
