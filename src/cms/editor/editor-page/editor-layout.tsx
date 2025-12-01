@@ -67,7 +67,7 @@ export const EditorLayout = ({
 
         {/* LAYER 1: The Overlay (Content Window) */}
         <motion.div
-          className="absolute z-10 flex shadow-xl flex-col overflow-hidden border border-border "
+          className="absolute z-10 flex shadow-md flex-col overflow-hidden"
           initial="collapsed"
           animate={isSidebarOpen ? "expanded" : "collapsed"}
           variants={windowVariants}

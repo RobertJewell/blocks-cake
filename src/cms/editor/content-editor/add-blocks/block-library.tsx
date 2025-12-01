@@ -32,7 +32,7 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
       className="flex flex-col w-full px-2 min-h-full pb-20"
     >
       {/* Search Header */}
-      <div className="sticky flex flex-col top-0 z-10 ">
+      <div className="sticky flex flex-col top-0 z-10">
         <div className="bg-sidebar py-2">
           <InputGroup className="bg-background">
             <InputGroupInput
@@ -46,7 +46,7 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
           </InputGroup>
         </div>
 
-        <div className="h-6 w-full bg-linear-to-b from-sidebar to bg-transparent"></div>
+        <div className="h-4 w-full bg-linear-to-b from-sidebar"></div>
       </div>
 
       {/* List */}
