@@ -15,7 +15,6 @@ export const SimpleCard = ({
   ctaHref,
   image,
 }: SimpleCardProps) => {
-  console.log(image);
   return (
     <div className="my-4 overflow-hidden bg-white py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

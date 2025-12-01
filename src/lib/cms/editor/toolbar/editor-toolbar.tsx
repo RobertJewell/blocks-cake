@@ -1,4 +1,10 @@
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/components/ui/utils/cn";
 import { Route } from "@/routes/app/(authenticated)/edit/$";
 import { Eye, Pencil, Plus, Save } from "lucide-react";
@@ -56,9 +62,9 @@ export function EditorToolbar() {
   useEditorShortcuts({ onSave: handleSave });
 
   const items = [
-    { value: "view", icon: Eye, label: "View Mode" },
-    { value: "edit", icon: Pencil, label: "Edit Mode" },
-    { value: "add", icon: Plus, label: "Add Mode" },
+    { value: "view", icon: Eye, label: "View Mode", shortcut: KbdView },
+    { value: "edit", icon: Pencil, label: "Edit Mode", shortcut: KbdEdit },
+    { value: "add", icon: Plus, label: "Add Mode", shortcut: KbdAdd },
   ];
 
   return (
@@ -97,37 +103,46 @@ export function EditorToolbar() {
                 const Icon = item.icon;
 
                 return (
-                  <ToggleGroupItem
-                    key={item.value}
-                    value={item.value}
-                    aria-label={item.label}
-                    className={cn(
-                      "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
-                      isSelected ? "text-background" : "text-muted-foreground",
-                    )}
-                  >
-                    {isSelected && (
-                      <motion.div
-                        layoutId="active-mode-bg"
-                        className="absolute inset-0 rounded-full bg-muted-foreground"
-                        initial={false}
-                        transition={{
-                          type: "spring",
-                          stiffness: 800,
-                          damping: 50,
-                        }}
-                      />
-                    )}
-
-                    <div className="relative z-10">
-                      <Icon
+                  <Tooltip delayDuration={500}>
+                    <TooltipTrigger asChild>
+                      <ToggleGroupItem
+                        key={item.value}
+                        value={item.value}
+                        aria-label={item.label}
                         className={cn(
-                          "h-4 w-4",
-                          isSelected && "text-background",
+                          "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                          isSelected
+                            ? "text-background"
+                            : "text-muted-foreground",
                         )}
-                      />
-                    </div>
-                  </ToggleGroupItem>
+                      >
+                        {isSelected && (
+                          <motion.div
+                            layoutId="active-mode-bg"
+                            className="absolute inset-0 rounded-full bg-muted-foreground"
+                            initial={false}
+                            transition={{
+                              type: "spring",
+                              stiffness: 800,
+                              damping: 50,
+                            }}
+                          />
+                        )}
+
+                        <div className="relative z-10">
+                          <Icon
+                            className={cn(
+                              "h-4 w-4",
+                              isSelected && "text-background",
+                            )}
+                          />
+                        </div>
+                      </ToggleGroupItem>
+                    </TooltipTrigger>
+                    <TooltipContent className="px-1.5">
+                      <item.shortcut />
+                    </TooltipContent>
+                  </Tooltip>
                 );
               })}
             </ToggleGroup>
@@ -156,5 +171,30 @@ export function EditorToolbar() {
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+function KbdView() {
+  return (
+    <KbdGroup className="relative">
+      <Kbd className="text-muted-foreground! bg-muted!">⌥</Kbd>
+      <Kbd className="text-muted-foreground! bg-muted!">1</Kbd>
+    </KbdGroup>
+  );
+}
+function KbdEdit() {
+  return (
+    <KbdGroup>
+      <Kbd className="text-muted-foreground! bg-muted!">⌥</Kbd>
+      <Kbd className="text-muted-foreground! bg-muted!">2</Kbd>
+    </KbdGroup>
+  );
+}
+function KbdAdd() {
+  return (
+    <KbdGroup>
+      <Kbd className="text-muted-foreground! bg-muted!">⌥</Kbd>
+      <Kbd className="text-muted-foreground! bg-muted!">3</Kbd>
+    </KbdGroup>
   );
 }

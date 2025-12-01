@@ -79,7 +79,7 @@ export function BlockDropContext({ children }: { children: ReactNode }) {
             {activeType ? (
               // We force a specific width because in the sidebar it might be constrained,
               // but when dragging we want it to look like a solid card.
-              <div className="w-[287px] shadow-2xl rotate-1  cursor-grabbing opacity-90">
+              <div className="w-[287px] rotate-1 rounded-lg shadow-2xl cursor-grabbing opacity-90">
                 <BlockPreview type={activeType} />
               </div>
             ) : null}
