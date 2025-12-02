@@ -53,7 +53,7 @@ export const EditorLayout = ({
         <DialogContent className="max-w-none transition-none! w-screen h-screen rounded-none border-none p-0 flex flex-col bg-background focus:outline-none sm:max-w-none!">
           <DialogTitle className="sr-only">Edit Page</DialogTitle>
           {sidebar}
-          <div className="w-full absolute bottom-0 h-6 pointer-events-none bg-linear-to-t from-background "></div>
+          <div className="absolute bottom-0 w-full h-6 bg-linear-to-t from-background" />
         </DialogContent>
       </Dialog>
 
@@ -68,7 +68,7 @@ export const EditorLayout = ({
 
         {/* LAYER 1: The Overlay (Content Window) */}
         <motion.div
-          className="absolute z-10 flex shadow-md flex-col sm:overflow-hidden"
+          className="absolute z-10 flex sm:shadow-md flex-col sm:overflow-hidden"
           initial="collapsed"
           animate={isSidebarOpen ? "expanded" : "collapsed"}
           variants={windowVariants}
@@ -77,8 +77,10 @@ export const EditorLayout = ({
 
           {/* Scrollable Content */}
           <div className="flex-1 min-h-0 sm:overflow-hidden bg-white">
-            {/*<div className="h-full block sm:hidden">{children}</div>*/}
-            <ScrollArea className="h-full">{children}</ScrollArea>
+            <div className="h-full block sm:hidden">{children}</div>
+            <ScrollArea className="h-full hidden sm:block ">
+              {children}
+            </ScrollArea>
           </div>
         </motion.div>
       </div>

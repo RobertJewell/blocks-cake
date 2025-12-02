@@ -79,7 +79,7 @@ export function EditorToolbar() {
           variants={blurUpVariants}
           custom={{ y: 30 }}
           className={cn(
-            "bg-background/70 backdrop-blur-xs fixed bottom-3 md:bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center  overflow-hidden rounded-full border p-1.5 shadow-lg",
+            "bg-background/70 backdrop-blur-xs fixed bottom-2 md:bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center  overflow-hidden rounded-full border p-1.5 shadow-sm",
           )}
           // set explictily to stop weird warping on resize
           style={{ height: 46, borderRadius: 23 }}
