@@ -48,7 +48,7 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
   }
 
   return (
-    <div className="relative group aspect-square bg-gray-100 rounded-md overflow-hidden border border-gray-200">
+    <div className="relative group aspect-square bg-muted rounded-md overflow-hidden border border-border">
       <AssetImage
         asset={asset}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
