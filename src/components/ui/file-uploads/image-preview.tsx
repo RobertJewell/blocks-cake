@@ -23,10 +23,17 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
 
   if (isLoading) {
     return (
-      <div className="aspect-square bg-gray-50 animate-pulse rounded-md flex items-center justify-center border border-gray-100">
+      <div className="aspect-square bg-muted  rounded-md flex items-center justify-center border border-gray-100">
         <span className="text-[10px] text-gray-400 font-medium">
           Loading...
         </span>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="absolute top-1 right-1 text-foreground animate-pulse p-1 rounded transition-colors"
+        >
+          <X size={12} />
+        </button>
       </div>
     );
   }

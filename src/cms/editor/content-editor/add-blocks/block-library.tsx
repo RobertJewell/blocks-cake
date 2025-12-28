@@ -1,5 +1,4 @@
 import { BlockType } from "@/cms/blocks/block-registry.types";
-import { SimpleCardSkeleton } from "@/cms/blocks/card";
 import { AnimationMode, editorVariants } from "@/cms/blocks/shared/animations";
 import { useBlockCategories } from "@/cms/blocks/shared/hooks/use-block-categories";
 import {
@@ -30,7 +29,7 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
       initial="enter"
       animate="center"
       exit="exit"
-      className="flex flex-col w-full px-2 min-h-full pb-20"
+      className="flex flex-col w-full px-2 min-h-full "
     >
       {/* Search Header */}
       <div className="sticky flex flex-col top-0 z-10">
@@ -49,12 +48,12 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
 
         <div className="h-4 w-full bg-linear-to-b from-sidebar"></div>
       </div>
-      <SkeletonThumbnailWrapper
+      {/*<SkeletonThumbnailWrapper
         className="bg-white border rounded-md border-border"
         targetWidth={120}
       >
         <SimpleCardSkeleton />
-      </SkeletonThumbnailWrapper>
+      </SkeletonThumbnailWrapper>*/}
 
       {/* List */}
       <div className="flex-1 overflow-y-auto pb-4">

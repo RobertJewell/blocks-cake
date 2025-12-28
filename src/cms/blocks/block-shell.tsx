@@ -1,9 +1,10 @@
 import { cn } from "@/components/ui/utils/cn";
 import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useInView } from "motion/react";
 import * as React from "react";
 
+import { useEffect, useRef } from "react";
 import { BlockPickerDialog } from "../editor/content-editor/add-blocks";
 import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
@@ -14,12 +15,21 @@ type Props = {
 };
 
 export function BlockShell({ block, children }: Props) {
+  const ref = useRef(null);
   const mode = useEditorStore((s) => s.mode);
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const setSelected = useEditorStore((s) => s.setSelected);
   const addBlock = useEditorStore((s) => s.addBlock);
+  const setBlockInView = useEditorStore((s) => s.setBlockInView);
   const [open, setOpen] = React.useState(false);
   const isEdit = mode === "edit";
+  const isInView = useInView(ref, {
+    margin: "-120px 0px -120px 0px",
+  });
+
+  useEffect(() => {
+    setBlockInView(block.id, isInView);
+  }, [isInView]);
 
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-after-${block.id}`,
@@ -34,6 +44,7 @@ export function BlockShell({ block, children }: Props) {
 
   return (
     <div
+      ref={ref}
       id={block.id}
       onClick={(e) => {
         if (!isEdit) return;

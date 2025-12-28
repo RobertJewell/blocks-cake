@@ -34,7 +34,7 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
         onClick={onSelect}
         {...props}
         className={cn(
-          "group relative outline-none touch-none my-1",
+          "group relative outline-none touch-none",
           "border-none! hover:border-none!",
           className,
         )}

@@ -40,7 +40,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
           custom={{ y: 5, duration: 0.2 }}
         >
           <ToolbarButton
-            id={blockId}
+            id={`sidebar-button-${blockId}`}
             onClick={() => {
               setSelected(blockId);
             }}

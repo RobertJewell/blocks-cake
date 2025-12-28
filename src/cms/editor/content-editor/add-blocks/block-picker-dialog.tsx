@@ -28,7 +28,7 @@ export function BlockPickerDialog({
 }: BlockPickerDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-2 py-3 font-editor sm:max-w-[425px]">
+      <DialogContent className="p-2 top-48 py-3 font-editor sm:max-w-[425px]">
         <DialogTitle className="sr-only">Block Library</DialogTitle>
         <DialogDescription className="sr-only">
           A filterable list of blicks that can be added to the page

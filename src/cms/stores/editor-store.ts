@@ -6,6 +6,7 @@ import {
   PropsOf,
 } from "@/cms/blocks/block-registry.types";
 import { registry } from "../blocks/block-registry";
+import { scrollToId } from "../lib/helpers/scroll-to-id";
 
 export type ViewMode = "view" | "edit" | "add" | "edit-meta";
 
@@ -29,6 +30,8 @@ type EditorState = {
   reorderBlocks: (blocks: Block[]) => void;
   resetPage: () => void;
   resetBlock: (id: string) => void;
+  inViewBlocks: Record<string, boolean>;
+  setBlockInView: (block: string, isInView: boolean) => void;
 
   // initial page
   initialPage: PageData | null;
@@ -154,6 +157,16 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     });
   },
 
+  inViewBlocks: {},
+  setBlockInView: (id, isInView) =>
+    set((s) => {
+      const currentInViewBlock = { ...s.inViewBlocks };
+      currentInViewBlock[id] = isInView;
+      return {
+        inViewBlocks: currentInViewBlock,
+      };
+    }),
+
   initialPage: null,
   setInitialPage: (page) => set({ initialPage: page }),
 
@@ -177,17 +190,3 @@ const mergeData = <T extends Block["type"]>(
   ...b,
   data: { ...b.data, ...patch },
 });
-
-function scrollToId(id?: string) {
-  if (!id) return;
-  setTimeout(() => {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "center", // Scrolls the element to the center of the viewport
-      });
-    }
-  }, 0);
-}

@@ -90,7 +90,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
           initial="enter"
           animate="center"
           exit="exit"
-          className="flex flex-col gap-2 w-full p-2 min-h-full pb-20"
+          className="flex flex-col gap-2 w-full p-2 min-h-full"
         >
           <DndContext
             sensors={sensors}

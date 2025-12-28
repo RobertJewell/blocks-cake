@@ -77,10 +77,12 @@ export const EditorLayout = ({
 
           {/* Scrollable Content */}
           <div className="flex-1 min-h-0 sm:overflow-hidden bg-white">
-            <div className="h-full block sm:hidden">{children}</div>
-            <ScrollArea className="h-full hidden sm:block ">
-              {children}
-            </ScrollArea>
+            {/* this can't just be css as we need to fully remove it from the dom to avoid id conflicts for scrollintoview */}
+            {isMobile ? (
+              <div className="h-full">{children}</div>
+            ) : (
+              <ScrollArea className="h-full">{children}</ScrollArea>
+            )}
           </div>
         </motion.div>
       </div>

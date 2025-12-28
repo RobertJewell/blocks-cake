@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+import { useIsMobile } from "@/cms/hooks/use-is-mobile";
 import { seo } from "@/cms/lib/helpers/seo";
 import { useEditorStore } from "@/cms/stores/editor-store";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
@@ -87,12 +88,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isAppRoute = location.pathname.startsWith("/app");
   const mode = useEditorStore((s) => s.mode);
+  const isMobile = useIsMobile();
 
   return (
     <html
       className={cn(
         "bg-white",
-        isAppRoute && mode !== "view" ? "overflow-hidden " : "",
+        isAppRoute && !isMobile && mode !== "view" ? "overflow-hidden" : "",
       )}
     >
       <head>

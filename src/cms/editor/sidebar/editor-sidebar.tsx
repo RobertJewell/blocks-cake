@@ -18,7 +18,7 @@ const SidebarHeader = () => {
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
-    <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10">
       {mode === "edit" && currentBlock ? (
         <motion.div
           key="header-detail"
@@ -78,7 +78,7 @@ export function EditorSidebar({
       <Separator className="shrink-0" />
 
       <ScrollArea className="flex-1 min-h-0">
-        <div className="px-2 pb-20">
+        <div className="px-2 pb-12">
           {mode === "edit" && <BlockEditor mode={animationMode} />}
           {mode === "add" && <BlockLibrary mode={animationMode} />}
         </div>

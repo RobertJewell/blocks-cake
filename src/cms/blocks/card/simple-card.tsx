@@ -17,7 +17,7 @@ export const SimpleCard = ({
   image,
 }: SimpleCardProps) => {
   return (
-    <div className="my-4 overflow-hidden bg-white py-12">
+    <div className="my-4 overflow-hidden py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div
           className={cn(
