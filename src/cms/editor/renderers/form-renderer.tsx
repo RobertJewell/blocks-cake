@@ -100,7 +100,7 @@ export function FormRenderer<T extends Block["type"]>({
             </TabsList>
             {groups.map((group) => (
               <TabsContent
-                key={group.label}
+                key={group.label + "content"}
                 value={group.label}
                 className="flex flex-col gap-4 pt-4"
               >
