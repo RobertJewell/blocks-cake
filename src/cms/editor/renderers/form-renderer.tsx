@@ -1,6 +1,9 @@
-import { BlockConfigFields } from "@/cms/blocks/block-builder";
 import { registry } from "@/cms/blocks/block-registry";
-import { Block, PropsOf } from "@/cms/blocks/block-registry.types";
+import {
+  Block,
+  BlockConfigFields,
+  PropsOf,
+} from "@/cms/blocks/block-registry.types";
 import {
   Form,
   FormControl,

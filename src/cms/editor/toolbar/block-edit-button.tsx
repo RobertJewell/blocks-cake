@@ -1,9 +1,8 @@
+import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { cn } from "@/components/ui/utils/cn";
 import { ResetIcon } from "@radix-ui/react-icons";
 import { Pencil } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-
-import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { useEditorStore } from "../../stores/editor-store";
 import { ToolbarButton } from "./toolbar-button";
 

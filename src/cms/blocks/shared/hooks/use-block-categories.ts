@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { registry } from "../../block-registry";
-import { BlockType } from "../../block-registry.types";
-import { BlockDefinitionResult } from "../../block-builder";
+import { BlockDefinitionResult, BlockType } from "../../block-registry.types";
 
 export type BlockLibraryItem = {
   type: BlockType;

@@ -1,4 +1,5 @@
-import { BlockDefinitionResult, defineBlock } from "./block-builder";
+import { defineBlock } from "./block-builder";
+import { BlockDefinitionResult } from "./block-registry.types";
 import { SimpleCard, simpleCardConfig, SimpleCardSkeleton } from "./card";
 import { HeroComponent, heroConfig, HeroSkeleton } from "./hero";
 import {
@@ -19,8 +20,8 @@ export const registry = {
       subheading: "Subtitle",
       ctaText: "Click Here",
       ctaHref: "",
-      leftImage: undefined,
-      rightImage: undefined,
+      leftImage: [],
+      rightImage: [],
     },
   }),
 
@@ -42,6 +43,7 @@ export const registry = {
     fields: simpleCardConfig,
     component: SimpleCard,
     skeleton: SimpleCardSkeleton,
+
     defaultValues: {
       heading: "Lorem Ipsum",
       subheading: undefined,
@@ -49,9 +51,8 @@ export const registry = {
         "Duis pariatur ex fugiat Lorem anim ullamco aliqua amet sit exercitation",
       ctaText: undefined,
       ctaHref: undefined,
-      image: undefined,
+      image: [],
+      maxWidth: undefined,
     },
   }),
 } satisfies Record<string, BlockDefinitionResult>;
-
-export type Registry = typeof registry;

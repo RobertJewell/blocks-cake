@@ -1,33 +1,10 @@
 import { z } from "zod";
-import React from "react";
-import { HydratedBlockProps } from "./shared/assets/asset-type-helpers";
-import { Asset, assetSchema } from "./shared/assets/asset-schema";
-
-export type FieldTypeMap = {
-  text: string;
-  richtext: string;
-  image: Asset[];
-  url: string;
-};
-
-export type FieldType = keyof FieldTypeMap;
-
-export type FieldDefinition<K extends FieldType> = {
-  type: K;
-  label: string;
-  schema: z.ZodType<FieldTypeMap[K] | undefined>;
-  defaultValue?: FieldTypeMap[K];
-  group?: string;
-};
-
-export type BlockConfigFields = Record<string, FieldDefinition<any>>;
-
-const applyOptions = <T extends z.ZodTypeAny>(
-  schema: T,
-  options?: { optional?: boolean },
-) => {
-  return options?.optional ? schema.optional() : schema;
-};
+import { assetSchema } from "./shared/assets/asset-schema";
+import {
+  BlockConfig,
+  BlockConfigFields,
+  FieldDefinition,
+} from "./block-registry.types";
 
 export const fields = {
   text: (
@@ -74,6 +51,13 @@ export const fields = {
   }),
 };
 
+const applyOptions = <T extends z.ZodTypeAny>(
+  schema: T,
+  options?: { optional?: boolean },
+) => {
+  return options?.optional ? schema.optional() : schema;
+};
+
 export function createSchema<T extends BlockConfigFields>(fields: T) {
   const zodShape: any = {};
   Object.entries(fields).forEach(([key, field]) => {
@@ -81,16 +65,6 @@ export function createSchema<T extends BlockConfigFields>(fields: T) {
   });
   return z.object(zodShape) as any;
 }
-
-export type BlockConfig<T extends BlockConfigFields> = {
-  name: string;
-  category: string;
-  fields: T;
-  tabs?: string[];
-  skeleton: React.ComponentType<{ className?: string }>;
-  component: React.ComponentType<HydratedBlockProps<T>>;
-  defaultValues: HydratedBlockProps<T>;
-};
 
 export function defineBlock<T extends BlockConfigFields>(
   config: BlockConfig<T>,
@@ -100,11 +74,3 @@ export function defineBlock<T extends BlockConfigFields>(
     schema: createSchema(config.fields),
   };
 }
-
-export type BlockDefinitionResult = {
-  name: string;
-  category?: string;
-  fields: BlockConfigFields;
-  component: React.ComponentType<any>;
-  schema: z.ZodObject<any>;
-};

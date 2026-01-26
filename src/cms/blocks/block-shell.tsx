@@ -2,9 +2,7 @@ import { cn } from "@/components/ui/utils/cn";
 import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "motion/react";
-import * as React from "react";
-
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BlockPickerDialog } from "../editor/content-editor/add-blocks";
 import { useEditorStore } from "../stores/editor-store";
 import { Block } from "./block-registry.types";
@@ -21,7 +19,7 @@ export function BlockShell({ block, children }: Props) {
   const setSelected = useEditorStore((s) => s.setSelected);
   const addBlock = useEditorStore((s) => s.addBlock);
   const setBlockInView = useEditorStore((s) => s.setBlockInView);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const isEdit = mode === "edit";
   const isInView = useInView(ref, {
     margin: "-120px 0px -120px 0px",

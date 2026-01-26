@@ -1,6 +1,6 @@
 import z from "zod";
-import { BlockConfigFields, FieldDefinition } from "../../block-builder";
 import { Asset } from "./asset-schema";
+import { BlockConfigFields, FieldDefinition } from "../../block-registry.types";
 
 type RuntimeValue<T extends FieldDefinition<any>> = T["type"] extends
   | "image"

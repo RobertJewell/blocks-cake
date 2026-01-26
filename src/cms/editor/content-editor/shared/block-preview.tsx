@@ -1,9 +1,9 @@
 import { registry } from "@/cms/blocks/block-registry";
 import { BlockType } from "@/cms/blocks/block-registry.types";
 import { cn } from "@/components/ui/utils/cn";
-import React from "react";
+import { HTMLAttributes } from "react";
 
-interface BlockPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
+interface BlockPreviewProps extends HTMLAttributes<HTMLDivElement> {
   type: BlockType;
 }
 

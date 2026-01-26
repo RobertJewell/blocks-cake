@@ -1,7 +1,8 @@
-import { FieldTypeMap } from "@/cms/blocks/block-builder";
+import { FieldTypeMap } from "@/cms/blocks/block-registry.types";
 import { ImageDropzone } from "@/components/ui/file-uploads/image-dropzone";
 import { Input } from "@/components/ui/input";
 import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap";
+import { ReactNode } from "react";
 import { ControllerRenderProps, Path } from "react-hook-form";
 
 type RendererProps<T extends keyof FieldTypeMap> = {
@@ -12,7 +13,7 @@ type RendererProps<T extends keyof FieldTypeMap> = {
 };
 
 type FieldRenderers = {
-  [K in keyof FieldTypeMap]: (props: RendererProps<K>) => React.ReactNode;
+  [K in keyof FieldTypeMap]: (props: RendererProps<K>) => ReactNode;
 };
 
 export const fieldRenderers: FieldRenderers = {
