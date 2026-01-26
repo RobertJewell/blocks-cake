@@ -21,8 +21,8 @@ export const fieldRenderers: FieldRenderers = {
   image: ({ field }) => (
     <ImageDropzone
       maxFiles={1}
-      value={field.value ? field.value : []}
-      onChange={(imageIds) => field.onChange(imageIds || [])}
+      value={Array.isArray(field.value) ? field.value.filter(Boolean) : []}
+      onChange={(assets) => field.onChange(assets || [])}
     />
   ),
 
@@ -37,7 +37,7 @@ export const fieldRenderers: FieldRenderers = {
         }}
         output="html"
         className="mx-0 w-full text-sm"
-        editorContentClassName="p-2"
+        editorContentClassName="p-2 min-h-56"
         placeholder="Enter content..."
       />
     );

@@ -18,6 +18,8 @@ export function EditorPageRenderer({ initialPage }: { initialPage: PageData }) {
 
   const displayPage = page || initialPage;
 
+  console.log(displayPage);
+
   return (
     <div className="relative pb-12">
       {displayPage.blocks.map((b) => {

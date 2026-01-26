@@ -17,16 +17,10 @@ export type FieldDefinition<K extends FieldType> = {
   label: string;
   schema: z.ZodType<FieldTypeMap[K] | undefined>;
   defaultValue?: FieldTypeMap[K];
+  group?: string;
 };
 
-// Update this in block-builder.ts
-export type FieldGroup = {
-  label: string;
-  fields: Record<string, FieldDefinition<any>>;
-};
-
-// Use a simple array type
-export type BlockConfigSchema = FieldGroup[];
+export type BlockConfigFields = Record<string, FieldDefinition<any>>;
 
 const applyOptions = <T extends z.ZodTypeAny>(
   schema: T,
@@ -38,7 +32,7 @@ const applyOptions = <T extends z.ZodTypeAny>(
 export const fields = {
   text: (
     label: string,
-    options?: { min?: number; optional?: boolean },
+    options?: { min?: number; optional?: boolean; group?: string },
   ): FieldDefinition<"text"> => {
     let schema = z.string();
     if (options?.min) schema = schema.min(options.min);
@@ -48,12 +42,13 @@ export const fields = {
       label,
       schema: applyOptions(schema, options),
       defaultValue: "",
+      group: options?.group || "Content",
     };
   },
 
   image: (
     label: string,
-    options?: { max?: number; optional?: boolean },
+    options?: { max?: number; optional?: boolean; group?: string },
   ): FieldDefinition<"image"> => {
     let schema = z.array(assetSchema);
     if (options?.max) schema = schema.max(options.max);
@@ -63,73 +58,41 @@ export const fields = {
       label,
       schema: applyOptions(schema, options),
       defaultValue: [],
+      group: options?.group || "Content",
     };
   },
 
   richtext: (
     label: string,
-    options?: { optional?: boolean },
+    options?: { optional?: boolean; group?: string },
   ): FieldDefinition<"richtext"> => ({
     type: "richtext",
     label,
     schema: applyOptions(z.string(), options),
     defaultValue: "",
+    group: options?.group || "Content",
   }),
-
-  // url: (
-  //   label: string,
-  //   options?: { optional?: boolean },
-  // ): FieldDefinition<"url"> => ({
-  //   type: "url",
-  //   label,
-  //   // By default, we allow empty strings for URLs to be 'optional' in usage,
-  //   // but the 'optional' flag will strictly allow undefined.
-  //   schema: applyOptions(z.string().optional().or(z.literal("")), options),
-  //   defaultValue: "",
-  // }),
 };
 
-// Converts a map of FieldDefinitions into a Zod Object Schema
-export function createSchema<T extends BlockConfigSchema>(config: T) {
+export function createSchema<T extends BlockConfigFields>(fields: T) {
   const zodShape: any = {};
-
-  config.forEach((group) => {
-    Object.entries(group.fields).forEach(([key, field]) => {
-      zodShape[key] = field.schema;
-    });
+  Object.entries(fields).forEach(([key, field]) => {
+    zodShape[key] = field.schema;
   });
-
-  // Return type casting remains the same to keep your props flat
-  return z.object(zodShape) as z.ZodObject<{
-    [K in keyof FlattenGroups<T>]: FlattenGroups<T>[K] extends FieldDefinition<
-      infer U
-    >
-      ? z.ZodType<FieldTypeMap[U] | undefined>
-      : never;
-  }>;
+  return z.object(zodShape) as any;
 }
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I,
-) => void
-  ? I
-  : never;
-
-type FlattenGroups<T extends BlockConfigSchema> =
-  UnionToIntersection<T[number]["fields"]> extends infer O
-    ? { [K in keyof O]: O[K] }
-    : never;
-
-export type BlockConfig<T extends BlockConfigSchema> = {
+export type BlockConfig<T extends BlockConfigFields> = {
   name: string;
   category: string;
   fields: T;
+  tabs?: string[];
   skeleton: React.ComponentType<{ className?: string }>;
-  component: React.ComponentType<HydratedBlockProps<FlattenGroups<T>>>;
-  defaultValues: z.infer<ReturnType<typeof createSchema<T>>>;
+  component: React.ComponentType<HydratedBlockProps<T>>;
+  defaultValues: HydratedBlockProps<T>;
 };
 
-export function defineBlock<T extends BlockConfigSchema>(
+export function defineBlock<T extends BlockConfigFields>(
   config: BlockConfig<T>,
 ) {
   return {
@@ -141,7 +104,7 @@ export function defineBlock<T extends BlockConfigSchema>(
 export type BlockDefinitionResult = {
   name: string;
   category?: string;
-  fields: BlockConfigSchema; // Updated to use the array structure
+  fields: BlockConfigFields;
   component: React.ComponentType<any>;
   schema: z.ZodObject<any>;
 };

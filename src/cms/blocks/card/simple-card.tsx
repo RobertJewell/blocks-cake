@@ -15,6 +15,7 @@ export const SimpleCard = ({
   ctaText,
   ctaHref,
   image,
+  maxWidth,
 }: SimpleCardProps) => {
   return (
     <div className="my-4 overflow-hidden py-12">
@@ -32,7 +33,7 @@ export const SimpleCard = ({
               !Boolean(image?.[0]) && "mx-auto!",
             )}
           >
-            <div className={cn("lg:max-w-lg")}>
+            <div className={cn("lg:max-w-lg")} style={{ maxWidth }}>
               {subheading && (
                 <h2 className="font-semibold text-pink-600">{subheading}</h2>
               )}

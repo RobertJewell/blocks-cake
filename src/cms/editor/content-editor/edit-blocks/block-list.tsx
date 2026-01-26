@@ -108,7 +108,7 @@ export const BlockList = () => {
           className="flex flex-col -ml-2 pb-12 pl-3 relative overflow-y-auto max-h-full"
         >
           {page?.blocks.map((block) => {
-            const isVisible = !!inViewBlocks[block.id];
+            const isVisible = Boolean(inViewBlocks[block.id]);
 
             return (
               <div
@@ -125,7 +125,7 @@ export const BlockList = () => {
                   }}
                   transition={{ duration: 0.2 }}
                   className={cn(
-                    "absolute -left-3 top-1 bottom-1 w-1.5 rounded-full bg-primary/25 origin-center",
+                    "absolute -left-3 top-1 bottom-1 w-1.5 rounded-full bg-primary/25 origin-center hidden md:block",
                   )}
                 />
 

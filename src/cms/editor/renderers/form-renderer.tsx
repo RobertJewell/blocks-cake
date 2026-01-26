@@ -1,3 +1,4 @@
+import { BlockConfigFields } from "@/cms/blocks/block-builder";
 import { registry } from "@/cms/blocks/block-registry";
 import { Block, PropsOf } from "@/cms/blocks/block-registry.types";
 import {
@@ -8,8 +9,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { DefaultValues, Path, SubmitHandler, useForm } from "react-hook-form";
 import { fieldRenderers } from "./field-renderer";
 
@@ -20,9 +22,6 @@ type FormRendererProps<T extends Block["type"]> = {
   children?: ReactNode;
 };
 
-import { FieldDefinition } from "@/cms/blocks/block-builder";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Assuming Shadcn UI
-
 export function FormRenderer<T extends Block["type"]>({
   block,
   onSubmit,
@@ -30,7 +29,6 @@ export function FormRenderer<T extends Block["type"]>({
   children,
 }: FormRendererProps<T>) {
   const blockDef = registry[block.type];
-  const groups = blockDef.fields;
 
   const form = useForm<PropsOf<T>>({
     mode: "onChange",
@@ -42,9 +40,28 @@ export function FormRenderer<T extends Block["type"]>({
     return onChange?.(values as Partial<PropsOf<T>>);
   });
 
-  // Helper to render the actual fields within a group
-  const renderFields = (fields: Record<string, FieldDefinition<any>>) => {
-    return Object.entries(fields).map(([key, def]) => {
+  const groups = useMemo(() => {
+    const grouped: Record<string, { label: string; fields: string[] }> = {};
+
+    Object.entries(blockDef.fields).forEach(([key, field]) => {
+      const groupName = field.group || "Content";
+      if (!grouped[groupName]) {
+        grouped[groupName] = { label: groupName, fields: [] };
+      }
+      grouped[groupName].fields.push(key);
+    });
+
+    const tabOrder = blockDef.tabs || Object.keys(grouped);
+
+    return tabOrder.map((tab) => grouped[tab]).filter(Boolean) as {
+      label: string;
+      fields: string[];
+    }[];
+  }, [blockDef]);
+
+  const renderFields = (fieldKeys: string[]) => {
+    return fieldKeys.map((key) => {
+      const def = (blockDef.fields as BlockConfigFields)[key];
       const Renderer = fieldRenderers[def.type as keyof typeof fieldRenderers];
 
       if (!Renderer) {
