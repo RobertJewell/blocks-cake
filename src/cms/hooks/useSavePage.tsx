@@ -6,7 +6,6 @@ async function savePage(
   data: PageData,
   status: string = "draft",
 ) {
-  // FIX: We spread 'data' (...data) so that 'blocks' is at the root level.
   // This matches the server-side Zod schema: { blocks: [], status: "" }
   const payload = { ...data, status };
 

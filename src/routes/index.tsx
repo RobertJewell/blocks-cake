@@ -59,20 +59,3 @@ function RouteComponent() {
     </div>
   );
 }
-
-// export const Route = createFileRoute("/")({
-//   component: LandingPage,
-// });
-
-// function LandingPage() {
-//   return (
-//     <div className="min-h-screen bg-background">
-//       <NavigationBar />
-//       <main>
-//         <HeroSection />
-//         <MiddlewareDemo />
-//       </main>
-//       <Footer />
-//     </div>
-//   );
-// }
