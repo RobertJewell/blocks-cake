@@ -2,18 +2,13 @@ import { registry } from "@/cms/blocks/block-registry";
 import { BlockType } from "@/cms/blocks/block-registry.types";
 import {
   Command,
+  CommandDialog,
+  CommandDialogPopup,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/cms/ui/command";
 
 interface BlockPickerDialogProps {
   open: boolean;
@@ -21,35 +16,41 @@ interface BlockPickerDialogProps {
   onSelect: (type: BlockType) => void;
 }
 
+const registryItems = Object.entries(registry).map(([key, value]) => ({
+  label: value.name,
+  value: key,
+}));
+
 export function BlockPickerDialog({
   open,
   setOpen,
   onSelect,
 }: BlockPickerDialogProps) {
+  const handleSelect = (blockType: BlockType) => {
+    console.log(blockType);
+    onSelect(blockType);
+    setOpen(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-2 top-48 py-3 font-editor sm:max-w-[425px]">
-        <DialogTitle className="sr-only">Block Library</DialogTitle>
-        <DialogDescription className="sr-only">
-          A filterable list of blicks that can be added to the page
-        </DialogDescription>
-        <Command className="w-full px-0">
-          <CommandInput autoFocus={false} placeholder="Search blocks..." />
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialogPopup>
+        <Command items={registryItems}>
+          <CommandInput placeholder="Search..." />
+          <CommandEmpty>No results found.</CommandEmpty>
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Blocks">
-              {Object.entries(registry).map(([key, value]) => (
-                <CommandItem
-                  onSelect={() => onSelect(key as BlockType)}
-                  key={key}
-                >
-                  <span>{value.name}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            {(item) => (
+              <CommandItem
+                onClick={() => handleSelect(item.value)}
+                key={item.value}
+                value={item.value}
+              >
+                {item.label}
+              </CommandItem>
+            )}
           </CommandList>
         </Command>
-      </DialogContent>
-    </Dialog>
+      </CommandDialogPopup>
+    </CommandDialog>
   );
 }

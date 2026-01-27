@@ -1,9 +1,8 @@
 "use client";
 
+import { cn } from "@/cms/lib/utils";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-
-import { cn } from "@/cms/lib/utils";
 
 function Label({
   className,

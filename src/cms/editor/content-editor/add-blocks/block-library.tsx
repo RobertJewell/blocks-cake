@@ -1,14 +1,14 @@
 import { BlockType } from "@/cms/blocks/block-registry.types";
 import { AnimationMode, editorVariants } from "@/cms/blocks/shared/animations";
 import { useBlockCategories } from "@/cms/blocks/shared/hooks/use-block-categories";
+import { cn } from "@/cms/lib/utils";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import { cn } from "@/components/ui/utils/cn";
+} from "@/cms/ui/input-group";
 import { useDraggable } from "@dnd-kit/core";
-import { Search } from "lucide-react";
+import { IconSearch } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { BlockPreview } from "../shared/block-preview";
@@ -41,7 +41,7 @@ export function BlockLibrary({ mode }: BlockEditorProps) {
               placeholder="Search blocks..."
             />
             <InputGroupAddon>
-              <Search />
+              <IconSearch className="h-4 w-4" />
             </InputGroupAddon>
           </InputGroup>
         </div>

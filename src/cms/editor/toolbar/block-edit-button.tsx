@@ -1,7 +1,6 @@
 import { blurUpVariants } from "@/cms/blocks/shared/animations";
-import { cn } from "@/components/ui/utils/cn";
-import { ResetIcon } from "@radix-ui/react-icons";
-import { Pencil } from "lucide-react";
+import { cn } from "@/cms/lib/utils";
+import { IconPencil, IconRefresh } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEditorStore } from "../../stores/editor-store";
 import { ToolbarButton } from "./toolbar-button";
@@ -44,7 +43,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
               setSelected(blockId);
             }}
           >
-            <Pencil className="size-4" />
+            <IconPencil className="size-4" />
             Edit
           </ToolbarButton>
         </motion.div>
@@ -68,7 +67,7 @@ export function BlockEditButton({ blockId }: { blockId: string }) {
                 resetBlock(blockId);
               }}
             >
-              <ResetIcon className="size-4" />
+              <IconRefresh className="size-4" />
               {/*{savePageMutation.isPending ? "Saving…" : "Save"}*/}
             </ToolbarButton>
           </motion.div>

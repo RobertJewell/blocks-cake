@@ -1,4 +1,4 @@
-import { cn } from "@/components/ui/utils/cn";
+import { cn } from "@/cms/lib/utils";
 import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "motion/react";
