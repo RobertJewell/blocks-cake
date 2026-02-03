@@ -1,4 +1,4 @@
-import { useAnimationMode } from "@/cms/hooks/use-animation-mode";
+import { useAnimationMode } from "@/cms/lib/hooks/use-animation-mode";
 import { useEditorStore } from "@/cms/stores/editor-store";
 import { Button } from "@/cms/ui/button";
 import { ScrollArea } from "@/cms/ui/scroll-area";

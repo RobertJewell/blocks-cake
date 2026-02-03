@@ -4,16 +4,21 @@ import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { Button } from "../ui/button";
+import { Button } from "../../../../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
+} from "../../../../components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "../../../../components/ui/field";
+import { Input } from "../../../../components/ui/input";
 
 type SignInEmailResult = Awaited<ReturnType<typeof authClient.signIn.email>>;
 type LoginValues = z.infer<typeof LoginSchema>;

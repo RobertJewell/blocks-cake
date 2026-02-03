@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageData } from "../blocks/block-registry.types";
+import { PageData } from "../../blocks/block-registry.types";
 
 async function savePage(
   slug: string,

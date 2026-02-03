@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/auth/login-form";
-import { UserConfirmationCard } from "@/components/auth/user-confirmation-card";
+import { LoginForm } from "@/cms/editor/dashboard/auth/login-form";
+import { UserConfirmationCard } from "@/cms/editor/dashboard/auth/user-confirmation-card";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/login")({

@@ -1,5 +1,6 @@
 import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
+import { queueImageOptimisation } from "@/cms/lib/data-ops/assets/queue-image-optimisation";
 import { useUploadFiles } from "@better-upload/client";
 import { AnimatePresence, motion } from "motion/react";
 import { AssetPreview } from "./image-preview";
@@ -18,8 +19,8 @@ export function ImageDropzone({
 }: ImageDropzoneProps) {
   const { control } = useUploadFiles({
     route: "images",
-    onUploadComplete: (res) => {
-      // 1. Extract IDs
+    onUploadComplete: async (res) => {
+      // Extract IDs
       // Since we updated the API to use the UUIDv7 as the key directly,
       // we don't need to parse strings anymore. The key IS the ID.
       const newAssets = res.files.map(
@@ -45,8 +46,16 @@ export function ImageDropzone({
           }) satisfies Asset,
       );
 
-      // 2. Update Form with IDs (Append to existing)
+      // Update Form with IDs (Append to existing)
       onChange?.(newAssets);
+
+      try {
+        const keys = newAssets.map((asset) => asset.id);
+        await queueImageOptimisation({ data: { keys } });
+        console.log("All assets queued successfully");
+      } catch (err) {
+        console.error("Failed to queue optimizations:", err);
+      }
     },
     onUploadFail: (err) => {
       console.error("Upload failed", err);

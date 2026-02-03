@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { AnimationMode } from "../blocks/shared/animations";
+import { AnimationMode } from "../../blocks/shared/animations";
 
 export function useAnimationMode(selectedId?: string | null) {
   const prevIdRef = useRef<string | null>(null);

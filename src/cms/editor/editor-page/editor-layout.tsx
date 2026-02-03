@@ -1,4 +1,4 @@
-import { useIsMobile } from "@/cms/hooks/use-is-mobile";
+import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
 import { useEditorStore } from "@/cms/stores/editor-store";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";

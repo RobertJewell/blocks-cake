@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
-import { useIsMobile } from "@/cms/hooks/use-is-mobile";
 import { seo } from "@/cms/lib/helpers/seo";
+import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
 import { useEditorStore } from "@/cms/stores/editor-store";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";

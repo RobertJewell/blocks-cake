@@ -1,7 +1,7 @@
 import { registry } from "@/cms/blocks/block-registry";
 import { getPageBySlug } from "@/cms/core/functions";
-import { useSiteShortcuts } from "@/cms/hooks/useShortcuts";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
+import { useSiteShortcuts } from "@/cms/lib/hooks/useShortcuts";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 

@@ -2,14 +2,14 @@ import { authClient } from "@/cms/core/auth/auth-client";
 import { AuthQueryResult } from "@/cms/core/auth/queries";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../../../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../../../../components/ui/card";
 
 export const UserConfirmationCard = ({ user }: { user: AuthQueryResult }) => {
   const navigate = useNavigate();

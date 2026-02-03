@@ -1,7 +1,7 @@
 import { blurUpVariants } from "@/cms/blocks/shared/animations";
-import { useIsMobile } from "@/cms/hooks/use-is-mobile";
-import { useSavePage } from "@/cms/hooks/useSavePage";
-import { useEditorShortcuts } from "@/cms/hooks/useShortcuts";
+import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
+import { useSavePage } from "@/cms/lib/hooks/useSavePage";
+import { useEditorShortcuts } from "@/cms/lib/hooks/useShortcuts";
 import { cn } from "@/cms/lib/utils";
 import { useEditorStore, ViewMode } from "@/cms/stores/editor-store";
 import { Kbd, KbdGroup } from "@/cms/ui/kbd";

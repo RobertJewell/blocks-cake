@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
 
-import { useIsMobile } from "@/cms/hooks/use-mobile";
+import { useIsMobile } from "@/cms/lib/hooks/use-mobile";
 import { cn } from "@/cms/lib/utils";
 import { Button } from "@/cms/ui/button";
 import { Input } from "@/cms/ui/input";
@@ -20,11 +20,7 @@ import {
   SheetTitle,
 } from "@/cms/ui/sheet";
 import { Skeleton } from "@/cms/ui/skeleton";
-import {
-  Tooltip,
-  TooltipPopup,
-  TooltipTrigger,
-} from "@/cms/ui/tooltip";
+import { Tooltip, TooltipPopup, TooltipTrigger } from "@/cms/ui/tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
