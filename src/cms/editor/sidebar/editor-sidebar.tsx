@@ -1,10 +1,10 @@
 import { useAnimationMode } from "@/cms/hooks/use-animation-mode";
 import { useEditorStore } from "@/cms/stores/editor-store";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Sidebar } from "@/components/ui/sidebar";
-import { ArrowLeft, X } from "lucide-react";
+import { Button } from "@/cms/ui/button";
+import { ScrollArea } from "@/cms/ui/scroll-area";
+import { Separator } from "@/cms/ui/separator";
+import { Sidebar } from "@/cms/ui/sidebar";
+import { IconArrowLeft, IconX } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { BlockLibrary } from "../content-editor/add-blocks";
 import { BlockEditor } from "../content-editor/edit-blocks";
@@ -36,7 +36,7 @@ const SidebarHeader = () => {
               className="mx-0 p-2 transition-colors"
               aria-label="Back to list"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <IconArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-3">
               <h3 className="font-medium capitalize">
@@ -58,7 +58,7 @@ const SidebarHeader = () => {
         </motion.div>
       )}
       <Button size={"icon"} variant={"ghost"} onClick={() => setMode("view")}>
-        <X />
+        <IconX />
       </Button>
     </div>
   );

@@ -2,17 +2,24 @@ import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { useIsMobile } from "@/cms/hooks/use-is-mobile";
 import { useSavePage } from "@/cms/hooks/useSavePage";
 import { useEditorShortcuts } from "@/cms/hooks/useShortcuts";
+import { cn } from "@/cms/lib/utils";
 import { useEditorStore, ViewMode } from "@/cms/stores/editor-store";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Kbd, KbdGroup } from "@/cms/ui/kbd";
+import { Separator } from "@/cms/ui/separator";
+import { ToggleGroup, ToggleGroupItem } from "@/cms/ui/toggle-group";
 import {
   Tooltip,
-  TooltipContent,
+  TooltipPopup,
+  TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/components/ui/utils/cn";
+} from "@/cms/ui/tooltip";
 import { Route } from "@/routes/app/(authenticated)/edit/$";
-import { Eye, Pencil, Plus, Save } from "lucide-react";
+import {
+  IconDeviceFloppy,
+  IconEye,
+  IconPencil,
+  IconPlus,
+} from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ToolbarButton } from "./toolbar-button";
@@ -62,9 +69,9 @@ export function EditorToolbar() {
   useEditorShortcuts({ onSave: handleSave });
 
   const items = [
-    { value: "view", icon: Eye, label: "View Mode", shortcut: KbdView },
-    { value: "edit", icon: Pencil, label: "Edit Mode", shortcut: KbdEdit },
-    { value: "add", icon: Plus, label: "Add Mode", shortcut: KbdAdd },
+    { value: "view", icon: IconEye, label: "View", shortcut: KbdView },
+    { value: "edit", icon: IconPencil, label: "Edit", shortcut: KbdEdit },
+    { value: "add", icon: IconPlus, label: "Add", shortcut: KbdAdd },
   ];
 
   return (
@@ -84,37 +91,39 @@ export function EditorToolbar() {
           // set explictily to stop weird warping on resize
           style={{ height: 46, borderRadius: 23 }}
         >
-          {/* Mode Toggle Group */}
-          <motion.div
-            layoutId={"edit"}
-            layout="position"
-            className="relative z-10"
-          >
-            <ToggleGroup
-              type="single"
-              value={mode}
-              onValueChange={(val: ViewMode) => {
-                if (val) setMode(val);
-              }}
-              className="gap-2"
+          <TooltipProvider>
+            {/* Mode Toggle Group */}
+            <motion.div
+              layoutId={"edit"}
+              layout="position"
+              className="relative z-10"
             >
-              {items.map((item) => {
-                const isSelected = mode === item.value;
-                const Icon = item.icon;
+              <ToggleGroup
+                value={[mode]}
+                onValueChange={(val: ViewMode[]) => {
+                  if (val) setMode(val[0]);
+                }}
+                className="gap-0.5"
+              >
+                {items.map((item) => {
+                  const isSelected = mode === item.value;
+                  const Icon = item.icon;
 
-                return (
-                  <Tooltip delayDuration={500}>
-                    <TooltipTrigger asChild>
-                      <ToggleGroupItem
-                        key={item.value}
-                        value={item.value}
-                        aria-label={item.label}
-                        className={cn(
-                          "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
-                          isSelected
-                            ? "text-background"
-                            : "text-muted-foreground",
-                        )}
+                  return (
+                    <Tooltip key={item.value}>
+                      <TooltipTrigger
+                        render={
+                          <ToggleGroupItem
+                            value={item.value}
+                            aria-label={item.label}
+                            className={cn(
+                              "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                              isSelected
+                                ? "text-background"
+                                : "text-muted-foreground",
+                            )}
+                          />
+                        }
                       >
                         {isSelected && (
                           <motion.div
@@ -129,24 +138,25 @@ export function EditorToolbar() {
                           />
                         )}
 
-                        <div className="relative z-10">
-                          <Icon
-                            className={cn(
-                              "h-4 w-4",
-                              isSelected && "text-background",
-                            )}
-                          />
+                        <div
+                          className={cn(
+                            "relative flex gap-2 items-center p-3 z-10 transition-colors",
+                            isSelected && "text-background!",
+                          )}
+                        >
+                          <Icon className={cn("h-4 w-4")} />
+                          {/*<span>{item.label}</span>*/}
                         </div>
-                      </ToggleGroupItem>
-                    </TooltipTrigger>
-                    <TooltipContent className="px-1.5">
-                      <item.shortcut />
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              })}
-            </ToggleGroup>
-          </motion.div>
+                      </TooltipTrigger>
+                      <TooltipPopup className="">
+                        <item.shortcut />
+                      </TooltipPopup>
+                    </Tooltip>
+                  );
+                })}
+              </ToggleGroup>
+            </motion.div>
+          </TooltipProvider>
 
           {/* Save Button (Conditional) */}
           <AnimatePresence mode="popLayout" initial={false}>
@@ -159,10 +169,11 @@ export function EditorToolbar() {
                 animate="visible"
                 exit="hidden"
                 custom={{ x: 10, duration: 0.2 }}
-                className="ml-1  border-l"
+                className="ml-2 flex gap-1.5"
               >
+                <Separator orientation="vertical" />
                 <ToolbarButton id="save" onClick={handleSave}>
-                  <Save className="size-4" />
+                  <IconDeviceFloppy className="size-4" />
                   {savePageMutation.isPending ? "Saving…" : "Save"}
                 </ToolbarButton>
               </motion.div>

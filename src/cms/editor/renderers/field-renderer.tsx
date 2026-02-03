@@ -1,7 +1,7 @@
 import { FieldTypeMap } from "@/cms/blocks/block-registry.types";
-import { ImageDropzone } from "@/components/ui/file-uploads/image-dropzone";
-import { Input } from "@/components/ui/input";
-import { MinimalTiptapEditor } from "@/components/ui/minimal-tiptap";
+import { ImageDropzone } from "@/cms/ui/file-uploads/image-dropzone";
+import { Input } from "@/cms/ui/input";
+import { MinimalTiptapEditor } from "@/cms/ui/minimal-tiptap";
 import { ReactNode } from "react";
 import { ControllerRenderProps, Path } from "react-hook-form";
 
@@ -17,8 +17,8 @@ type FieldRenderers = {
 };
 
 export const fieldRenderers: FieldRenderers = {
-  text: ({ field }) => <Input {...field} />,
-  url: ({ field }) => <Input {...field} />,
+  text: ({ field }) => <Input {...field} nativeInput />,
+  url: ({ field }) => <Input {...field} type="url" nativeInput />,
   image: ({ field }) => (
     <ImageDropzone
       maxFiles={1}

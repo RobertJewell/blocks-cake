@@ -11,8 +11,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/cms/ui/form";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/cms/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useMemo } from "react";
 import { DefaultValues, Path, SubmitHandler, useForm } from "react-hook-form";
@@ -82,7 +82,7 @@ export function FormRenderer<T extends Block["type"]>({
           name={key as Path<PropsOf<T>>}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <FormLabel className="text-xs text-muted-foreground">
                 {def.label}
               </FormLabel>
               <FormControl>
