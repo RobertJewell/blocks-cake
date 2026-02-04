@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blocks-cakes",
-  "compatibility_date": "2025-09-02",
+  "compatibility_date": "2026-02-03",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
   "vars": {
@@ -25,6 +25,29 @@
       "remote": true,
     },
   ],
+  "queues": {
+    "producers": [
+      {
+        "queue": "blocks-optimise-image",
+        "binding": "blocks_optimise_image",
+      },
+    ],
+    "consumers": [
+      {
+        "queue": "blocks-optimise-image",
+      },
+    ],
+  },
+
+  "ai": {
+    "binding": "AI",
+    "remote": true,
+  },
+
+  "images": {
+    "binding": "IMAGES",
+  },
+
   "observability": {
     "logs": {
       "enabled": false,

@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
-import { authFunctionMiddleware } from "../../../core/middleware/auth";
 import z from "zod";
+import { authFunctionMiddleware } from "@/cms/core/middleware/auth/auth-function-middleware";
+import { env } from "cloudflare:workers";
 
 export const queueImageOptimisation = createServerFn()
   .middleware([authFunctionMiddleware])
@@ -19,8 +20,9 @@ export const queueImageOptimisation = createServerFn()
 
     console.log(`Queueing ${data.keys.length} assets for optimization...`);
 
-    data.keys.forEach((key) => {
-      console.log("Adding to queue:", key);
+    await env.blocks_optimise_image.send({
+      keys: data.keys,
+      timestamp: Date.now(),
     });
 
     return {

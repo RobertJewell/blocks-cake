@@ -1,3 +1,2 @@
-export * from "./auth";
-export * from "./auth-function-middleware";
-export * from "./auth-request-middleware";
+export { createAuthInstance } from "./auth";
+export { authRequestMiddleware } from "./auth-request-middleware";
