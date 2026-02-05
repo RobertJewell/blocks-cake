@@ -23,6 +23,22 @@ export const fields = {
     };
   },
 
+  textArea: (
+    label: string,
+    options?: { min?: number; optional?: boolean; group?: string },
+  ): FieldDefinition<"textArea"> => {
+    let schema = z.string();
+    if (options?.min) schema = schema.min(options.min);
+
+    return {
+      type: "textArea",
+      label,
+      schema: applyOptions(schema, options),
+      defaultValue: "",
+      group: options?.group || "Content",
+    };
+  },
+
   image: (
     label: string,
     options?: { max?: number; optional?: boolean; group?: string },

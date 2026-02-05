@@ -2,6 +2,7 @@ import { FieldTypeMap } from "@/cms/blocks/block-registry.types";
 import { ImageDropzone } from "@/cms/ui/file-uploads/image-dropzone";
 import { Input } from "@/cms/ui/input";
 import { MinimalTiptapEditor } from "@/cms/ui/minimal-tiptap";
+import { Textarea } from "@/cms/ui/textarea";
 import { ReactNode } from "react";
 import { ControllerRenderProps, Path } from "react-hook-form";
 
@@ -18,6 +19,7 @@ type FieldRenderers = {
 
 export const fieldRenderers: FieldRenderers = {
   text: ({ field }) => <Input {...field} nativeInput />,
+  textArea: ({ field }) => <Textarea className="h-64" {...field} />,
   url: ({ field }) => <Input {...field} type="url" nativeInput />,
   image: ({ field }) => (
     <ImageDropzone

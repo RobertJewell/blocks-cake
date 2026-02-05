@@ -17,6 +17,7 @@ export type Registry = typeof registry;
 
 export type FieldTypeMap = {
   text: string;
+  textArea: string;
   richtext: string;
   image: Asset[];
   url: string;

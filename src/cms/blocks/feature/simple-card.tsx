@@ -43,7 +43,7 @@ export const SimpleCard = ({
                 </p>
               )}
               {description && (
-                <p className="mt-6 leading-loose text-gray-600 whitespace-pre-line">
+                <p className="mt-6 leading-loose text-gray-600">
                   {description}
                 </p>
               )}

@@ -1,16 +1,15 @@
 import { fields } from "../block-builder";
 
-export const simpleCardConfig = {
+export const featureThreeColumn = {
   heading: fields.text("Heading", { min: 1 }),
   subheading: fields.text("Subheading", { optional: true }),
-  description: fields.textArea("Description"),
-  image: fields.image("Image", { max: 1, optional: true }),
-
+  description: fields.text("Description"),
   ctaText: fields.text("Call to Action Text", {
     optional: true,
-    group: "Action",
   }),
-  ctaHref: fields.text("Link URL", { optional: true, group: "Action" }),
+  ctaHref: fields.text("Link URL", { optional: true }),
+
+  image: fields.image("Image", { max: 1, optional: true }),
 
   maxWidth: fields.text("Max Width", { optional: true, group: "Style" }),
 };
