@@ -7,51 +7,75 @@ import { registry } from "./block-registry";
 // --- --- --- --- --- ---
 // Registry export type
 // --- --- --- --- --- ---
-//
+
 export type Registry = typeof registry;
 
 // --- --- --- --- --- ---
 // Field types
 // --- --- --- --- --- ---
 
-export type FieldTypeMap = {
+/**
+ * Base map for non-recursive fields.
+ * This acts as the source of truth for primitive field values.
+ */
+export type BaseFieldMap = {
   text: string;
   textArea: string;
   richtext: string;
   url: string;
   switch: boolean;
   image: Asset[];
-  repeater: any[];
+};
+
+/**
+ * Enhanced FieldTypeMap that describes a repeater as a recursive
+ * collection of any valid field value.
+ */
+export type FieldTypeMap = BaseFieldMap & {
+  repeater: Array<Record<string, BaseFieldMap[keyof BaseFieldMap] | any[]>>;
 };
 
 export type FieldType = keyof FieldTypeMap;
 
-export type FieldDefinition<K extends FieldType> = {
+/**
+ * Generic definition for primitive fields.
+ */
+export type FieldDefinition<K extends keyof BaseFieldMap> = {
   type: K;
   label: string;
-  // TODO (low priority) - Work out how to remove this "| undefined" as it makes all the keys optional
-  // There is likely a way to persist an "as const" across these types so removing this doesn't make all the other types unhappy
-  schema: z.ZodType<FieldTypeMap[K] | undefined>;
-  defaultValue?: FieldTypeMap[K];
+  schema: z.ZodType<BaseFieldMap[K] | undefined>;
+  defaultValue?: BaseFieldMap[K];
   group?: string;
 };
 
-export type RepeaterFieldDefinition<T extends BlockConfigFields = any> = {
+/**
+ * Definition for Repeaters.
+ * T defaults to BlockConfigFields to allow recursion while keeping
+ * the specific field keys intact for the RuntimeValue resolver.
+ */
+export type RepeaterFieldDefinition<
+  T extends BlockConfigFields = BlockConfigFields,
+> = {
   type: "repeater";
   label: string;
   fields: T;
-  schema: z.ZodType<any>;
-  defaultValue?: any[];
+  schema: z.ZodType<unknown>;
+  defaultValue?: Array<Record<string, unknown>>;
   max?: number;
   min?: number;
   group?: string;
 };
+
+/**
+ * Discriminated union of all possible field definitions.
+ * This prevents type widening and allows for proper narrowing in components.
+ */
 export type AnyFieldDefinition =
-  | FieldDefinition<Exclude<FieldType, "repeater">>
+  | { [K in keyof BaseFieldMap]: FieldDefinition<K> }[keyof BaseFieldMap]
   | RepeaterFieldDefinition<any>;
 
 // --- --- --- --- --- ---
-//  Block Types
+// Block Types
 // --- --- --- --- --- ---
 
 export type BlockConfigFields = Record<string, AnyFieldDefinition>;
@@ -87,16 +111,19 @@ export type Block = {
 // --- --- --- --- --- ---
 // Assets Types / helpers
 // --- --- --- --- --- ---
-//
-// Images are stored as references, but at RuntimeValue we're hydrating them to a full asset object.
 
+/**
+ * Recursive Type Resolver.
+ * 1. If T is a Repeater, it maps over the fields F and resolves them recursively.
+ * 2. If T is a Primitive, it looks up the value in BaseFieldMap.
+ */
 type RuntimeValue<T extends AnyFieldDefinition> =
   T extends RepeaterFieldDefinition<infer F>
-    ? { [K in keyof F]: RuntimeValue<F[K]> }[] // 1. Recurse into the specific fields F
-    : T["type"] extends keyof FieldTypeMap
-      ? T["type"] extends "image" // 2. Handle special assets
-        ? Asset[]
-        : z.infer<T["schema"]> // 3. Fallback to Zod inference for primitives
+    ? { [K in keyof F]: RuntimeValue<F[K]> }[]
+    : T extends { type: infer K }
+      ? K extends keyof BaseFieldMap
+        ? BaseFieldMap[K]
+        : never
       : never;
 
 export type HydratedBlockProps<T extends BlockConfigFields> = {
@@ -121,3 +148,12 @@ export type PropsOf<T extends Block["type"]> = Extract<
   Block,
   { type: T }
 >["data"];
+
+/**
+ * Helper to narrow AnyFieldDefinition to RepeaterFieldDefinition.
+ */
+export function isRepeaterDef(
+  def: AnyFieldDefinition,
+): def is RepeaterFieldDefinition<BlockConfigFields> {
+  return def.type === "repeater";
+}

@@ -1,7 +1,6 @@
 import {
-  FieldDefinition,
+  AnyFieldDefinition,
   FieldTypeMap,
-  RepeaterFieldDefinition,
 } from "@/cms/blocks/block-registry.types";
 import { ImageDropzone } from "@/cms/ui/file-uploads/image-dropzone";
 import { Input } from "@/cms/ui/input";
@@ -17,7 +16,7 @@ export type RendererProps<T extends keyof FieldTypeMap> = {
     Record<string, FieldTypeMap[T]>,
     Path<Record<string, FieldTypeMap[T]>>
   >;
-  fieldDef: FieldDefinition<keyof FieldTypeMap> | RepeaterFieldDefinition;
+  fieldDef: AnyFieldDefinition;
 };
 
 export type FieldRenderers = {

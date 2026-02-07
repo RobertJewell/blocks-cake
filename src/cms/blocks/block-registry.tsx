@@ -48,13 +48,13 @@ export const registry = {
 
     defaultValues: {
       heading: "Lorem Ipsum",
-      subheading: undefined,
+      subheading: "",
       description:
         "Duis pariatur ex fugiat Lorem anim ullamco aliqua amet sit exercitation",
-      ctaText: undefined,
-      ctaHref: undefined,
+      ctaText: "",
+      ctaHref: "",
       image: [],
-      maxWidth: undefined,
+      maxWidth: "",
       reverse: false,
     },
   }),
@@ -67,7 +67,7 @@ export const registry = {
 
     defaultValues: {
       heading: "Lorem Ipsum",
-      subheading: undefined,
+      subheading: "",
       description:
         "Duis pariatur ex fugiat Lorem anim ullamco aliqua amet sit exercitation",
       features: [],

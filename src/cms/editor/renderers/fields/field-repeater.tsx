@@ -1,4 +1,4 @@
-import { AnyFieldDefinition } from "@/cms/blocks/block-registry.types";
+import { isRepeaterDef } from "@/cms/blocks/block-registry.types";
 import { Button } from "@/cms/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/cms/ui/card";
 import { IconPlus, IconX } from "@tabler/icons-react";
@@ -16,11 +16,11 @@ export const RepeaterField = ({
     name: field.name,
   });
 
-  if (!("fields" in fieldDef)) return null;
+  if (!isRepeaterDef(fieldDef)) return null;
 
   return (
     <div className="space-y-4">
-      {fields.map((item: any, index) => (
+      {fields.map((item, index) => (
         <Card key={item.id} className="overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between bg-muted/30 p-2 px-3">
             <CardTitle className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -33,7 +33,7 @@ export const RepeaterField = ({
               className="h-7 w-7 p-0"
               onClick={() => {
                 remove(index);
-                // Notify parent of the structural change
+                // Update parent so our isDirty tracking stays correct
                 field.onChange(getValues(field.name));
               }}
             >
@@ -41,10 +41,8 @@ export const RepeaterField = ({
             </Button>
           </CardHeader>
           <CardContent className="space-y-4 p-3">
-            {Object.entries(fieldDef.fields).map(([childKey, childValue]) => {
-              const childDef = childValue as AnyFieldDefinition;
-              const Renderer =
-                fieldRenderers[childDef.type as keyof typeof fieldRenderers];
+            {Object.entries(fieldDef.fields).map(([childKey, childDef]) => {
+              const Renderer = fieldRenderers[childDef.type];
 
               if (!Renderer) return null;
 
@@ -56,29 +54,22 @@ export const RepeaterField = ({
                     {childDef.label}
                   </label>
                   <Renderer
-                    fieldDef={childDef as any}
+                    fieldDef={childDef}
                     field={{
-                      name: childPath as any,
-                      // 1. Important: Use getValues here to ensure we always have the freshest state
+                      name: childPath,
                       value:
-                        getValues(childPath) ??
-                        (childDef as any).defaultValue ??
-                        "",
-                      onChange: (val: any) => {
+                        getValues(childPath) ?? childDef.defaultValue ?? "",
+                      onChange: (val) => {
                         const extractedValue =
                           val?.target && "value" in val.target
                             ? val.target.value
                             : val;
 
-                        // 2. Surgical Update: Update only this specific string in the form state.
-                        // This prevents the whole array from being "replaced" and losing focus.
                         setValue(childPath, extractedValue, {
                           shouldDirty: true,
                           shouldTouch: true,
                         });
 
-                        // 3. Notify the Repeater's own Controller (for the Save button logic)
-                        // We send the current state of the array.
                         field.onChange(getValues(field.name));
                       },
                       onBlur: () => {},
@@ -100,7 +91,7 @@ export const RepeaterField = ({
           className="w-full border-dashed"
           onClick={() => {
             const newItem = Object.entries(fieldDef.fields).reduce(
-              (acc, [k, d]) => ({ ...acc, [k]: (d as any).defaultValue ?? "" }),
+              (acc, [k, d]) => ({ ...acc, [k]: d.defaultValue ?? "" }),
               {},
             );
             append(newItem);

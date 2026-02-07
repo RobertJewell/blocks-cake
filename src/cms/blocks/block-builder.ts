@@ -4,7 +4,6 @@ import {
   BlockConfig,
   BlockConfigFields,
   FieldDefinition,
-  FieldTypeMap,
   RepeaterFieldDefinition,
 } from "./block-registry.types";
 
@@ -111,7 +110,7 @@ const applyOptions = <T extends z.ZodTypeAny>(
 export function createSchema<T extends BlockConfigFields>(fields: T) {
   const zodShape: Record<string, z.ZodTypeAny> = {};
   Object.entries(fields).forEach(([key, field]) => {
-    zodShape[key] = (field as FieldDefinition<keyof FieldTypeMap>).schema;
+    zodShape[key] = field.schema;
   });
   return z.object(zodShape) as any;
 }
