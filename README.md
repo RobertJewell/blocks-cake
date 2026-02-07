@@ -25,10 +25,15 @@ We can cover the tech stack, then I’ll rant about _why_ I’m trying this.
 
 Headless CMSs are great\*
 They separate the content from the presentation and that’s wonderful.
+
 The problem is this requires the user to have a mental model of the presention layer and how that will change the content.
-…And it **will** change the content.
-How the content is **presented** changes how the reader perceives it.
+
+…And it **_will_** change the content.
+
+How the content is **_presented_** changes how the reader perceives it.
+
 Just in those last two lines you read the words “will” and “presented” differently because they were emphasised. That was just bolding them. What about when they’re 3 sizes larger and a in different font?
+
 
 For a casual user, a preview of the page where they can see the results of their edits is really useful. Not every part of a CMS needs to headless.
 There are advantages to having your CMS live alongside your app - for example: Payload [The Next.js Headless CMS and App Framework](https://payloadcms.com/)
@@ -71,4 +76,3 @@ This all happens:
 
 And all that happens in around 120 lines of code…
 
-#webdev
