@@ -50,7 +50,7 @@ export function FormRenderer<T extends Block["type"]>({
       grouped[groupName].fields.push(key);
     });
 
-    const tabOrder = blockDef.tabs || Object.keys(grouped);
+    const tabOrder = Object.keys(grouped);
 
     return tabOrder.map((tab) => grouped[tab]).filter(Boolean) as {
       label: string;

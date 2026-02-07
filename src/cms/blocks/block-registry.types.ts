@@ -82,9 +82,9 @@ export type BlockConfigFields = Record<string, AnyFieldDefinition>;
 
 export type BlockConfig<T extends BlockConfigFields> = {
   name: string;
+  nameKey?: keyof T;
   category: string;
   fields: T;
-  tabs?: string[];
   skeleton: React.ComponentType<{ className?: string }>;
   component: React.ComponentType<HydratedBlockProps<T>>;
   defaultValues: HydratedBlockProps<T>;

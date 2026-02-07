@@ -17,6 +17,7 @@ export const registry = {
     fields: heroConfig,
     component: HeroComponent,
     skeleton: HeroSkeleton,
+    nameKey: "heading",
     defaultValues: {
       heading: "A Hero Banner",
       subheading: "Subtitle",
