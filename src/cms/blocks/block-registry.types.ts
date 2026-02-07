@@ -2,7 +2,6 @@ import { z } from "zod";
 import { InferSelectModel } from "drizzle-orm";
 import { pages } from "../core/db/schema";
 import { Asset } from "./shared/assets/asset-schema";
-import { HydratedBlockProps } from "./shared/assets/asset-type-helpers";
 import { registry } from "./block-registry";
 
 // --- --- --- --- --- ---
@@ -19,8 +18,10 @@ export type FieldTypeMap = {
   text: string;
   textArea: string;
   richtext: string;
-  image: Asset[];
   url: string;
+  switch: boolean;
+  image: Asset[];
+  repeater: any[];
 };
 
 export type FieldType = keyof FieldTypeMap;
@@ -28,19 +29,32 @@ export type FieldType = keyof FieldTypeMap;
 export type FieldDefinition<K extends FieldType> = {
   type: K;
   label: string;
+  // TODO (low priority) - Work out how to remove this "| undefined" as it makes all the keys optional
+  // There is likely a way to persist an "as const" across these types so removing this doesn't make all the other types unhappy
   schema: z.ZodType<FieldTypeMap[K] | undefined>;
   defaultValue?: FieldTypeMap[K];
   group?: string;
 };
 
+export type RepeaterFieldDefinition<T extends BlockConfigFields = any> = {
+  type: "repeater";
+  label: string;
+  fields: T;
+  schema: z.ZodType<any>;
+  defaultValue?: any[];
+  max?: number;
+  min?: number;
+  group?: string;
+};
+export type AnyFieldDefinition =
+  | FieldDefinition<Exclude<FieldType, "repeater">>
+  | RepeaterFieldDefinition<any>;
+
 // --- --- --- --- --- ---
 //  Block Types
 // --- --- --- --- --- ---
 
-export type BlockConfigFields = Record<
-  string,
-  FieldDefinition<keyof FieldTypeMap>
->;
+export type BlockConfigFields = Record<string, AnyFieldDefinition>;
 
 export type BlockConfig<T extends BlockConfigFields> = {
   name: string;
@@ -69,6 +83,25 @@ export type Block = {
     data: z.infer<Registry[K]["schema"]>;
   };
 }[BlockType];
+
+// --- --- --- --- --- ---
+// Assets Types / helpers
+// --- --- --- --- --- ---
+//
+// Images are stored as references, but at RuntimeValue we're hydrating them to a full asset object.
+
+type RuntimeValue<T extends AnyFieldDefinition> =
+  T extends RepeaterFieldDefinition<infer F>
+    ? { [K in keyof F]: RuntimeValue<F[K]> }[] // 1. Recurse into the specific fields F
+    : T["type"] extends keyof FieldTypeMap
+      ? T["type"] extends "image" // 2. Handle special assets
+        ? Asset[]
+        : z.infer<T["schema"]> // 3. Fallback to Zod inference for primitives
+      : never;
+
+export type HydratedBlockProps<T extends BlockConfigFields> = {
+  [K in keyof T]: RuntimeValue<T[K]>;
+};
 
 // --- --- --- --- --- ---
 // Page Types

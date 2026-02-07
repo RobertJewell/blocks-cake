@@ -1,26 +1,41 @@
-import { FieldTypeMap } from "@/cms/blocks/block-registry.types";
+import {
+  FieldDefinition,
+  FieldTypeMap,
+  RepeaterFieldDefinition,
+} from "@/cms/blocks/block-registry.types";
 import { ImageDropzone } from "@/cms/ui/file-uploads/image-dropzone";
 import { Input } from "@/cms/ui/input";
 import { MinimalTiptapEditor } from "@/cms/ui/minimal-tiptap";
+import { Switch } from "@/cms/ui/switch";
 import { Textarea } from "@/cms/ui/textarea";
 import { ReactNode } from "react";
 import { ControllerRenderProps, Path } from "react-hook-form";
+import { RepeaterField } from "./fields/field-repeater";
 
-type RendererProps<T extends keyof FieldTypeMap> = {
+export type RendererProps<T extends keyof FieldTypeMap> = {
   field: ControllerRenderProps<
     Record<string, FieldTypeMap[T]>,
     Path<Record<string, FieldTypeMap[T]>>
   >;
+  fieldDef: FieldDefinition<keyof FieldTypeMap> | RepeaterFieldDefinition;
 };
 
-type FieldRenderers = {
+export type FieldRenderers = {
   [K in keyof FieldTypeMap]: (props: RendererProps<K>) => ReactNode;
 };
 
 export const fieldRenderers: FieldRenderers = {
-  text: ({ field }) => <Input {...field} nativeInput />,
+  text: ({ field }) => <Input {...field} />,
   textArea: ({ field }) => <Textarea className="h-64" {...field} />,
-  url: ({ field }) => <Input {...field} type="url" nativeInput />,
+  url: ({ field }) => <Input {...field} type="url" />,
+  switch: ({ field }) => (
+    <Switch
+      {...field}
+      value={""}
+      checked={Boolean(field.value)}
+      onCheckedChange={(val) => field.onChange(val)}
+    />
+  ),
   image: ({ field }) => (
     <ImageDropzone
       maxFiles={1}
@@ -45,4 +60,6 @@ export const fieldRenderers: FieldRenderers = {
       />
     );
   },
+
+  repeater: RepeaterField,
 };

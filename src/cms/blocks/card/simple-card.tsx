@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/components/ui/utils/cn";
+import { HydratedBlockProps } from "../block-registry.types";
 import { AssetImage } from "../shared/assets/asset-image";
-import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
 import { simpleCardConfig } from "./simple-card-config";
 
 export type SimpleCardProps = HydratedBlockProps<typeof simpleCardConfig>;
-
-const reverse = false;
 
 export const SimpleCard = ({
   heading,
@@ -16,6 +14,7 @@ export const SimpleCard = ({
   ctaHref,
   image,
   maxWidth,
+  reverse,
 }: SimpleCardProps) => {
   return (
     <div className="my-4 overflow-hidden py-12">

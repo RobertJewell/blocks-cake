@@ -1,6 +1,8 @@
 import { defineBlock } from "./block-builder";
 import { BlockDefinitionResult } from "./block-registry.types";
 import { SimpleCard, simpleCardConfig, SimpleCardSkeleton } from "./card";
+import { featuresThreeColumn } from "./feature";
+import { FeaturesThreeColumn } from "./feature/features-three-column";
 import { HeroComponent, heroConfig, HeroSkeleton } from "./hero";
 import {
   RichTextComponent,
@@ -53,6 +55,22 @@ export const registry = {
       ctaHref: undefined,
       image: [],
       maxWidth: undefined,
+      reverse: false,
+    },
+  }),
+  featuresThreeColumn: defineBlock({
+    name: "Three Column",
+    category: "features",
+    fields: featuresThreeColumn,
+    component: FeaturesThreeColumn,
+    skeleton: SimpleCardSkeleton,
+
+    defaultValues: {
+      heading: "Lorem Ipsum",
+      subheading: undefined,
+      description:
+        "Duis pariatur ex fugiat Lorem anim ullamco aliqua amet sit exercitation",
+      features: [],
     },
   }),
 } satisfies Record<string, BlockDefinitionResult>;

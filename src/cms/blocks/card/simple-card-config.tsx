@@ -13,4 +13,5 @@ export const simpleCardConfig = {
   ctaHref: fields.text("Link URL", { optional: true, group: "Action" }),
 
   maxWidth: fields.text("Max Width", { optional: true, group: "Style" }),
+  reverse: fields.switch("Reverse", { optional: false, group: "Style" }),
 };

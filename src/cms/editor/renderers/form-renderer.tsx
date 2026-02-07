@@ -39,10 +39,6 @@ export function FormRenderer<T extends Block["type"]>({
     defaultValues: block.data as DefaultValues<PropsOf<T>>,
   });
 
-  form.watch((values) => {
-    return onChange?.(values as Partial<PropsOf<T>>);
-  });
-
   const groups = useMemo(() => {
     const grouped: Record<string, { label: string; fields: string[] }> = {};
 
@@ -64,13 +60,14 @@ export function FormRenderer<T extends Block["type"]>({
 
   const renderFields = (fieldKeys: string[]) => {
     return fieldKeys.map((key) => {
-      const def = (blockDef.fields as BlockConfigFields)[key];
-      const Renderer = fieldRenderers[def.type as keyof typeof fieldRenderers];
+      const fieldDef = (blockDef.fields as BlockConfigFields)[key];
+      const Renderer =
+        fieldRenderers[fieldDef.type as keyof typeof fieldRenderers];
 
       if (!Renderer) {
         return (
           <p key={key} className="text-sm text-red-600">
-            Unknown field type: {def.type}
+            Unknown field type: {fieldDef.type}
           </p>
         );
       }
@@ -83,10 +80,35 @@ export function FormRenderer<T extends Block["type"]>({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-xs text-muted-foreground">
-                {def.label}
+                {fieldDef.label}
               </FormLabel>
               <FormControl>
-                <Renderer field={field as any} />
+                <Renderer
+                  fieldDef={fieldDef}
+                  field={{
+                    ...field,
+                    onChange: (val: any) => {
+                      // 1. Extract the value
+                      const extractedValue =
+                        val?.target && "value" in val.target
+                          ? val.target.value
+                          : val;
+
+                      // 2. Update the local form state (RHF)
+                      field.onChange(extractedValue);
+
+                      // 3. Explicitly notify the parent of the change
+                      // We use getValues() to send the full updated state
+                      if (onChange) {
+                        const currentValues = form.getValues();
+                        onChange({
+                          ...currentValues,
+                          [key]: extractedValue,
+                        });
+                      }
+                    },
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
