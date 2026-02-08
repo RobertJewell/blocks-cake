@@ -1,3 +1,4 @@
+import { registry } from "@/cms/blocks/block-registry";
 import { Block } from "@/cms/blocks/block-registry.types";
 import { cn } from "@/cms/lib/utils";
 import { useEditorStore } from "@/cms/stores/editor-store";
@@ -12,6 +13,21 @@ export interface BlockItemProps extends React.HTMLAttributes<HTMLDivElement> {
   onSelect?: () => void;
 }
 
+/**
+ * Strips HTML tags, collapses whitespace, and truncates to a max length.
+ */
+const formatBlockTitle = (input: unknown, maxLength: number = 80): string => {
+  if (typeof input !== "string") {
+    return "";
+  }
+
+  return input
+    .replace(/<[^>]*>/g, " ") // Replace HTML tags with a space
+    .replace(/\s+/g, " ") // Collapse multiple spaces/newlines into one
+    .trim() // Clean up edges
+    .substring(0, maxLength); // Truncate
+};
+
 export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
   ({ block, onSelect, style, className, ...props }, ref) => {
     const resetBlock = useEditorStore((s) => s.resetBlock);
@@ -21,6 +37,10 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
     const editedBlocks = useEditorStore((s) => s.editedBlocks);
 
     const hasChanges = editedBlocks.has(block.id);
+
+    const titleSample =
+      block.data[registry[block.type].nameKey as string] || "";
+    const title = formatBlockTitle(titleSample);
 
     return (
       <div
@@ -40,7 +60,7 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
             "border-none! hover:border-none!",
           )}
         >
-          <BlockPreview type={block.type} />
+          <BlockPreview type={block.type} title={title} />
 
           {/* Menu Button - appears on hover */}
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">

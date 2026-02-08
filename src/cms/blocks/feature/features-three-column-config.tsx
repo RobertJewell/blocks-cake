@@ -1,6 +1,6 @@
 import { fields } from "../block-builder";
 
-export const featuresThreeColumn = {
+export const featuresThreeColumnConfig = {
   heading: fields.text("Heading", { min: 1 }),
   subheading: fields.text("Subheading", { optional: true }),
   description: fields.text("Description"),

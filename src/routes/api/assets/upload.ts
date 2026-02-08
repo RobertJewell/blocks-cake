@@ -12,7 +12,7 @@ import { drizzleMiddleware } from "@/cms/core/middleware/db";
 import { authRequestMiddleware } from "@/cms/core/middleware/auth";
 import { assets } from "@/cms/core/db/schema";
 
-export const Route = createFileRoute("/api/upload")({
+export const Route = createFileRoute("/api/assets/upload")({
   server: {
     middleware: [drizzleMiddleware, authRequestMiddleware],
     handlers: {

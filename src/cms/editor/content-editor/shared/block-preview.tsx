@@ -5,9 +5,15 @@ import { HTMLAttributes } from "react";
 
 interface BlockPreviewProps extends HTMLAttributes<HTMLDivElement> {
   type: BlockType;
+  title?: string;
 }
 
-export function BlockPreview({ type, className, ...props }: BlockPreviewProps) {
+export function BlockPreview({
+  type,
+  title,
+  className,
+  ...props
+}: BlockPreviewProps) {
   const def = registry[type];
   const Skeleton = def?.skeleton;
 
@@ -27,10 +33,10 @@ export function BlockPreview({ type, className, ...props }: BlockPreviewProps) {
       <div className="absolute left-0 top-0 flex w-full justify-center pointer-events-none">
         <span
           className={cn(
-            "rounded-b-md border bg-muted border-t-0 px-2 py-0.5 text-xs font-mono capitalize text-foreground select-none",
+            "rounded-b-md line-clamp-1 max-w-56 border bg-muted border-t-0 px-2 py-0.5 text-xs font-normal capitalize text-muted-foreground select-none",
           )}
         >
-          {def?.name || type}
+          {title || def?.name || type}
         </span>
       </div>
 

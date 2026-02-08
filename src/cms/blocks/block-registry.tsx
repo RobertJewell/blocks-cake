@@ -1,8 +1,11 @@
 import { defineBlock } from "./block-builder";
 import { BlockDefinitionResult } from "./block-registry.types";
 import { SimpleCard, simpleCardConfig, SimpleCardSkeleton } from "./card";
-import { featuresThreeColumn } from "./feature";
-import { FeaturesThreeColumn } from "./feature/features-three-column";
+import {
+  FeaturesThreeColumn,
+  featuresThreeColumnConfig,
+  FeaturesThreeColumnSkeleton,
+} from "./feature";
 import { HeroComponent, heroConfig, HeroSkeleton } from "./hero";
 import {
   RichTextComponent,
@@ -31,6 +34,7 @@ export const registry = {
   richtext: defineBlock({
     name: "Rich Text",
     category: "Rich Text",
+    nameKey: "content",
     fields: richTextConfig,
     component: RichTextComponent,
     skeleton: RichTextSkeleton,
@@ -43,10 +47,10 @@ export const registry = {
   simpleCard: defineBlock({
     name: "Simple card",
     category: "cards",
+    nameKey: "heading",
     fields: simpleCardConfig,
     component: SimpleCard,
     skeleton: SimpleCardSkeleton,
-
     defaultValues: {
       heading: "Lorem Ipsum",
       subheading: "",
@@ -62,10 +66,10 @@ export const registry = {
   featuresThreeColumn: defineBlock({
     name: "Three Column",
     category: "features",
-    fields: featuresThreeColumn,
+    nameKey: "heading",
+    fields: featuresThreeColumnConfig,
     component: FeaturesThreeColumn,
-    skeleton: SimpleCardSkeleton,
-
+    skeleton: FeaturesThreeColumnSkeleton,
     defaultValues: {
       heading: "Lorem Ipsum",
       subheading: "",

@@ -1,9 +1,9 @@
 import { IconArrowRight } from "@tabler/icons-react";
 import { HydratedBlockProps } from "../block-registry.types";
-import { featuresThreeColumn } from "./features-three-column-config";
+import { featuresThreeColumnConfig } from "./features-three-column-config";
 
 export type FeaturesThreeColumnProps = HydratedBlockProps<
-  typeof featuresThreeColumn
+  typeof featuresThreeColumnConfig
 >;
 
 export const FeaturesThreeColumn: React.FC<FeaturesThreeColumnProps> = ({

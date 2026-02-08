@@ -18,6 +18,7 @@ export function ImageDropzone({
   maxFiles = 1,
 }: ImageDropzoneProps) {
   const { control } = useUploadFiles({
+    api: "/api/assets/upload",
     route: "images",
     onUploadComplete: async (res) => {
       // Extract IDs
