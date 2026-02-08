@@ -12,11 +12,7 @@ export const Route = createFileRoute("/$")({
   loader: async ({ params }) => {
     const slug = params._splat || "index";
 
-    if (
-      !isValidSlugPath(slug) ||
-      slug.startsWith("app") ||
-      slug.startsWith("api")
-    ) {
+    if (!isValidSlugPath(slug)) {
       throw notFound();
     }
     const page = await getPageBySlug({ data: params._splat || "index" });
@@ -33,7 +29,7 @@ function RouteComponent() {
   useSiteShortcuts();
 
   return (
-    <div className="bg-white">
+    <main className="bg-white">
       {page.blocks.map((block) => {
         const def = registry[block.type];
         if (!def) {
@@ -49,6 +45,6 @@ function RouteComponent() {
         >;
         return <Component key={block.id} {...block.data} />;
       })}
-    </div>
+    </main>
   );
 }
