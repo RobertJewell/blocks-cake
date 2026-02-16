@@ -9,7 +9,7 @@ import { Switch } from "@/cms/ui/switch";
 import { Textarea } from "@/cms/ui/textarea";
 import { ReactNode } from "react";
 import { ControllerRenderProps, Path } from "react-hook-form";
-import { RepeaterField } from "./fields/field-repeater";
+import { RepeaterField } from "./field-repeater";
 
 export type RendererProps<T extends keyof FieldTypeMap> = {
   field: ControllerRenderProps<

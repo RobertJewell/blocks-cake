@@ -3,7 +3,7 @@ import { Button } from "@/cms/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/cms/ui/card";
 import { IconPlus, IconX } from "@tabler/icons-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { fieldRenderers, RendererProps } from "../field-renderer";
+import { fieldRenderers, RendererProps } from "./field-renderer";
 
 export const RepeaterField = ({
   field,
@@ -11,7 +11,7 @@ export const RepeaterField = ({
 }: RendererProps<"repeater">) => {
   const { control, setValue, getValues } = useFormContext();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: field.name,
   });
@@ -32,9 +32,14 @@ export const RepeaterField = ({
               size="sm"
               className="h-7 w-7 p-0"
               onClick={() => {
-                remove(index);
-                // Update parent so our isDirty tracking stays correct
-                field.onChange(getValues(field.name));
+                const currentValues = getValues(field.name) || [];
+                const newArray = currentValues.filter(
+                  (_: any, i: number) => i !== index,
+                );
+                setValue(field.name, newArray, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
               }}
             >
               <IconX className="h-4 w-4" />
@@ -69,8 +74,6 @@ export const RepeaterField = ({
                           shouldDirty: true,
                           shouldTouch: true,
                         });
-
-                        field.onChange(getValues(field.name));
                       },
                       onBlur: () => {},
                       ref: () => {},
@@ -90,12 +93,16 @@ export const RepeaterField = ({
           size="sm"
           className="w-full border-dashed"
           onClick={() => {
+            const currentValues = getValues(field.name) || [];
             const newItem = Object.entries(fieldDef.fields).reduce(
               (acc, [k, d]) => ({ ...acc, [k]: d.defaultValue ?? "" }),
               {},
             );
-            append(newItem);
-            field.onChange([...getValues(field.name), newItem]);
+            const newArray = [...currentValues, newItem];
+            setValue(field.name, newArray, {
+              shouldDirty: true,
+              shouldTouch: true,
+            });
           }}
         >
           <IconPlus className="mr-2 h-4 w-4" />

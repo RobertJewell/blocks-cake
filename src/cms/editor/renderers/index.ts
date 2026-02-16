@@ -1,1 +1,2 @@
-export { FormRenderer } from "./form-renderer";
+export { BlockFormRenderer } from "./forms/block-form-renderer";
+export { FormRenderer } from "./forms/form-renderer";

@@ -1,7 +1,7 @@
 import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
 import { useEditorStore } from "@/cms/stores/editor-store";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogTitle } from "@/cms/ui/dialog";
+import { ScrollArea } from "@/cms/ui/scroll-area";
 import { motion, Variants } from "motion/react";
 import { ReactNode } from "react";
 import { BlockDropContext } from "../content-editor/add-blocks";
@@ -37,10 +37,12 @@ export const EditorLayout = ({
   sidebar,
   toolbar,
   children,
+  scrollRef,
 }: {
   sidebar: ReactNode;
   toolbar: ReactNode;
   children: ReactNode;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
 }) => {
   const mode = useEditorStore((s) => s.mode);
   const isMobile = useIsMobile();
@@ -77,12 +79,9 @@ export const EditorLayout = ({
 
           {/* Scrollable Content */}
           <div className="flex-1 min-h-0 sm:overflow-hidden bg-white">
-            {/* this can't just be css as we need to fully remove it from the dom to avoid id conflicts for scrollintoview */}
-            {isMobile ? (
-              <div className="h-full">{children}</div>
-            ) : (
-              <ScrollArea className="h-full">{children}</ScrollArea>
-            )}
+            <ScrollArea ref={scrollRef} className="h-full">
+              {children}
+            </ScrollArea>
           </div>
         </motion.div>
       </div>

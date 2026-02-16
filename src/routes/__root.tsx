@@ -78,6 +78,7 @@ function RootComponent() {
         // enableSystem
         disableTransitionOnChange={false}
       >*/}
+
       <Outlet />
       {/*</ThemeProvider>*/}
     </RootDocument>

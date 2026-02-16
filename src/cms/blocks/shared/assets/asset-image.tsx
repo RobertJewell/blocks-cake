@@ -26,12 +26,12 @@ export const AssetImage: React.FC<AssetImageProps> = ({
     <img
       src={src}
       alt={alt || asset.altText || ""}
-      // width={variant.width}
-      // height={variant.height}
+      width={variant.width}
+      height={variant.height}
       className={className}
       style={{
         // prevent layout shift before image loads
-        // aspectRatio: `${variant.width} / ${variant.height}`,
+        aspectRatio: `${variant.width} / ${variant.height}`,
         ...style,
       }}
       {...props}

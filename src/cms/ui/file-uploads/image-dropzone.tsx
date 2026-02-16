@@ -2,7 +2,7 @@ import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
 import { queueImageOptimisation } from "@/cms/lib/data-ops/assets/queue-image-optimisation";
 import { useUploadFiles } from "@better-upload/client";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { AssetPreview } from "./image-preview";
 import { UploadDropzoneProgress } from "./upload-dropzone-progress";
 
@@ -70,28 +70,27 @@ export function ImageDropzone({
   return (
     <div className="space-y-4">
       {/* previews */}
-      <AnimatePresence>
-        {hasImages && (
-          <motion.div
-            variants={blurUpVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col gap-4"
-          >
-            {value.map((asset, index) => (
-              <AssetPreview
-                key={`${asset.id}-${index}`}
-                assetId={asset.id}
-                onRemove={() => {
-                  control.reset();
-                  const newValue = value.filter((_, i) => i !== index);
-                  onChange?.(newValue);
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+      {hasImages && (
+        <motion.div
+          variants={blurUpVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-4"
+        >
+          {value.map((asset, index) => (
+            <AssetPreview
+              key={`${asset.id}-${index}`}
+              assetId={asset.id}
+              onRemove={() => {
+                control.reset();
+                const newValue = value.filter((_, i) => i !== index);
+                onChange?.(newValue);
+              }}
+            />
+          ))}
+        </motion.div>
+      )}
 
       {/* dropzone */}
       {!isFull && (

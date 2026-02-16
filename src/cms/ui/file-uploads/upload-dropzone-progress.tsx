@@ -51,7 +51,7 @@ export function UploadDropzoneProgress({
 
   return (
     <div className="text-foreground  flex flex-col gap-3">
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="popLayout" initial={false}>
         {progresses.length === 0 ? (
           <motion.div
             variants={blurUpVariants}
@@ -130,6 +130,7 @@ export function UploadDropzoneProgress({
           </motion.div>
         ) : (
           <motion.div
+            key={"progress"}
             className="grid gap-2"
             variants={blurUpVariants}
             initial="hidden"

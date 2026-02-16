@@ -7,104 +7,147 @@ import {
   RepeaterFieldDefinition,
 } from "./block-registry.types";
 
+/**
+ * Field builders for creating block configurations.
+ *
+ * This is kinda hideous, but it allows the optional properties to be typed correctly in our hydratedProps helper.
+ * The issue seems to be that there's no amount of 'as const' we can do that will make the optional boolean survive being passed through in an object.
+ * That's fine for min/max stuff as that doens't exist on types anyway, just validation.
+ *
+ * Last time I had this problem the answer was a builder pattern, but that won't work here.
+ * Instead we can add an explicit optional key to our FieldDefinition.
+ * It's not great, but these should almost never change, and it makes the stuff that will change (block definitions) much nicer.
+ *
+ *
+ * The `optional` property enables our RuntimeValue type to check
+ * `T extends { optional: true }` and make fields optional in the inferred types.
+ */
 export const fields = {
-  text: (
+  text: <Options extends { min?: number; optional?: boolean; group?: string }>(
     label: string,
-    options?: { min?: number; optional?: boolean; group?: string },
-  ): FieldDefinition<"text"> => {
+    options?: Options,
+  ) => {
+    const baseSchema = applyConstraints(z.string(), options);
     return {
-      type: "text",
+      type: "text" as const,
       label,
-      schema: applyOptions(z.string(), options),
+      optional: options?.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
       defaultValue: "",
       group: options?.group || "Content",
-    };
+    } as FieldDefinition<"text"> & Pick<Options, "optional">;
   },
 
-  textArea: (
+  textArea: <
+    Options extends { min?: number; optional?: boolean; group?: string },
+  >(
     label: string,
-    options?: { min?: number; optional?: boolean; group?: string },
-  ): FieldDefinition<"textArea"> => {
+    options?: Options,
+  ) => {
+    const baseSchema = applyConstraints(z.string(), options);
     return {
-      type: "textArea",
+      type: "textArea" as const,
       label,
-      schema: applyOptions(z.string(), options),
+      optional: options?.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
       defaultValue: "",
       group: options?.group || "Content",
-    };
+    } as FieldDefinition<"textArea"> & Pick<Options, "optional">;
   },
 
-  switch: (
+  switch: <Options extends { optional?: boolean; group?: string }>(
     label: string,
-    options?: { optional?: boolean; group?: string },
-  ): FieldDefinition<"switch"> => {
+    options?: Options,
+  ) => {
+    const baseSchema = z.boolean();
     return {
-      type: "switch",
+      type: "switch" as const,
       label,
-      schema: applyOptions(z.boolean(), options),
+      optional: options?.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
       defaultValue: false,
       group: options?.group || "Content",
-    };
+    } as FieldDefinition<"switch"> & Pick<Options, "optional">;
   },
 
-  image: (
+  image: <Options extends { max?: number; optional?: boolean; group?: string }>(
     label: string,
-    options?: { max?: number; optional?: boolean; group?: string },
-  ): FieldDefinition<"image"> => {
+    options?: Options,
+  ) => {
+    const baseSchema = applyConstraints(z.array(assetSchema), options);
     return {
-      type: "image",
+      type: "image" as const,
       label,
-      schema: applyOptions(z.array(assetSchema), options),
+      optional: options?.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
       defaultValue: [],
       group: options?.group || "Content",
-    };
+    } as FieldDefinition<"image"> & Pick<Options, "optional">;
   },
 
-  richtext: (
+  richtext: <Options extends { optional?: boolean; group?: string }>(
     label: string,
-    options?: { optional?: boolean; group?: string },
-  ): FieldDefinition<"richtext"> => ({
-    type: "richtext",
-    label,
-    schema: applyOptions(z.string(), options),
-    defaultValue: "",
-    group: options?.group || "Content",
-  }),
+    options?: Options,
+  ) => {
+    const baseSchema = z.string();
+    return {
+      type: "richtext" as const,
+      label,
+      optional: options?.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
+      defaultValue: "",
+      group: options?.group || "Content",
+    } as FieldDefinition<"richtext"> & Pick<Options, "optional">;
+  },
 
-  repeater: <T extends BlockConfigFields>(
+  repeater: <
+    T extends BlockConfigFields,
+    Options extends {
+      fields: T;
+      max?: number;
+      optional?: boolean;
+      group?: string;
+    },
+  >(
     label: string,
-    options: { fields: T; max?: number; optional?: boolean; group?: string },
-  ) =>
-    ({
+    options: Options,
+  ) => {
+    const baseSchema = applyConstraints(z.array(z.any()), options);
+    return {
       type: "repeater" as const,
       label,
       fields: options.fields,
       max: options.max,
-      schema: z.array(z.any()),
+      optional: options.optional,
+      schema: options?.optional ? baseSchema.optional() : baseSchema,
       defaultValue: [],
       group: options?.group || "Content",
-    }) as RepeaterFieldDefinition<T>,
+    } as RepeaterFieldDefinition<Options["fields"]> & Pick<Options, "optional">;
+  },
 };
 
-const applyOptions = <T extends z.ZodTypeAny>(
+/**
+ * Applies min/max constraints to Zod schemas.
+ */
+const applyConstraints = <T extends z.ZodTypeAny>(
   schema: T,
-  options?: { min?: number; max?: number; optional?: boolean },
+  options?: { min?: number; max?: number },
 ) => {
   if (schema instanceof z.ZodString) {
     let s = schema;
     if (options?.min !== undefined) s = s.min(options.min);
     if (options?.max !== undefined) s = s.max(options.max);
-    return options?.optional ? s.optional() : s;
+    return s;
   }
 
   if (schema instanceof z.ZodArray) {
     let s = schema;
     if (options?.min !== undefined) s = s.min(options.min);
     if (options?.max !== undefined) s = s.max(options.max);
-    return options?.optional ? s.optional() : s;
+    return s;
   }
 
-  return options?.optional ? schema.optional() : schema;
+  return schema;
 };
 
 export function createSchema<T extends BlockConfigFields>(fields: T) {

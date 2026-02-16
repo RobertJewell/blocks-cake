@@ -14,7 +14,7 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { motion } from "motion/react";
 import { BlockList } from ".";
-import { FormRenderer } from "../../renderers";
+import { BlockFormRenderer } from "../../renderers";
 
 interface BlockEditorProps {
   mode: AnimationMode;
@@ -73,7 +73,7 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
           exit="exit"
           className="h-full flex flex-col py-4"
         >
-          <FormRenderer
+          <BlockFormRenderer
             key={currentBlock.id}
             block={currentBlock}
             onChange={(patch) =>
