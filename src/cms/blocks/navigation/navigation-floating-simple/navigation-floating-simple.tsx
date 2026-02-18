@@ -18,7 +18,7 @@ import { navigationFloatingSimpleConfig } from "./navigation-floating-simple-con
 
 export interface NavigationProps
   extends HydratedBlockProps<typeof navigationFloatingSimpleConfig> {
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function NavigationFloatingSimple({
@@ -28,7 +28,7 @@ export default function NavigationFloatingSimple({
   ctaText,
   containerRef,
 }: NavigationProps) {
-  const { scrollY } = useScroll({ container: containerRef });
+  const { scrollY } = useScroll({ container: containerRef ?? undefined });
   const [isScrolled, setIsScrolled] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {

@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { BlockPickerDialog } from "../editor/content-editor/add-blocks";
-import { useEditorStore } from "../stores/editor-store";
+import { useEditorStore } from "../lib/stores/editor-store";
 import { Block } from "./block-registry.types";
 
 type Props = {

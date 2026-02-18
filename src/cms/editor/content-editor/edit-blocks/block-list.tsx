@@ -1,5 +1,5 @@
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { cn } from "@/cms/lib/utils";
-import { useEditorStore } from "@/cms/stores/editor-store";
 import {
   closestCenter,
   defaultDropAnimationSideEffects,

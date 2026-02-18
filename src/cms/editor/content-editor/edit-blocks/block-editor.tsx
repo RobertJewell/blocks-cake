@@ -1,5 +1,5 @@
 import { AnimationMode, editorVariants } from "@/cms/blocks/shared/animations";
-import { useEditorStore } from "@/cms/stores/editor-store";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import {
   closestCenter,
   DndContext,
@@ -13,6 +13,7 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 import { BlockList } from ".";
 import { BlockFormRenderer } from "../../renderers";
 
@@ -27,6 +28,19 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
   const reorderBlocks = useEditorStore((s) => s.reorderBlocks);
 
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
+
+  // Scroll to top when block form loads
+  useEffect(() => {
+    if (currentBlock) {
+      // Find the ScrollArea viewport and scroll to top
+      const scrollViewport = document.querySelector(
+        "[data-radix-scroll-area-viewport]",
+      );
+      if (scrollViewport) {
+        scrollViewport.scrollTop = 0;
+      }
+    }
+  }, [selectedId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

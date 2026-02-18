@@ -1,7 +1,7 @@
 import { registry } from "@/cms/blocks/block-registry";
 import { Block } from "@/cms/blocks/block-registry.types";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { cn } from "@/cms/lib/utils";
-import { useEditorStore } from "@/cms/stores/editor-store";
 import { Button } from "@/cms/ui/button";
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@/cms/ui/menu";
 import { IconDots, IconRefresh, IconTrash } from "@tabler/icons-react";

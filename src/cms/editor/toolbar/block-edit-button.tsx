@@ -2,7 +2,7 @@ import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { cn } from "@/cms/lib/utils";
 import { IconPencil, IconRefresh } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEditorStore } from "../../stores/editor-store";
+import { useEditorStore } from "../../lib/stores/editor-store";
 import { ToolbarButton } from "./toolbar-button";
 
 export function BlockEditButton({ blockId }: { blockId: string }) {

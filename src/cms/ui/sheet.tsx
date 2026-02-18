@@ -1,10 +1,10 @@
 "use client";
 
-import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
-import { XIcon } from "lucide-react";
 import { cn } from "@/cms/lib/utils";
 import { Button } from "@/cms/ui/button";
 import { ScrollArea } from "@/cms/ui/scroll-area";
+import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
+import { XIcon } from "lucide-react";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -188,16 +188,16 @@ function SheetPanel({
 
 export {
   Sheet,
-  SheetTrigger,
-  SheetPortal,
-  SheetClose,
   SheetBackdrop,
-  SheetBackdrop as SheetOverlay,
-  SheetPopup,
+  SheetClose,
   SheetPopup as SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
   SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetBackdrop as SheetOverlay,
   SheetPanel,
+  SheetPopup,
+  SheetPortal,
+  SheetTitle,
+  SheetTrigger,
 };

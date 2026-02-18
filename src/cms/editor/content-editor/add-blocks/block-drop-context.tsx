@@ -1,5 +1,5 @@
 import { BlockType } from "@/cms/blocks/block-registry.types";
-import { useEditorStore } from "@/cms/stores/editor-store";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import {
   DndContext,
   DragEndEvent,

@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import { seo } from "@/cms/lib/helpers/seo";
 import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
-import { useEditorStore } from "@/cms/stores/editor-store";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
 import { cn } from "@/components/ui/utils/cn";
@@ -92,12 +92,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
   return (
-    <html
-      className={cn(
-        "bg-white",
-        isAppRoute && !isMobile && mode !== "view" ? "overflow-hidden" : "",
-      )}
-    >
+    <html className={cn("bg-white")}>
       <head>
         <HeadContent />
       </head>

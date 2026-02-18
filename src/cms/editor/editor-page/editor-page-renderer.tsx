@@ -1,7 +1,7 @@
 import { registry } from "@/cms/blocks/block-registry";
 import { PageData } from "@/cms/blocks/block-registry.types";
 import { BlockShell } from "@/cms/blocks/block-shell";
-import { useEditorStore } from "@/cms/stores/editor-store";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { motion } from "motion/react";
 
 export function EditorPageRenderer({ initialPage }: { initialPage: PageData }) {

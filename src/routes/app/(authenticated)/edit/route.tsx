@@ -5,7 +5,6 @@ import { EditorLayout } from "@/cms/editor/editor-page/editor-layout";
 import { EditorSidebar } from "@/cms/editor/sidebar/editor-sidebar";
 import { EditorToolbar } from "@/cms/editor/toolbar/editor-toolbar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useRef } from "react";
 
 export const Route = createFileRoute("/app/(authenticated)/edit")({
   component: Layout,
@@ -33,15 +32,9 @@ const ctaData = {
 };
 
 function Layout() {
-  const scrollRef = useRef<HTMLDivElement>(null);
   return (
-    <EditorLayout
-      scrollRef={scrollRef}
-      sidebar={<EditorSidebar />}
-      toolbar={<EditorToolbar />}
-    >
+    <EditorLayout sidebar={<EditorSidebar />} toolbar={<EditorToolbar />}>
       <NavigationFloatingSimple
-        containerRef={scrollRef}
         logo={[]}
         menuItems={menuData}
         ctaHref={ctaData.href}

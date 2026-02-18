@@ -1,90 +1,71 @@
-import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
-import { useEditorStore } from "@/cms/stores/editor-store";
-import { Dialog, DialogContent, DialogTitle } from "@/cms/ui/dialog";
-import { ScrollArea } from "@/cms/ui/scroll-area";
-import { motion, Variants } from "motion/react";
-import { ReactNode } from "react";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
+import {
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  useSidebar,
+} from "@/cms/ui/sidebar";
+import { ReactNode, useEffect } from "react";
 import { BlockDropContext } from "../content-editor/add-blocks";
 
-// Configuration
-const SIDEBAR_WIDTH = 320;
-const GAP = 12;
-
-const windowVariants: Variants = {
-  expanded: {
-    top: GAP,
-    left: SIDEBAR_WIDTH + GAP / 2,
-    right: GAP,
-    bottom: GAP,
-    borderRadius: 12,
-    transition: { type: "spring", bounce: 0, duration: 0.3 },
-  },
-  collapsed: {
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: 0,
-    transition: { type: "spring", bounce: 0, duration: 0.2 },
-  },
-};
-
 /**
- * Reusable Desktop Layout Wrapper
- * Handles the "Underlay" sidebar and "Overlay" content window animations.
+ * Editor Layout with Sidebar
+ * Uses default shadcn baseui Sidebar component with natural page scrolling.
  */
 export const EditorLayout = ({
   sidebar,
   toolbar,
   children,
-  scrollRef,
 }: {
   sidebar: ReactNode;
   toolbar: ReactNode;
   children: ReactNode;
-  scrollRef: React.RefObject<HTMLDivElement | null>;
 }) => {
   const mode = useEditorStore((s) => s.mode);
-  const isMobile = useIsMobile();
-  const isSidebarOpen = mode !== "view" && !isMobile;
-  const isMobileEditPanelOpen = mode === "edit" && isMobile;
+  const isSidebarOpen = mode !== "view";
 
   return (
     <BlockDropContext>
-      <Dialog open={isMobileEditPanelOpen} modal>
-        <DialogContent className="max-w-none transition-none! w-screen h-screen rounded-none border-none p-0 flex flex-col bg-background focus:outline-none sm:max-w-none!">
-          <DialogTitle className="sr-only">Edit Page</DialogTitle>
-          {sidebar}
-          <div className="absolute bottom-0 w-full h-6 bg-linear-to-t from-background" />
-        </DialogContent>
-      </Dialog>
-
-      <div className="relative bg-sidebar h-svh w-full sm:overflow-hidden border-border">
-        {/* LAYER 0: The Underlay (Sidebar) */}
-        <div
-          className="h-full border-r border-transparent"
-          style={{ width: SIDEBAR_WIDTH }}
+      <SidebarProvider defaultOpen={false}>
+        <EditorLayoutInner
+          sidebar={sidebar}
+          toolbar={toolbar}
+          isSidebarOpen={isSidebarOpen}
         >
-          <div className="h-full w-full overflow-hidden">{sidebar}</div>
-        </div>
-
-        {/* LAYER 1: The Overlay (Content Window) */}
-        <motion.div
-          className="absolute z-10 flex sm:shadow-md flex-col sm:overflow-hidden"
-          initial="collapsed"
-          animate={isSidebarOpen ? "expanded" : "collapsed"}
-          variants={windowVariants}
-        >
-          {toolbar}
-
-          {/* Scrollable Content */}
-          <div className="flex-1 min-h-0 sm:overflow-hidden bg-white">
-            <ScrollArea ref={scrollRef} className="h-full">
-              {children}
-            </ScrollArea>
-          </div>
-        </motion.div>
-      </div>
+          {children}
+        </EditorLayoutInner>
+      </SidebarProvider>
     </BlockDropContext>
   );
 };
+
+function EditorLayoutInner({
+  sidebar,
+  toolbar,
+  children,
+  isSidebarOpen,
+}: {
+  sidebar: ReactNode;
+  toolbar: ReactNode;
+  children: ReactNode;
+  isSidebarOpen: boolean;
+}) {
+  const { setOpen } = useSidebar();
+
+  // Sync sidebar state with editor mode
+  useEffect(() => {
+    setOpen(isSidebarOpen);
+  }, [isSidebarOpen, setOpen]);
+
+  return (
+    <>
+      <Sidebar collapsible="offcanvas" side="left">
+        {sidebar}
+      </Sidebar>
+      <SidebarInset>
+        {toolbar}
+        <main>{children}</main>
+      </SidebarInset>
+    </>
+  );
+}

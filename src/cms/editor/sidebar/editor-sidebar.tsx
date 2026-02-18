@@ -1,9 +1,11 @@
 import { useAnimationMode } from "@/cms/lib/hooks/use-animation-mode";
-import { useEditorStore } from "@/cms/stores/editor-store";
+import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { Button } from "@/cms/ui/button";
-import { ScrollArea } from "@/cms/ui/scroll-area";
 import { Separator } from "@/cms/ui/separator";
-import { Sidebar } from "@/cms/ui/sidebar";
+import {
+  SidebarContent,
+  SidebarHeader as SidebarHeaderBase,
+} from "@/cms/ui/sidebar";
 import { IconArrowLeft, IconX } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { BlockLibrary } from "../content-editor/add-blocks";
@@ -18,7 +20,7 @@ const SidebarHeader = () => {
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   return (
-    <div className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10">
+    <SidebarHeaderBase className="flex h-14 shrink-0 flex-row items-center justify-between px-2 z-10">
       {mode === "edit" && currentBlock ? (
         <motion.div
           key="header-detail"
@@ -60,29 +62,27 @@ const SidebarHeader = () => {
       <Button size={"icon"} variant={"ghost"} onClick={() => setMode("view")}>
         <IconX />
       </Button>
-    </div>
+    </SidebarHeaderBase>
   );
 };
 
-export function EditorSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function EditorSidebar() {
   const mode = useEditorStore((s) => s.mode);
   const selectedId = useEditorStore((s) => s.selectedBlockId);
   const animationMode = useAnimationMode(selectedId);
 
   return (
-    <div className="flex h-full w-full flex-col font-editor" {...props}>
+    <>
       <SidebarHeader />
 
       <Separator className="shrink-0" />
 
-      <ScrollArea className="flex-1 min-h-0">
+      <SidebarContent className="font-editor">
         <div className="px-2 pb-12">
           {mode === "edit" && <BlockEditor mode={animationMode} />}
           {mode === "add" && <BlockLibrary mode={animationMode} />}
         </div>
-      </ScrollArea>
-    </div>
+      </SidebarContent>
+    </>
   );
 }
