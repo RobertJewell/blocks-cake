@@ -101,7 +101,10 @@ export function EditorToolbar() {
               <ToggleGroup
                 value={[mode]}
                 onValueChange={(val: ViewMode[]) => {
-                  if (val) setMode(val[0]);
+                  // Always maintain at least one mode selected
+                  if (val.length > 0) {
+                    setMode(val[0]);
+                  }
                 }}
                 className="gap-0.5"
               >
@@ -116,10 +119,11 @@ export function EditorToolbar() {
                           <ToggleGroupItem
                             value={item.value}
                             aria-label={item.label}
+                            disabled={isSelected}
                             className={cn(
                               "relative flex h-8 w-8 bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
                               isSelected
-                                ? "text-background"
+                                ? "text-background cursor-default"
                                 : "text-muted-foreground",
                             )}
                           />

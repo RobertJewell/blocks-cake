@@ -1,5 +1,6 @@
 "use client";
 
+import { useSidebar } from "@/cms/ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -10,26 +11,24 @@ import {
   NavigationMenuTrigger,
 } from "@radix-ui/react-navigation-menu";
 import { MenuIcon } from "lucide-react";
-import { useMotionValueEvent, useScroll } from "motion/react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
 import { Button } from "../../../../components/ui/button";
 import { HydratedBlockProps } from "../../block-registry.types";
 import { navigationFloatingSimpleConfig } from "./navigation-floating-simple-config";
 
 export interface NavigationProps
-  extends HydratedBlockProps<typeof navigationFloatingSimpleConfig> {
-  containerRef?: React.RefObject<HTMLDivElement | null>;
-}
+  extends HydratedBlockProps<typeof navigationFloatingSimpleConfig> {}
 
 export default function NavigationFloatingSimple({
   logo,
   menuItems,
   ctaHref,
   ctaText,
-  containerRef,
 }: NavigationProps) {
-  const { scrollY } = useScroll({ container: containerRef ?? undefined });
+  const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { open } = useSidebar();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 0);
@@ -38,10 +37,11 @@ export default function NavigationFloatingSimple({
   menuItems?.[0];
 
   return (
-    <div
+    <motion.div
       className={cn(
-        "z-50 w-full px-2 transition-all sm:px-4",
-        isScrolled ? "fixed top-1" : "absolute top-2",
+        "z-50 fixed top-2 transition-all left-0 right-0 px-2 ",
+        open && "md:ml-80",
+        isScrolled && "sm:px-4",
       )}
     >
       <div
@@ -120,6 +120,6 @@ export default function NavigationFloatingSimple({
           </div>
         </NavigationMenu>
       </div>
-    </div>
+    </motion.div>
   );
 }
