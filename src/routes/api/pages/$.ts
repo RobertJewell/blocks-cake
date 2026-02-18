@@ -1,9 +1,14 @@
 import { eq, inArray, sql } from "drizzle-orm";
 import { json } from "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
-import { drizzleMiddleware } from "@/cms/core/middleware/db";
-import { authRequestMiddleware } from "@/cms/core/middleware/auth";
-import { pages, blocks, pageBlocks, assetUsages } from "@/cms/core/db/schema";
+import { drizzleMiddleware } from "@/cms/lib/core/middleware/db";
+import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth";
+import {
+  pages,
+  blocks,
+  pageBlocks,
+  assetUsages,
+} from "@/cms/lib/core/db/schema";
 import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
 import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";

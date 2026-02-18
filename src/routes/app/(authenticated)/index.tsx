@@ -1,5 +1,5 @@
 import { navigationFloatingSimpleConfig } from "@/cms/blocks/navigation/navigation-floating-simple/navigation-floating-simple-config";
-import { getPages } from "@/cms/core/functions";
+import { getPages } from "@/cms/lib/core/functions";
 import { FormRenderer } from "@/cms/editor/renderers";
 import { Badge } from "@/cms/ui/badge";
 import { Button } from "@/cms/ui/button";

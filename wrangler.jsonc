@@ -1,11 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blocks-cakes",
-  "compatibility_date": "2026-02-03",
+  "compatibility_date": "2025-11-25",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
   "vars": {
     "BETTER_AUTH_URL": "https://blocks-cakes.rjewellaudio.workers.dev",
+    "GOOGLE_CLIENT_ID": "526399404524-53k72oqm52ffvoejk5frg9m0ukbeeak6.apps.googleusercontent.com",
     "CLOUDFLARE_ACCOUNT_ID": "bcfacdd0f09674f8cae0297886b0ea76",
     "CLOUDFLARE_D1_DATABASE_ID": "29d1f84b-e2bc-43b1-bde2-1ee5b0358ab8",
     "CLOUDFLARE_R2_BASE_URL": "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev",

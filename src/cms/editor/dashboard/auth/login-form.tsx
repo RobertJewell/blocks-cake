@@ -1,4 +1,4 @@
-import { authClient } from "@/cms/core/auth/auth-client";
+import { authClient } from "@/cms/lib/core/auth/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
@@ -95,7 +95,16 @@ export const LoginForm = () => {
                 {isSubmitting ? "Logging in..." : "Login"}
               </Button>
 
-              <Button variant="outline" type="button">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={async () => {
+                  await authClient.signIn.social({
+                    provider: "google",
+                    callbackURL: "/app",
+                  });
+                }}
+              >
                 Login with Google
               </Button>
             </div>

@@ -1,5 +1,5 @@
-import { authClient } from "@/cms/core/auth/auth-client";
-import { AuthQueryResult } from "@/cms/core/auth/queries";
+import { authClient } from "@/cms/lib/core/auth/auth-client";
+import { AuthQueryResult } from "@/cms/lib/core/auth/queries";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader } from "lucide-react";
 import { Button } from "../../../../components/ui/button";

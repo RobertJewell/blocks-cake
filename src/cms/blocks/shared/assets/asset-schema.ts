@@ -1,4 +1,4 @@
-import { assets } from "@/cms/core/db/schema";
+import { assets } from "@/cms/lib/core/db/schema";
 import z from "zod";
 
 const imageVariantSchema = z.object({

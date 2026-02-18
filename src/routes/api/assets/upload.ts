@@ -8,9 +8,9 @@ import {
 import { cloudflare } from "@better-upload/server/clients";
 import { env } from "cloudflare:workers";
 import { uuidv7 } from "uuidv7";
-import { drizzleMiddleware } from "@/cms/core/middleware/db";
-import { authRequestMiddleware } from "@/cms/core/middleware/auth";
-import { assets } from "@/cms/core/db/schema";
+import { drizzleMiddleware } from "@/cms/lib/core/middleware/db";
+import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth";
+import { assets } from "@/cms/lib/core/db/schema";
 
 export const Route = createFileRoute("/api/assets/upload")({
   server: {

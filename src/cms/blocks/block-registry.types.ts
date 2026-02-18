@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { InferSelectModel } from "drizzle-orm";
-import { pages } from "../core/db/schema";
+import { pages } from "../lib/core/db/schema";
 import { Asset } from "./shared/assets/asset-schema";
 import { registry } from "./block-registry";
 

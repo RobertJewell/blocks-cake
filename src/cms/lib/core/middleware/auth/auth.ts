@@ -9,7 +9,14 @@ export function createAuthInstance() {
 
   return betterAuth({
     database: drizzleAdapter(db, { provider: "sqlite" }),
+    baseURL: env.BETTER_AUTH_URL,
     emailAndPassword: { enabled: true },
     plugins: [tanstackStartCookies()],
+    socialProviders: {
+      google: {
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+      },
+    },
   });
 }

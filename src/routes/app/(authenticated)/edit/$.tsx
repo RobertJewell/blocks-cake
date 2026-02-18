@@ -1,5 +1,5 @@
 import { PageData } from "@/cms/blocks/block-registry.types";
-import { getPageBySlug } from "@/cms/core/functions";
+import { getPageBySlug } from "@/cms/lib/core/functions";
 import { EditorPageRenderer } from "@/cms/editor/editor-page/editor-page-renderer";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";

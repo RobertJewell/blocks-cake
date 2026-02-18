@@ -1,4 +1,4 @@
-import { DrizzleDB } from "@/cms/core/db/drizzle";
+import { DrizzleDB } from "@/cms/lib/core/db/drizzle";
 import { registry } from "@/cms/blocks/block-registry";
 import { Block } from "@/cms/blocks/block-registry.types";
 import { Asset } from "@/cms/blocks/shared/assets/asset-schema";

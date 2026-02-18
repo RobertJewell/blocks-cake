@@ -1,5 +1,5 @@
-import { assets } from "@/cms/core/db/schema";
-import { drizzleMiddleware } from "@/cms/core/middleware/db";
+import { assets } from "@/cms/lib/core/db/schema";
+import { drizzleMiddleware } from "@/cms/lib/core/middleware/db";
 import { createFileRoute } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 

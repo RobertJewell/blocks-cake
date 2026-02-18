@@ -1,6 +1,6 @@
-import { assets } from "@/cms/core/db/schema";
+import { assets } from "@/cms/lib/core/db/schema";
 import { eq } from "drizzle-orm";
-import { getDB } from "@/cms/core/db/drizzle";
+import { getDB } from "@/cms/lib/core/db/drizzle";
 import { encode } from "blurhash";
 
 // Configuration & Constants

@@ -1,4 +1,4 @@
-import { authClient } from "@/cms/core/auth/auth-client";
+import { authClient } from "@/cms/lib/core/auth/auth-client";
 import { Button } from "@/components/ui/button";
 import {
   Card,

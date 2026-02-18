@@ -1,4 +1,4 @@
-import { authQueryOptions } from "@/cms/core/auth/queries";
+import { authQueryOptions } from "@/cms/lib/core/auth/queries";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app")({
