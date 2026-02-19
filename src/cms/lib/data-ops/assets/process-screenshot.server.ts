@@ -1,4 +1,5 @@
 import { screenshots } from "@/cms/lib/core/db/schema";
+import { eq } from "drizzle-orm";
 import { getDB } from "@/cms/lib/core/db/drizzle";
 
 const SCREENSHOT_WIDTH = 1280;
@@ -13,8 +14,6 @@ export async function processScreenshot(
 
   try {
     // Call Cloudflare Browser Rendering API
-    // Doing this via api as using the worker binding means manually doing teh playwright bits
-    // Cloudlfares api handles that for us
     const browserRenderingUrl = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/browser-rendering/screenshot`;
 
     const response = await fetch(browserRenderingUrl, {
@@ -47,11 +46,20 @@ export async function processScreenshot(
     }
 
     const screenshotBuffer = await response.arrayBuffer();
-    const storagePath = `screenshots/${pageId}.png`;
 
-    // Store in R2 (overwrites existing)
-    await env.blocks_cakes_assets.put(storagePath, screenshotBuffer, {
+    // Use timestamp in filename to bypass browser cache
+    const timestamp = Date.now();
+    const newStoragePath = `screenshots/${pageId}/${timestamp}.png`;
+
+    // Store in R2
+    await env.blocks_cakes_assets.put(newStoragePath, screenshotBuffer, {
       httpMetadata: { contentType: "image/png" },
+    });
+
+    // Get the old screenshot path (if exists) to delete it
+    const oldScreenshot = await db.query.screenshots.findFirst({
+      where: eq(screenshots.pageId, pageId),
+      columns: { storagePath: true },
     });
 
     // Upsert screenshot record in DB (pageId is primary key)
@@ -60,7 +68,7 @@ export async function processScreenshot(
       .values({
         pageId,
         status: "completed",
-        storagePath,
+        storagePath: newStoragePath,
         width: SCREENSHOT_WIDTH,
         height: SCREENSHOT_HEIGHT,
       })
@@ -68,16 +76,25 @@ export async function processScreenshot(
         target: screenshots.pageId,
         set: {
           status: "completed",
-          storagePath,
+          storagePath: newStoragePath,
           width: SCREENSHOT_WIDTH,
           height: SCREENSHOT_HEIGHT,
           updatedAt: new Date(),
         },
       });
 
-    return { success: true, storagePath };
+    // Delete old screenshot from R2 if it exists
+    if (oldScreenshot?.storagePath) {
+      try {
+        await env.blocks_cakes_assets.delete(oldScreenshot.storagePath);
+      } catch (err) {
+        console.error("Failed to delete old screenshot:", err);
+      }
+    }
+
+    return { success: true, storagePath: newStoragePath };
   } catch (err) {
-    console.error(`❌ Screenshot failed for ${pageId}:`, err);
+    console.error("Screenshot failed for " + pageId + ":", err);
 
     const errorMessage = err instanceof Error ? err.message : String(err);
 

@@ -9,6 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/cms/ui/command";
+import { useDraggable } from "@dnd-kit/core";
 
 interface BlockPickerDialogProps {
   open: boolean;
@@ -21,13 +22,40 @@ const registryItems = Object.entries(registry).map(([key, value]) => ({
   value: key,
 }));
 
+function DraggablePickerItem({
+  value,
+  label,
+  onClick,
+}: {
+  value: BlockType;
+  label: string;
+  onClick: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `picker-new-${value}`,
+    data: { type: "sidebar-block", blockType: value },
+  });
+
+  return (
+    <CommandItem
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      onClick={onClick}
+      value={value}
+      className={isDragging ? "opacity-50" : ""}
+    >
+      {label}
+    </CommandItem>
+  );
+}
+
 export function BlockPickerDialog({
   open,
   setOpen,
   onSelect,
 }: BlockPickerDialogProps) {
   const handleSelect = (blockType: BlockType) => {
-    console.log(blockType);
     onSelect(blockType);
     setOpen(false);
   };
@@ -40,13 +68,12 @@ export function BlockPickerDialog({
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandList>
             {(item) => (
-              <CommandItem
-                onClick={() => handleSelect(item.value)}
+              <DraggablePickerItem
                 key={item.value}
                 value={item.value}
-              >
-                {item.label}
-              </CommandItem>
+                label={item.label}
+                onClick={() => handleSelect(item.value)}
+              />
             )}
           </CommandList>
         </Command>

@@ -1,6 +1,8 @@
 import { getPages } from "@/cms/lib/core/functions";
+import { Button } from "@/cms/ui/button";
 import { PageCard } from "@/cms/ui/dashboard/page-card";
-import { createFileRoute } from "@tanstack/react-router";
+import { IconPlus } from "@tabler/icons-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/(authenticated)/")({
   component: RouteComponent,
@@ -12,14 +14,20 @@ export const Route = createFileRoute("/app/(authenticated)/")({
 
 function RouteComponent() {
   const pages = Route.useLoaderData();
+  const navigate = useNavigate();
   const r2BaseUrl =
     import.meta.env.VITE_CLOUDFLARE_R2_BASE_URL ||
     "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
 
   return (
-    <div className="p-6 flex flex-col gap-8">
+    <div className="p-6 flex flex-col font-editor gap-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">Pages</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold">Pages</h1>
+          <Button onClick={() => navigate({ to: "/app/create" })}>
+            <IconPlus /> New Page
+          </Button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {pages.map((page) => (
             <PageCard

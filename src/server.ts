@@ -31,7 +31,7 @@ export default {
               try {
                 await processImageOptimisation(key, env);
               } catch (err) {
-                console.error(`❌ Optimization failed for ${key}:`, err);
+                console.error("Optimization failed for " + key + ":", err);
               }
             }),
           ),
@@ -40,13 +40,12 @@ export default {
       // Screenshot queue
       else if ("pageId" in body && "pageUrl" in body) {
         const { pageId, pageUrl } = body;
-        console.log({ pageId, pageUrl });
         ctx.waitUntil(
           (async () => {
             try {
               await processScreenshot(pageId, pageUrl, env);
             } catch (err) {
-              console.error(`❌ Screenshot failed for ${pageId}:`, err);
+              console.error("Screenshot failed for " + pageId + ":", err);
             }
           })(),
         );

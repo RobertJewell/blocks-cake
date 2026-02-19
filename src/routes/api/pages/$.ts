@@ -129,7 +129,7 @@ export const Route = createFileRoute("/api/pages/$")({
 
         // Queue Screenshot Generation
         // Build the page URL for screenshot using env SITE_URL
-        const pageslug = slug === "index" ? "" : `/${slug}`;
+        const pageslug = slug === "index" ? "" : `${slug}`;
         const pageUrl = `${env.SITE_URL}/${pageslug}`;
 
         // Queue the screenshot processing (same screenshot per page, overwrites on updates)
@@ -139,9 +139,8 @@ export const Route = createFileRoute("/api/pages/$")({
             pageUrl,
             timestamp: Date.now(),
           });
-          console.log(`Screenshot queued for page ${slug}`);
         } catch (err) {
-          console.error(`Failed to queue screenshot for ${slug}:`, err);
+          console.error("Failed to queue screenshot for " + slug + ":", err);
           // Don't fail the page save if screenshot queueing fails
         }
 

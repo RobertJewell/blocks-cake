@@ -24,7 +24,7 @@ type EditorState = {
     type: T,
     patch: Partial<PropsOf<T>>,
   ) => void;
-  addBlock: (type: BlockType, insertAfterId: string) => void;
+  addBlock: (type: BlockType, insertAfterId?: string) => void;
   deleteBlock: (id: string) => void;
   resetEditedBlocks: () => void;
   reorderBlocks: (blocks: Block[]) => void;
@@ -78,13 +78,18 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         data: registry[type].defaultValues,
       } as Block;
 
-      // 2. Find insertion index
-      const index = s.page.blocks.findIndex((b) => b.id === insertAfterId);
-      if (index === -1) return {};
+      // 2. Determine insertion index
+      let insertIndex = 0; // Default to beginning (for empty pages)
+
+      if (insertAfterId) {
+        const index = s.page.blocks.findIndex((b) => b.id === insertAfterId);
+        if (index === -1) return {}; // insertAfterId not found
+        insertIndex = index + 1;
+      }
 
       // 3. Insert into array
       const newBlocks = [...s.page.blocks];
-      newBlocks.splice(index + 1, 0, newBlock);
+      newBlocks.splice(insertIndex, 0, newBlock);
 
       // 4. Mark as edited
       const editedBlocks = new Set(s.editedBlocks);
