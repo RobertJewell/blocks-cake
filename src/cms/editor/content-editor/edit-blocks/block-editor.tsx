@@ -30,6 +30,8 @@ export const BlockEditor = ({ mode }: BlockEditorProps) => {
   const currentBlock = page?.blocks.find((b) => b.id === selectedId);
 
   // Scroll to top when block form loads
+  // No one likes a useEffect, but this is the cleanest way.
+  // It is "correct" as it's working with the real DOM outside of reacts control
   useEffect(() => {
     if (currentBlock) {
       // Find the ScrollArea viewport and scroll to top

@@ -1,15 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { drizzleMiddleware } from "../../middleware/db";
-import { pages } from "../../db/schema";
 
 export const getPages = createServerFn({ method: "GET" })
   .middleware([drizzleMiddleware])
-  // .inputValidator((slug: string) => slug)
-
   .handler(async ({ context }) => {
     const { db } = context;
 
-    const data = await db.select().from(pages).all();
+    const data = await db.query.pages.findMany({
+      with: {
+        screenshots: true,
+      },
+    });
 
     return data;
   });

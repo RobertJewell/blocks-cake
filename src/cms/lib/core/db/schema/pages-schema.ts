@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { relations, sql } from "drizzle-orm";
 import { blocks } from "./blocks-schema";
+import { screenshots } from "./screenshots-schema";
 import { Status } from "@/cms/blocks/block-registry.types";
 
 export const pages = sqliteTable(
@@ -49,6 +50,7 @@ export const pageBlocks = sqliteTable(
 
 export const pagesRelations = relations(pages, ({ many }) => ({
   pageBlocks: many(pageBlocks),
+  screenshots: many(screenshots),
 }));
 
 export const pageBlocksRelations = relations(pageBlocks, ({ one }) => ({

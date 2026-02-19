@@ -12,6 +12,7 @@ import {
 import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
 import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
+import { env } from "cloudflare:workers";
 
 export const Route = createFileRoute("/api/pages/$")({
   server: {
@@ -39,21 +40,20 @@ export const Route = createFileRoute("/api/pages/$")({
         const { auth, db } = context;
         const slug = params._splat;
 
-        // 1. Auth & Validation
+        // Auth check
         const session = await auth.api.getSession(request);
         if (!session?.user)
           return new Response("Unauthorized", { status: 401 });
         if (!slug || !isValidSlugPath(slug))
           return new Response("Invalid slug", { status: 400 });
 
-        // 2. Parse Body
         const body = (await request.json()) as {
           title?: string;
           status?: "draft" | "published";
           blocks: any[];
         };
 
-        // 3. Find Page ID
+        // Grab Page ID
         const existingPage = await db.query.pages.findFirst({
           where: eq(pages.slug, slug),
           columns: { id: true },
@@ -63,15 +63,12 @@ export const Route = createFileRoute("/api/pages/$")({
           return new Response("Page not found", { status: 404 });
         }
 
-        // 4. Process Blocks (Dehydrate & Validate)
-        // This helper handles all the logic we moved out
+        // Process Blocks (Dehydrate & Validate)
         const { validBlocks, usageRecords, blockIdsToDeleteUsagesFor } =
           processBlocksForSave(body.blocks);
 
-        // 5. Prepare Database Batch
         const batchStatements: any[] = [];
 
-        // A. Update Page Metadata
         batchStatements.push(
           db
             .update(pages)
@@ -83,7 +80,6 @@ export const Route = createFileRoute("/api/pages/$")({
             .where(eq(pages.id, existingPage.id)),
         );
 
-        // B. Upsert Blocks
         if (validBlocks.length > 0) {
           batchStatements.push(
             db
@@ -99,13 +95,12 @@ export const Route = createFileRoute("/api/pages/$")({
           );
         }
 
-        // C. Clean up Old Links
-        // 1. Unlink blocks from this page
+        // Clean up operations
+        // Unlink blocks from this page
         batchStatements.push(
           db.delete(pageBlocks).where(eq(pageBlocks.pageId, existingPage.id)),
         );
 
-        // 2. Clear old asset usages for the blocks we are touching
         if (blockIdsToDeleteUsagesFor.length > 0) {
           batchStatements.push(
             db
@@ -114,7 +109,6 @@ export const Route = createFileRoute("/api/pages/$")({
           );
         }
 
-        // D. Insert New Page Links (Restore Order)
         if (validBlocks.length > 0) {
           const newLinks = validBlocks.map((b, index) => ({
             pageId: existingPage.id,
@@ -125,14 +119,30 @@ export const Route = createFileRoute("/api/pages/$")({
           batchStatements.push(db.insert(pageBlocks).values(newLinks));
         }
 
-        // E. Insert New Asset Usages
         if (usageRecords.length > 0) {
           batchStatements.push(db.insert(assetUsages).values(usageRecords));
         }
 
-        // 6. Execute Transaction
         if (batchStatements.length > 0) {
           await db.batch(batchStatements as [any, ...any[]]);
+        }
+
+        // Queue Screenshot Generation
+        // Build the page URL for screenshot using env SITE_URL
+        const pageslug = slug === "index" ? "" : `/${slug}`;
+        const pageUrl = `${env.SITE_URL}/${pageslug}`;
+
+        // Queue the screenshot processing (same screenshot per page, overwrites on updates)
+        try {
+          await env.blocks_capture_screenshot.send({
+            pageId: existingPage.id,
+            pageUrl,
+            timestamp: Date.now(),
+          });
+          console.log(`Screenshot queued for page ${slug}`);
+        } catch (err) {
+          console.error(`Failed to queue screenshot for ${slug}:`, err);
+          // Don't fail the page save if screenshot queueing fails
         }
 
         return json({ ok: true });

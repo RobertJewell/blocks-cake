@@ -5,6 +5,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
   "vars": {
+    "CLOUDFLARE_BROWSER_RENDERING_TOKEN": "PHKl8iWSbSWkRQpbXe3UYcsx0dN1lQ4wfMbP5RTg",
+    "SITE_URL": "https://blocks-cakes.rjewellaudio.workers.dev",
     "BETTER_AUTH_URL": "https://blocks-cakes.rjewellaudio.workers.dev",
     "GOOGLE_CLIENT_ID": "526399404524-53k72oqm52ffvoejk5frg9m0ukbeeak6.apps.googleusercontent.com",
     "CLOUDFLARE_ACCOUNT_ID": "bcfacdd0f09674f8cae0297886b0ea76",
@@ -32,10 +34,17 @@
         "queue": "blocks-optimise-image",
         "binding": "blocks_optimise_image",
       },
+      {
+        "queue": "blocks-capture-screenshot",
+        "binding": "blocks_capture_screenshot",
+      },
     ],
     "consumers": [
       {
         "queue": "blocks-optimise-image",
+      },
+      {
+        "queue": "blocks-capture-screenshot",
       },
     ],
   },
