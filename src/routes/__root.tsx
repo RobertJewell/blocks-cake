@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { seo } from "@/cms/lib/helpers/seo";
-import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
+import { useDisableAnimationsForScreenshot } from "@/cms/lib/hooks/use-disable-animations-for-screenshot";
 import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
@@ -13,10 +13,8 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
-  useLocation,
 } from "@tanstack/react-router";
 import * as React from "react";
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   editorStore: typeof useEditorStore;
@@ -86,10 +84,8 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const location = useLocation();
-  const isAppRoute = location.pathname.startsWith("/app");
-  const mode = useEditorStore((s) => s.mode);
-  const isMobile = useIsMobile();
+  // Disable Framer Motion animations during screenshot capture
+  useDisableAnimationsForScreenshot();
 
   return (
     <html className={cn("bg-white")}>

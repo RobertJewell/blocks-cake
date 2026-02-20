@@ -14,10 +14,10 @@ export const Route = createFileRoute("/api/pages/create")({
         // Auth check
         const session = await auth.api.getSession(request);
         if (!session?.user) {
-          return new Response(
-            JSON.stringify({ message: "Unauthorized" }),
-            { status: 401, headers: { "Content-Type": "application/json" } },
-          );
+          return new Response(JSON.stringify({ message: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
         }
 
         // Parse body

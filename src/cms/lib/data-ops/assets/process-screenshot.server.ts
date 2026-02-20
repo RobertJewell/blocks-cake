@@ -1,9 +1,12 @@
 import { screenshots } from "@/cms/lib/core/db/schema";
 import { eq } from "drizzle-orm";
 import { getDB } from "@/cms/lib/core/db/drizzle";
+import { encode } from "blurhash";
 
 const SCREENSHOT_WIDTH = 1280;
 const SCREENSHOT_HEIGHT = 720;
+
+const toStream = (buffer: ArrayBuffer) => new Response(buffer).body!;
 
 export async function processScreenshot(
   pageId: string,
@@ -35,6 +38,23 @@ export async function processScreenshot(
           waitUntil: "networkidle0",
           timeout: 45000,
         },
+        // we can't guarentee when an animation finishes, so this fires them all immediately, in theory...
+        addStyleTag: [
+          {
+            content: `
+              * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+              }
+            `,
+          },
+        ],
+        addScriptTag: [
+          {
+            content: `window.SCREENSHOT_MODE = true;`,
+          },
+        ],
       }),
     });
 
@@ -47,13 +67,38 @@ export async function processScreenshot(
 
     const screenshotBuffer = await response.arrayBuffer();
 
+    // Convert PNG to WebP for better compression
+    const transform = await env.IMAGES.input(toStream(screenshotBuffer))
+      .transform({ fit: "cover" })
+      .output({ format: "image/webp", quality: 80 });
+
+    const res = transform.response();
+    const webpBuffer = await res.arrayBuffer();
+
+    // Generate blurhash
+    let blurhash: string | null = null;
+    try {
+      const bhWidth = 32;
+      const bhHeight = 32;
+
+      const bhTransform = await env.IMAGES.input(toStream(screenshotBuffer))
+        .transform({ width: bhWidth, height: bhHeight, fit: "cover" })
+        .output({ format: "rgba" });
+
+      const bhRes = bhTransform.response();
+      const pixels = new Uint8ClampedArray(await bhRes.arrayBuffer());
+      blurhash = encode(pixels, bhWidth, bhHeight, 4, 4);
+    } catch (err) {
+      console.warn("Blurhash generation skipped:", err);
+    }
+
     // Use timestamp in filename to bypass browser cache
     const timestamp = Date.now();
-    const newStoragePath = `screenshots/${pageId}/${timestamp}.png`;
+    const newStoragePath = `screenshots/${pageId}/${timestamp}.webp`;
 
-    // Store in R2
-    await env.blocks_cakes_assets.put(newStoragePath, screenshotBuffer, {
-      httpMetadata: { contentType: "image/png" },
+    // Store optimized WebP in R2
+    await env.blocks_cakes_assets.put(newStoragePath, webpBuffer, {
+      httpMetadata: { contentType: "image/webp" },
     });
 
     // Get the old screenshot path (if exists) to delete it
@@ -71,6 +116,7 @@ export async function processScreenshot(
         storagePath: newStoragePath,
         width: SCREENSHOT_WIDTH,
         height: SCREENSHOT_HEIGHT,
+        blurhash,
       })
       .onConflictDoUpdate({
         target: screenshots.pageId,
@@ -79,6 +125,7 @@ export async function processScreenshot(
           storagePath: newStoragePath,
           width: SCREENSHOT_WIDTH,
           height: SCREENSHOT_HEIGHT,
+          blurhash,
           updatedAt: new Date(),
         },
       });

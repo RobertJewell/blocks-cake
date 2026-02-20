@@ -1,8 +1,22 @@
 import { pages, screenshots } from "@/cms/lib/core/db/schema";
+import {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/cms/ui/alert-dialog";
 import { Badge } from "@/cms/ui/badge";
+import { Button } from "@/cms/ui/button";
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@/cms/ui/menu";
+import { IconDots, IconTrash } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 import { InferSelectModel } from "drizzle-orm";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type PageType = InferSelectModel<typeof pages>;
 type ScreenshotType = InferSelectModel<typeof screenshots>;
@@ -13,6 +27,7 @@ interface PageCardProps {
   status: PageType["status"];
   screenshot?: ScreenshotType;
   r2BaseUrl: string;
+  onDelete?: () => void;
 }
 
 export function PageCard({
@@ -21,57 +36,142 @@ export function PageCard({
   status,
   screenshot,
   r2BaseUrl,
+  onDelete,
 }: PageCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const screenshotUrl = screenshot?.storagePath
     ? `${r2BaseUrl}/${screenshot.storagePath}`
     : null;
   const isLoadingScreenshot = screenshot?.status === "pending";
 
-  return (
-    <Link to="/app/edit/$" params={{ _splat: slug }} className="group">
-      <div className="flex flex-col gap-3 overflow-hidden rounded-lg border border-border hover:border-foreground/50 transition-colors bg-background h-full">
-        {/* Screenshot Preview */}
-        <div className="relative aspect-video bg-muted overflow-hidden">
-          {screenshotUrl ? (
-            <img
-              src={screenshotUrl}
-              alt={title}
-              className="w-full h-full object-cover transition-transform duration-200"
-              onError={(e) => {
-                // Fallback if image fails to load
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-              }}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-muted">
-              {isLoadingScreenshot ? (
-                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-              ) : (
-                <div className="text-center text-muted-foreground text-sm">
-                  <div>No screenshot yet</div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/pages/${slug}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        {/* Content */}
-        <div className="flex flex-col gap-2 p-3">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-sm line-clamp-2 flex-1 group-hover:underline">
-              {title}
-            </h3>
-            <Badge
-              variant={status === "published" ? "success" : "warning"}
-              className="shrink-0"
-            >
-              {status}
-            </Badge>
+      if (!response.ok) {
+        const error = (await response.json()) as { message?: string };
+        throw new Error(error.message || "Failed to delete page");
+      }
+
+      toast.success(`Page "${title}" deleted successfully`);
+      setShowDeleteDialog(false);
+      onDelete?.();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete page";
+      toast.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <div className="group font-editor relative">
+      <Link to="/app/edit/$" params={{ _splat: slug }} className="flex">
+        <div className="flex flex-col gap-3 overflow-hidden rounded-lg border border-border hover:border-foreground/50 transition-colors bg-background h-full w-full">
+          {/* Screenshot Preview */}
+          <div className="relative aspect-video bg-muted overflow-hidden">
+            {screenshotUrl ? (
+              <img
+                src={screenshotUrl}
+                alt={title}
+                className="w-full h-full object-cover transition-transform duration-200"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                }}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-muted">
+                {isLoadingScreenshot ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                ) : (
+                  <div className="text-center text-muted-foreground text-sm">
+                    <div>No screenshot yet</div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-          <p className="text-xs text-muted-foreground">{slug}</p>
+
+          {/* Content */}
+          <div className="flex flex-col gap-2 p-3">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="font-semibold text-sm line-clamp-2 flex-1 group-hover:underline">
+                {title}
+              </h3>
+              <Badge
+                variant={status === "published" ? "success" : "warning"}
+                className="shrink-0"
+              >
+                {status}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground">{slug}</p>
+          </div>
         </div>
+      </Link>
+
+      {/* Menu Button - appears on hover */}
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Menu>
+          <MenuTrigger>
+            <Button
+              variant="outline"
+              size="sm"
+              className="size-8! p-0 bg-white/90 hover:bg-white border-gray-200 shadow-sm"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <IconDots className="h-4 w-4" />
+            </Button>
+          </MenuTrigger>
+
+          <MenuPopup align="end" className="w-48">
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteDialog(true);
+              }}
+            >
+              <IconTrash className="mr-2 h-4 w-4" />
+              Delete
+            </MenuItem>
+          </MenuPopup>
+        </Menu>
       </div>
-    </Link>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="font-editor">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Page</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{title}"? This action cannot be
+              undone. All blocks, assets, and screenshots associated with this
+              page will be removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogClose>
+              <Button variant="outline">Cancel</Button>
+            </AlertDialogClose>
+            <Button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              variant="destructive"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }

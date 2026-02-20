@@ -8,6 +8,7 @@ import {
   blocks,
   pageBlocks,
   assetUsages,
+  screenshots,
 } from "@/cms/lib/core/db/schema";
 import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
 import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
@@ -145,6 +146,112 @@ export const Route = createFileRoute("/api/pages/$")({
         }
 
         return json({ ok: true });
+      },
+
+      DELETE: async ({ request, params, context }) => {
+        const { db, auth } = context;
+        const slug = params._splat;
+
+        // Auth check
+        const session = await auth.api.getSession(request);
+        if (!session?.user) {
+          return new Response(JSON.stringify({ message: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        if (!slug) {
+          return new Response(JSON.stringify({ message: "Slug is required" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        // Find the page
+        const page = await db.query.pages.findFirst({
+          where: eq(pages.slug, slug),
+          columns: { id: true },
+        });
+
+        if (!page) {
+          return new Response(JSON.stringify({ message: "Page not found" }), {
+            status: 404,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        try {
+          // Get all blocks for this page
+          const pageBlocksRecords = await db.query.pageBlocks.findMany({
+            where: eq(pageBlocks.pageId, page.id),
+            columns: { blockId: true },
+          });
+
+          const blockIds = pageBlocksRecords.map((pb) => pb.blockId);
+
+          // Start transaction, kinda
+          const cleanupStatements: any[] = [];
+
+          // Asset uses
+          if (blockIds.length > 0) {
+            cleanupStatements.push(
+              db
+                .delete(assetUsages)
+                .where(inArray(assetUsages.blockId, blockIds)),
+            );
+
+            // Blocks
+            cleanupStatements.push(
+              db.delete(blocks).where(inArray(blocks.id, blockIds)),
+            );
+          }
+
+          //  Page-block relationships
+          cleanupStatements.push(
+            db.delete(pageBlocks).where(eq(pageBlocks.pageId, page.id)),
+          );
+
+          // Screenshots
+          const pageScreenshots = await db.query.screenshots.findMany({
+            where: eq(screenshots.pageId, page.id),
+            columns: { storagePath: true },
+          });
+
+          cleanupStatements.push(
+            db.delete(screenshots).where(eq(screenshots.pageId, page.id)),
+          );
+
+          // Page
+          cleanupStatements.push(db.delete(pages).where(eq(pages.id, page.id)));
+
+          // Run transation
+          if (cleanupStatements.length > 0) {
+            await db.batch(cleanupStatements as [any, ...any[]]);
+          }
+
+          // Delete screenshots from R2
+          for (const screenshot of pageScreenshots) {
+            if (screenshot.storagePath) {
+              try {
+                await env.blocks_cakes_assets.delete(screenshot.storagePath);
+              } catch (err) {
+                console.error("Failed to delete screenshot from R2:", err);
+              }
+            }
+          }
+
+          return json({ success: true });
+        } catch (err) {
+          console.error("Failed to delete page:", err);
+          return new Response(
+            JSON.stringify({
+              message:
+                err instanceof Error ? err.message : "Failed to delete page",
+            }),
+            { status: 500, headers: { "Content-Type": "application/json" } },
+          );
+        }
       },
     },
   },

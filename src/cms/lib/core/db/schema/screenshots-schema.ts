@@ -25,6 +25,9 @@ export const screenshots = sqliteTable(
       .notNull(),
     errorMessage: text("error_message"),
 
+    // Blurhash for preview
+    blurhash: text("blurhash"),
+
     // Row Metadata
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)

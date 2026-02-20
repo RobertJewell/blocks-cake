@@ -3,6 +3,7 @@ import { Button } from "@/cms/ui/button";
 import { PageCard } from "@/cms/ui/dashboard/page-card";
 import { IconPlus } from "@tabler/icons-react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/app/(authenticated)/")({
   component: RouteComponent,
@@ -13,11 +14,16 @@ export const Route = createFileRoute("/app/(authenticated)/")({
 });
 
 function RouteComponent() {
-  const pages = Route.useLoaderData();
   const navigate = useNavigate();
+  const initialPages = Route.useLoaderData();
+  const [pages, setPages] = useState(initialPages);
   const r2BaseUrl =
     import.meta.env.VITE_CLOUDFLARE_R2_BASE_URL ||
     "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
+
+  const handlePageDeleted = (deletedSlug: string) => {
+    setPages((prev) => prev.filter((p) => p.slug !== deletedSlug));
+  };
 
   return (
     <div className="p-6 flex flex-col font-editor gap-8">
@@ -37,6 +43,7 @@ function RouteComponent() {
               status={page.status}
               screenshot={page.screenshots?.[0]}
               r2BaseUrl={r2BaseUrl}
+              onDelete={() => handlePageDeleted(page.slug)}
             />
           ))}
         </div>
