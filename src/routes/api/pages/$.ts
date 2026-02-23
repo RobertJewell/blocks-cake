@@ -2,7 +2,6 @@ import { eq, inArray, sql } from "drizzle-orm";
 import { json } from "@tanstack/react-start";
 import { createFileRoute } from "@tanstack/react-router";
 import { drizzleMiddleware } from "@/cms/lib/core/middleware/db";
-import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth";
 import {
   pages,
   blocks,
@@ -14,6 +13,7 @@ import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
 import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 import { env } from "cloudflare:workers";
+import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth/auth-request-middleware";
 
 export const Route = createFileRoute("/api/pages/$")({
   server: {

@@ -2,7 +2,7 @@ import { isTag } from "domutils";
 import { DOMNode, domToReact } from "html-react-parser";
 import { parseDocument } from "htmlparser2";
 import { createElement } from "react";
-import { HydratedBlockProps } from "../shared/assets/asset-type-helpers";
+import { HydratedBlockProps } from "../block-registry.types";
 import { richTextConfig } from "./rich-text-config";
 
 export const typographyMap: Record<string, string> = {

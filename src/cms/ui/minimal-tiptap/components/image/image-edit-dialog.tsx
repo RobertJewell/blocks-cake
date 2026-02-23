@@ -23,17 +23,19 @@ const ImageEditDialog = ({ editor, size, variant }: ImageEditDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <ToolbarButton
-          isActive={editor.isActive("image")}
-          tooltip="Image"
-          aria-label="Image"
-          size={size}
-          variant={variant}
-        >
-          <ImageIcon className="size-5" />
-        </ToolbarButton>
-      </DialogTrigger>
+      <DialogTrigger
+        render={() => (
+          <ToolbarButton
+            isActive={editor.isActive("image")}
+            tooltip="Image"
+            aria-label="Image"
+            size={size}
+            variant={variant}
+          >
+            <ImageIcon className="size-5" />
+          </ToolbarButton>
+        )}
+      ></DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Select image</DialogTitle>

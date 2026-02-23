@@ -1,4 +1,4 @@
-import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth";
+import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth/auth-request-middleware";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/api/auth/$")({

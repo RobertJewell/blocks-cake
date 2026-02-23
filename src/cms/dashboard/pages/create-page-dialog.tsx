@@ -1,4 +1,15 @@
+import { createPage } from "@/cms/lib/core/functions/pages/create-page";
 import { Button } from "@/cms/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPanel,
+  DialogTitle,
+  DialogTrigger,
+} from "@/cms/ui/dialog";
 import {
   Form,
   FormControl,
@@ -17,15 +28,11 @@ import {
   SelectValue,
 } from "@/cms/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-
-export const Route = createFileRoute("/app/(authenticated)/create")({
-  component: RouteComponent,
-});
 
 const createPageSchema = z.object({
   title: z.string().min(1, "Title is required").max(255),
@@ -41,17 +48,9 @@ const createPageSchema = z.object({
 
 type CreatePageFormData = z.infer<typeof createPageSchema>;
 
-type CreatePageResponse = {
-  id: string;
-  slug: string;
-};
-
-type ErrorResponse = {
-  message: string;
-};
-
-function RouteComponent() {
+export function CreatePageDialog({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<CreatePageFormData>({
@@ -66,21 +65,11 @@ function RouteComponent() {
   const onSubmit = async (data: CreatePageFormData) => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/pages/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const result = await createPage({ data });
 
-      if (!response.ok) {
-        const error = (await response.json()) as ErrorResponse;
-        throw new Error(error.message || "Failed to create page");
-      }
-
-      const result = (await response.json()) as CreatePageResponse;
       toast.success(`Page "${data.title}" created successfully`);
+      setOpen(false);
+      form.reset();
 
       // Redirect to edit page
       await navigate({
@@ -97,20 +86,21 @@ function RouteComponent() {
   };
 
   return (
-    <div className="p-6 flex flex-col gap-8 font-editor">
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Create New Page</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Start with a blank page and add blocks to build your content
-          </p>
-        </div>
-
-        <div className="max-w-md">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Create New Page</DialogTitle>
+          <DialogDescription>
+            Start with a blank page and add blocks to build your content.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogPanel>
           <Form {...form}>
             <form
+              id="create-page-form"
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-4"
+              className="space-y-4"
             >
               <FormField
                 control={form.control}
@@ -119,10 +109,7 @@ function RouteComponent() {
                   <FormItem>
                     <FormLabel>Page Title</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g., Home, About Us, Pricing"
-                        {...field}
-                      />
+                      <Input placeholder="e.g., Home, About Us" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,15 +123,9 @@ function RouteComponent() {
                   <FormItem>
                     <FormLabel>Page Slug</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="e.g., home, about-us, pricing"
-                        {...field}
-                      />
+                      <Input placeholder="e.g., home, about-us" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      URL-friendly identifier. Use lowercase letters, numbers,
-                      hyphens, and underscores.
-                    </FormDescription>
+                    <FormDescription>URL-friendly identifier.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -156,10 +137,13 @@ function RouteComponent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue />
+                          <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -167,30 +151,19 @@ function RouteComponent() {
                         <SelectItem value="published">Published</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      You can change this later in the editor.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              <div className="flex gap-3 pt-4">
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? "Creating..." : "Create Page"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate({ to: "/app" })}
-                >
-                  Cancel
-                </Button>
-              </div>
             </form>
           </Form>
-        </div>
-      </div>
-    </div>
+        </DialogPanel>
+        <DialogFooter>
+          <Button type="submit" form="create-page-form" disabled={isLoading}>
+            {isLoading ? "Creating..." : "Create Page"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

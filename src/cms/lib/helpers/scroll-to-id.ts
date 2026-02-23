@@ -1,16 +1,15 @@
 export function scrollToId(
   id?: string,
-  options: ScrollIntoViewOptions = { behavior: "smooth", block: "start" },
+  options: ScrollIntoViewOptions = { behavior: "smooth", block: "center" },
 ) {
   if (!id) return;
 
   requestAnimationFrame(() => {
-    // Remember to use your prefix logic if you added it in the previous step
     const element = document.getElementById(id);
 
     if (element) {
       element.scrollIntoView({
-        inline: "nearest",
+        inline: "center",
         ...options, // Allow overriding behavior and block alignment
       });
     }

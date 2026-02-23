@@ -12,6 +12,7 @@ import { Badge } from "@/cms/ui/badge";
 import { Button } from "@/cms/ui/button";
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from "@/cms/ui/menu";
 import { IconDots, IconTrash } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { InferSelectModel } from "drizzle-orm";
 import { Loader2 } from "lucide-react";
@@ -26,18 +27,14 @@ interface PageCardProps {
   title: PageType["title"];
   status: PageType["status"];
   screenshot?: ScreenshotType;
-  r2BaseUrl: string;
-  onDelete?: () => void;
 }
 
-export function PageCard({
-  slug,
-  title,
-  status,
-  screenshot,
-  r2BaseUrl,
-  onDelete,
-}: PageCardProps) {
+const r2BaseUrl =
+  import.meta.env.VITE_CLOUDFLARE_R2_BASE_URL ||
+  "https://pub-39814712f705425ebdcd406e6d0a9361.r2.dev";
+
+export function PageCard({ slug, title, status, screenshot }: PageCardProps) {
+  const queryClient = useQueryClient();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const screenshotUrl = screenshot?.storagePath
@@ -62,7 +59,7 @@ export function PageCard({
 
       toast.success(`Page "${title}" deleted successfully`);
       setShowDeleteDialog(false);
-      onDelete?.();
+      queryClient.invalidateQueries({ queryKey: ["pages"] });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to delete page";
@@ -119,14 +116,14 @@ export function PageCard({
         </div>
       </Link>
 
-      {/* Menu Button - appears on hover */}
-      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Menu Dropdown - TODO probably want to make a resuable verion of this as we're using it on the preview cards*/}
+      <div className="absolute top-2 right-2">
         <Menu>
           <MenuTrigger>
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
-              className="size-8! p-0 bg-white/90 hover:bg-white border-gray-200 shadow-sm"
+              className="size-8! p-0 bg-background hover:bg-background! border-border shadow-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <IconDots className="h-4 w-4" />

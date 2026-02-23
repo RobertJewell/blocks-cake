@@ -21,9 +21,7 @@ export function ImageDropzone({
     api: "/api/assets/upload",
     route: "images",
     onUploadComplete: async (res) => {
-      // Extract IDs
-      // Since we updated the API to use the UUIDv7 as the key directly,
-      // we don't need to parse strings anymore. The key IS the ID.
+      // Extract IDs - we're using uuidv7 for time orderable ids
       const newAssets = res.files.map(
         (file) =>
           ({

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { authClient } from "../auth-client";
-import { createAuthInstance } from "../../middleware/auth";
+import { createAuthInstance } from "../auth";
 
 export function useSession() {
   return useQuery({

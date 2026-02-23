@@ -1,8 +1,4 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/cms/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/cms/ui/popover";
 import type { toggleVariants } from "@/cms/ui/toggle";
 import { Link2Icon } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/react";
@@ -50,18 +46,20 @@ const LinkEditPopover = ({ editor, size, variant }: LinkEditPopoverProps) => {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <ToolbarButton
-          isActive={editor.isActive("link")}
-          tooltip="Link"
-          aria-label="Insert link"
-          disabled={editor.isActive("codeBlock")}
-          size={size}
-          variant={variant}
-        >
-          <Link2Icon className="size-5" />
-        </ToolbarButton>
-      </PopoverTrigger>
+      <PopoverTrigger
+        render={() => (
+          <ToolbarButton
+            isActive={editor.isActive("link")}
+            tooltip="Link"
+            aria-label="Insert link"
+            disabled={editor.isActive("codeBlock")}
+            size={size}
+            variant={variant}
+          >
+            <Link2Icon className="size-5" />
+          </ToolbarButton>
+        )}
+      ></PopoverTrigger>
       <PopoverContent align="end" side="bottom">
         <LinkEditBlock onSave={onSetLink} defaultText={text} />
       </PopoverContent>

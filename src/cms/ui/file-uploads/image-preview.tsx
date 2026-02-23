@@ -1,5 +1,5 @@
 import { AssetImage } from "@/cms/blocks/shared/assets/asset-image";
-import { Asset } from "@/cms/blocks/shared/assets/asset-schema";
+import { getAssetById } from "@/cms/lib/core/functions/assets/get-asset-by-id";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Button } from "../../../components/ui/button";
@@ -11,19 +11,18 @@ interface AssetPreviewProps {
 
 export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
   // Fetch asset details by ID
-  const { data: asset, isLoading } = useQuery({
+  const {
+    data: asset,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["asset", assetId],
-    queryFn: async () => {
-      const res = await fetch(`/api/assets/${assetId}`);
-      if (!res.ok) throw new Error("Failed to load asset");
-      return res.json() as Promise<Asset>;
-    },
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    queryFn: () => getAssetById({ data: { id: assetId } }),
   });
 
   if (isLoading) {
     return (
-      <div className="aspect-square bg-muted  rounded-md flex items-center justify-center border border-gray-100">
+      <div className="aspect-square bg-muted rounded-md flex items-center justify-center border border-gray-100 relative">
         <span className="text-[10px] text-gray-400 font-medium">
           Loading...
         </span>
@@ -39,7 +38,7 @@ export function AssetPreview({ assetId, onRemove }: AssetPreviewProps) {
   }
 
   // Handle broken IDs or deleted assets
-  if (!asset) {
+  if (isError || !asset) {
     return (
       <div className="aspect-square bg-red-50 rounded-md flex items-center justify-center border border-red-100 relative group">
         <span className="text-[10px] text-red-400">Not Found</span>
