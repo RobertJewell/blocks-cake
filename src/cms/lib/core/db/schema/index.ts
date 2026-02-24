@@ -3,3 +3,5 @@ export * from "./pages-schema";
 export * from "./blocks-schema";
 export * from "./assets-schema";
 export * from "./screenshots-schema";
+export * from "./globals-schema";
+export * from "./scopes-schema";

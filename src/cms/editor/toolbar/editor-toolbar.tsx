@@ -1,5 +1,6 @@
 import { blurUpVariants } from "@/cms/blocks/shared/animations";
 import { useIsMobile } from "@/cms/lib/hooks/use-is-mobile";
+import { usePageDiffWithIds } from "@/cms/lib/hooks/usePageDiff";
 import { useSavePage } from "@/cms/lib/hooks/useSavePage";
 import { useEditorShortcuts } from "@/cms/lib/hooks/useShortcuts";
 import { useEditorStore, ViewMode } from "@/cms/lib/stores/editor-store";
@@ -30,7 +31,6 @@ export function EditorToolbar() {
   const page = useEditorStore((s) => s.page);
   const initialPage = useEditorStore((s) => s.initialPage);
   const setInitialPage = useEditorStore((s) => s.setInitialPage);
-  const editedBlocks = useEditorStore((s) => s.editedBlocks);
   const resetEditedBlocks = useEditorStore((s) => s.resetEditedBlocks);
 
   const { _splat } = Route.useParams();
@@ -39,17 +39,12 @@ export function EditorToolbar() {
   const isMobile = useIsMobile();
   const isMobileEditPanelOpen = mode === "edit" && isMobile;
 
+  const { hasChanges: showSave } = usePageDiffWithIds(page, initialPage);
+
   useHotkeys("meta+e", () => setMode("edit"), [setMode]);
   useHotkeys("meta+a", () => setMode("add"), [setMode], {
     preventDefault: true,
   });
-
-  //block order
-  const currentOrder = page?.blocks.map((b) => b.id).join("|") ?? "";
-  const initialOrder = initialPage?.blocks.map((b) => b.id).join("|") ?? "";
-  const hasReordered = initialOrder && currentOrder !== initialOrder;
-
-  const showSave = editedBlocks.size > 0 || hasReordered;
 
   const handleSave = () => {
     page &&

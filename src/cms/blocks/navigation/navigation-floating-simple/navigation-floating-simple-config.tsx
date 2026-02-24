@@ -1,7 +1,7 @@
 import { fields } from "../../block-builder";
 
 export const navigationFloatingSimpleConfig = {
-  logo: fields.image("Logo", { max: 1 }),
+  logo: fields.image("Logo", { max: 1, optional: true }),
 
   ctaText: fields.text("Call to Action Text", {
     optional: true,

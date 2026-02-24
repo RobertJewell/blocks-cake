@@ -119,16 +119,18 @@ export function PageCard({ slug, title, status, screenshot }: PageCardProps) {
       {/* Menu Dropdown - TODO probably want to make a resuable verion of this as we're using it on the preview cards*/}
       <div className="absolute top-2 right-2">
         <Menu>
-          <MenuTrigger>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="size-8! p-0 bg-background hover:bg-background! border-border shadow-sm"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <IconDots className="h-4 w-4" />
-            </Button>
-          </MenuTrigger>
+          <MenuTrigger
+            render={() => (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="size-8! p-0 bg-background hover:bg-background! border-border shadow-sm"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconDots className="h-4 w-4" />
+              </Button>
+            )}
+          ></MenuTrigger>
 
           <MenuPopup align="end" className="w-48">
             <MenuItem

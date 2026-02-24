@@ -34,7 +34,6 @@ How the content is **_presented_** changes how the reader perceives it.
 
 Just in those last two lines you read the words “will” and “presented” differently because they were emphasised. That was just bolding them. What about when they’re 3 sizes larger and a in different font?
 
-
 For a casual user, a preview of the page where they can see the results of their edits is really useful. Not every part of a CMS needs to headless.
 There are advantages to having your CMS live alongside your app - for example: Payload [The Next.js Headless CMS and App Framework](https://payloadcms.com/)
 
@@ -74,5 +73,12 @@ This all happens:
 - Without needing to keep the browser open.
 - It also handles retries! 🎉
 
-And all that happens in around 120 lines of code…
+And all that happens in around 140 lines of code…
 
+### Future plans and considerations
+
+Bold move to assume this has a future, it's more of an experiment, but...
+This will eventually be a monorepo (likely using and bun or pnpm workspaces, we don't need nx or turborepo for this), with the cms imported into multiple front-ends.
+This is why we're leaning so heavily into server functions over api routes and isolating the cms components. That means less to set up on each new project.
+
+Side note: I know I keep saying "we", it's just me, but it feels weird not to.

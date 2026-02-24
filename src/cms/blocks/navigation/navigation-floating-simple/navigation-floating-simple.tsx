@@ -1,6 +1,5 @@
 "use client";
 
-import { useSidebar } from "@/cms/ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -28,7 +27,6 @@ export default function NavigationFloatingSimple({
 }: NavigationProps) {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { open } = useSidebar();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 0);
@@ -40,7 +38,7 @@ export default function NavigationFloatingSimple({
     <motion.div
       className={cn(
         "z-50 fixed top-2 transition-all left-0 right-0 px-2 ",
-        open && "md:ml-80",
+        // open && "md:ml-80",
         isScrolled && "sm:px-4",
       )}
     >

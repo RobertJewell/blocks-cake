@@ -5,7 +5,7 @@ import { useEditorStore } from "@/cms/lib/stores/editor-store";
 import { Button } from "@/cms/ui/button";
 import { IconPlus } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BlockPickerDialog } from "../content-editor/add-blocks";
 
 export function EditorPageRenderer({ initialPage }: { initialPage: PageData }) {
@@ -15,12 +15,11 @@ export function EditorPageRenderer({ initialPage }: { initialPage: PageData }) {
   const addBlock = useEditorStore((s) => s.addBlock);
   const [isBlockPickerOpen, setIsBlockPickerOpen] = useState(false);
 
-  // --- Store Sync ---
-  if (!page || page.id !== initialPage.id) {
+  // Sync initialPage to store after mount
+  useEffect(() => {
     setInitialPage(initialPage);
     setPage(initialPage);
-    return null;
-  }
+  }, [initialPage.id]);
 
   const displayPage = page || initialPage;
 

@@ -1,5 +1,7 @@
 import { registry } from "@/cms/blocks/block-registry";
+import NavigationFloatingSimple from "@/cms/blocks/navigation/navigation-floating-simple/navigation-floating-simple";
 import { getPageBySlug } from "@/cms/lib/core/functions";
+import { fetchGlobal } from "@/cms/lib/core/functions/globals/fetch-global";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
 import { useSiteShortcuts } from "@/cms/lib/hooks/useShortcuts";
 import { DefaultCatchBoundary } from "@/components/default-catch-boundary";
@@ -15,9 +17,14 @@ export const Route = createFileRoute("/$")({
     if (!isValidSlugPath(slug)) {
       throw notFound();
     }
-    const page = await getPageBySlug({ data: params._splat || "index" });
+
+    const [page, navigation] = await Promise.all([
+      getPageBySlug({ data: slug }),
+      fetchGlobal({ data: { key: "system-navigation" } }),
+    ]);
+
     if (!page) throw notFound();
-    return page;
+    return { page, navigation };
   },
   component: RouteComponent,
   notFoundComponent: () => <NotFound />,
@@ -25,11 +32,19 @@ export const Route = createFileRoute("/$")({
 });
 
 function RouteComponent() {
-  const page = Route.useLoaderData();
+  const { page, navigation } = Route.useLoaderData();
   useSiteShortcuts();
 
   return (
     <main className="bg-white">
+      {navigation?.type === "system-navigation" && (
+        <NavigationFloatingSimple
+          logo={navigation.value.logo || []}
+          menuItems={navigation.value.menuItems || []}
+          ctaHref={navigation.value.ctaHref}
+          ctaText={navigation.value.ctaText}
+        />
+      )}
       {page.blocks.map((block) => {
         const def = registry[block.type];
         if (!def) {

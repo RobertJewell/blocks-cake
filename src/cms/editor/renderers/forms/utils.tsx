@@ -78,6 +78,14 @@ export function renderFormFields<T extends Record<string, any>>({
             <FormControl>
               <Renderer
                 fieldDef={fieldDef}
+                onChange={
+                  onChange
+                    ? () => {
+                        const currentValues = form.getValues();
+                        onChange(currentValues);
+                      }
+                    : undefined
+                }
                 field={{
                   ...field,
                   onChange: (val) => {

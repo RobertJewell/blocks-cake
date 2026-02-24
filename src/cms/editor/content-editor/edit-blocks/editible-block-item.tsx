@@ -65,16 +65,18 @@ export const BlockItem = forwardRef<HTMLDivElement, BlockItemProps>(
           {/* Menu Button - appears on hover */}
           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Menu>
-              <MenuTrigger>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 w-8 p-0 bg-white/90 hover:bg-white border-gray-200 shadow-sm"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <IconDots className="h-4 w-4" />
-                </Button>
-              </MenuTrigger>
+              <MenuTrigger
+                render={() => (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-8 p-0 bg-white/90 hover:bg-white border-gray-200 shadow-sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <IconDots className="h-4 w-4" />
+                  </Button>
+                )}
+              ></MenuTrigger>
 
               <MenuPopup className="w-48">
                 <MenuItem

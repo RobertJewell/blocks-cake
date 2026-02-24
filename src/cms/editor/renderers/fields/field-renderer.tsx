@@ -17,6 +17,7 @@ export type RendererProps<T extends keyof FieldTypeMap> = {
     Path<Record<string, FieldTypeMap[T]>>
   >;
   fieldDef: AnyFieldDefinition;
+  onChange?: () => void;
 };
 
 export type FieldRenderers = {

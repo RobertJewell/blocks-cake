@@ -29,7 +29,7 @@ import {
 } from "@/cms/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -85,9 +85,11 @@ export function CreatePageDialog({ children }: { children: React.ReactNode }) {
     }
   };
 
+  if (!children) return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger render={children as ReactElement}></DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Page</DialogTitle>
