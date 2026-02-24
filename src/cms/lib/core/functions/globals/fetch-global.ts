@@ -53,19 +53,10 @@ export type GlobalRecord =
   | NumberGlobal;
 
 export const fetchGlobal = createServerFn({ method: "GET" })
-  .middleware([drizzleMiddleware, authRequestMiddleware])
+  .middleware([drizzleMiddleware])
   .inputValidator((data) => fetchGlobalSchema.parse(data))
   .handler(async ({ data, context }): Promise<GlobalRecord | null> => {
-    const { db, request, auth } = context;
-
-    // Auth check
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    });
-
-    if (!session) {
-      throw new Error("Unauthorized");
-    }
+    const { db } = context;
 
     const { key, scope: scopeName } = data;
 
