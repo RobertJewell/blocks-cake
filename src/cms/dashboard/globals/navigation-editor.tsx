@@ -1,4 +1,4 @@
-import { navigationFloatingSimpleConfig } from "@/cms/blocks/navigation/navigation-floating-simple/navigation-floating-simple-config";
+import { navigationFloatingSimpleConfig } from "@/cms/blocks/navigation/navigation-config";
 import { FormRenderer } from "@/cms/editor/renderers";
 import { fetchGlobal, saveGlobal } from "@/cms/lib/core/functions/globals";
 import { Button } from "@/cms/ui/button";

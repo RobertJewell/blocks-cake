@@ -1,4 +1,4 @@
-import { fields } from "../../block-builder";
+import { fields } from "../block-builder";
 
 export const navigationFloatingSimpleConfig = {
   logo: fields.image("Logo", { max: 1, optional: true }),

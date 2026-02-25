@@ -62,7 +62,7 @@ function EditorLayoutInner({
       <Sidebar collapsible="offcanvas" side="left">
         {sidebar}
       </Sidebar>
-      <SidebarInset>
+      <SidebarInset className="@container">
         {toolbar}
         <main>{children}</main>
       </SidebarInset>

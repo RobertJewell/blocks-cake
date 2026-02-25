@@ -29,7 +29,6 @@ export const Route = createFileRoute("/app/(authenticated)/edit/$")({
   },
   component: () => {
     const data = Route.useLoaderData();
-    console.log(data.globals);
     return <EditorPageRenderer initialPage={data.page} />;
   },
   notFoundComponent: () => <NotFound />,

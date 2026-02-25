@@ -1,4 +1,5 @@
 import NavigationFloatingSimple from "@/cms/blocks/navigation/navigation-floating-simple/navigation-floating-simple";
+import { NavigationWrapper } from "@/cms/blocks/navigation/navigation-wrapper";
 import { EditorLayout } from "@/cms/editor/editor-page/editor-layout";
 import { EditorSidebar } from "@/cms/editor/sidebar/editor-sidebar";
 import { EditorToolbar } from "@/cms/editor/toolbar/editor-toolbar";
@@ -46,11 +47,14 @@ function Layout() {
   return (
     <EditorLayout sidebar={<EditorSidebar />} toolbar={<EditorToolbar />}>
       {navigation?.type === "system-navigation" && (
-        <NavigationFloatingSimple
-          logo={[]}
-          menuItems={navigation?.value.menuItems || []}
-          ctaHref={navigation?.value.ctaHref}
-          ctaText={navigation?.value.ctaText}
+        <NavigationWrapper
+          NavigationComponent={NavigationFloatingSimple}
+          props={{
+            logo: [],
+            menuItems: navigation.value.menuItems || [],
+            ctaHref: navigation.value.ctaHref,
+            ctaText: navigation.value.ctaText,
+          }}
         />
       )}
       <Outlet />

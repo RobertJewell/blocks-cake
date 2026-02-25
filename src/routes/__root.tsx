@@ -88,7 +88,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   useDisableAnimationsForScreenshot();
 
   return (
-    <html className={cn("bg-white")}>
+    <html lang="pl" className={cn("bg-white")}>
       <head>
         <HeadContent />
       </head>

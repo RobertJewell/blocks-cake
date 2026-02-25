@@ -14,16 +14,19 @@ import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
 import { Button } from "../../../../components/ui/button";
 import { HydratedBlockProps } from "../../block-registry.types";
-import { navigationFloatingSimpleConfig } from "./navigation-floating-simple-config";
+import { navigationFloatingSimpleConfig } from "../navigation-config";
 
 export interface NavigationProps
-  extends HydratedBlockProps<typeof navigationFloatingSimpleConfig> {}
+  extends HydratedBlockProps<typeof navigationFloatingSimpleConfig> {
+  isSidebarOpen?: boolean;
+}
 
 export default function NavigationFloatingSimple({
   logo,
   menuItems,
   ctaHref,
   ctaText,
+  isSidebarOpen,
 }: NavigationProps) {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,7 +41,7 @@ export default function NavigationFloatingSimple({
     <motion.div
       className={cn(
         "z-50 fixed top-2 transition-all left-0 right-0 px-2 ",
-        // open && "md:ml-80",
+        isSidebarOpen && "md:ml-80",
         isScrolled && "sm:px-4",
       )}
     >
