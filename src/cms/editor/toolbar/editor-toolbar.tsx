@@ -5,6 +5,7 @@ import { useSavePage } from "@/cms/lib/hooks/useSavePage";
 import { useEditorShortcuts } from "@/cms/lib/hooks/useShortcuts";
 import { useEditorStore, ViewMode } from "@/cms/lib/stores/editor-store";
 import { cn } from "@/cms/lib/utils";
+import { Button } from "@/cms/ui/button";
 import { Kbd, KbdGroup } from "@/cms/ui/kbd";
 import { Separator } from "@/cms/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/cms/ui/toggle-group";
@@ -18,9 +19,12 @@ import { Route } from "@/routes/app/(authenticated)/edit/$";
 import {
   IconDeviceFloppy,
   IconEye,
+  IconHome,
   IconPencil,
   IconPlus,
+  IconSettings,
 } from "@tabler/icons-react";
+import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ToolbarButton } from "./toolbar-button";
@@ -63,7 +67,7 @@ export function EditorToolbar() {
 
   useEditorShortcuts({ onSave: handleSave });
 
-  const items = [
+  const editModes = [
     { value: "view", icon: IconEye, label: "View", shortcut: KbdView },
     { value: "edit", icon: IconPencil, label: "Edit", shortcut: KbdEdit },
     { value: "add", icon: IconPlus, label: "Add", shortcut: KbdAdd },
@@ -88,6 +92,48 @@ export function EditorToolbar() {
         >
           <TooltipProvider>
             {/* Mode Toggle Group */}
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant={"ghost"}
+                    aria-label={"home"}
+                    className={cn(
+                      "relative flex h-8 w-8 text-muted-foreground bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                    )}
+                  />
+                }
+              >
+                <Link
+                  to="/app"
+                  className={cn(
+                    "relative flex h-8 w-8 text-muted-foreground bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                  )}
+                >
+                  <IconHome className={cn("h-4 w-4")} />
+                </Link>
+              </TooltipTrigger>
+              <TooltipPopup className="">
+                <KbdHome />
+              </TooltipPopup>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Link
+                    to="/app"
+                    className={cn(
+                      "relative flex h-8 w-8 text-muted-foreground bg-transparent! items-center justify-center bg-none rounded-full p-0 transition-colors duration-200 hover:bg-transparent hover:text-foreground",
+                    )}
+                  >
+                    <IconSettings className={cn("h-4 w-4")} />
+                  </Link>
+                }
+              ></TooltipTrigger>
+              <TooltipPopup className="">
+                <KbdPageSettings />
+              </TooltipPopup>
+            </Tooltip>
             <motion.div
               layoutId={"edit"}
               layout="position"
@@ -103,7 +149,8 @@ export function EditorToolbar() {
                 }}
                 className="gap-0.5"
               >
-                {items.map((item) => {
+                <Separator orientation="vertical" className={"mx-2"} />
+                {editModes.map((item) => {
                   const isSelected = mode === item.value;
                   const Icon = item.icon;
 
@@ -184,6 +231,22 @@ export function EditorToolbar() {
   );
 }
 
+function KbdHome() {
+  return (
+    <KbdGroup className="relative">
+      <Kbd className="text-muted-foreground! bg-muted!">⌥</Kbd>
+      <Kbd className="text-muted-foreground! bg-muted!">h</Kbd>
+    </KbdGroup>
+  );
+}
+function KbdPageSettings() {
+  return (
+    <KbdGroup className="relative">
+      <Kbd className="text-muted-foreground! bg-muted!">⌥</Kbd>
+      <Kbd className="text-muted-foreground! bg-muted!">p</Kbd>
+    </KbdGroup>
+  );
+}
 function KbdView() {
   return (
     <KbdGroup className="relative">
