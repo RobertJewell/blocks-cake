@@ -33,6 +33,8 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ) {
+    const context = createCMSContextFromEnv(env);
+
     for (const message of batch.messages) {
       const body = message.body as any;
 
@@ -43,7 +45,7 @@ export default {
           Promise.all(
             keys.map(async (key: string) => {
               try {
-                await processImageOptimisation(key, env);
+                await processImageOptimisation(key, context);
               } catch (err) {
                 console.error("Optimization failed for " + key + ":", err);
               }
@@ -57,7 +59,7 @@ export default {
         ctx.waitUntil(
           (async () => {
             try {
-              await processScreenshot(pageId, pageUrl, env);
+              await processScreenshot(pageId, pageUrl, context);
             } catch (err) {
               console.error("Screenshot failed for " + pageId + ":", err);
             }

@@ -3,7 +3,7 @@ import { createAuthInstance } from "../../auth/auth";
 
 export const authRequestMiddleware = createMiddleware().server(
   async ({ request, context, next }) => {
-    const auth = createAuthInstance();
+    const auth = createAuthInstance(context);
 
     return next({
       context: {

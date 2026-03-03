@@ -4,7 +4,7 @@ import { createAuthInstance } from "../../auth/auth";
 export const authFunctionMiddleware = createMiddleware({
   type: "function",
 }).server(async ({ context, next }) => {
-  const auth = createAuthInstance();
+  const auth = createAuthInstance(context);
 
   return next({
     context: {

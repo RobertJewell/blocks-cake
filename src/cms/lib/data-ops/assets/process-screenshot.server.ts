@@ -2,6 +2,7 @@ import { screenshots } from "@/cms/lib/core/db/schema";
 import { eq } from "drizzle-orm";
 import { getDB } from "@/cms/lib/core/db/drizzle";
 import { encode } from "blurhash";
+import type { CMSContext } from "@/cms/lib/core/context";
 
 const SCREENSHOT_WIDTH = 1280;
 const SCREENSHOT_HEIGHT = 720;
@@ -11,18 +12,18 @@ const toStream = (buffer: ArrayBuffer) => new Response(buffer).body!;
 export async function processScreenshot(
   pageId: string,
   pageUrl: string,
-  env: Env,
+  context: CMSContext,
 ) {
-  const db = getDB(env.database);
+  const db = getDB(context.database);
 
   try {
     // Call Cloudflare Browser Rendering API
-    const browserRenderingUrl = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/browser-rendering/screenshot`;
+    const browserRenderingUrl = `https://api.cloudflare.com/client/v4/accounts/${context.processing.cloudflareAccountId}/browser-rendering/screenshot`;
 
     const response = await fetch(browserRenderingUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${env.CLOUDFLARE_BROWSER_RENDERING_TOKEN}`,
+        Authorization: `Bearer ${context.processing.browserRenderingToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -68,7 +69,7 @@ export async function processScreenshot(
     const screenshotBuffer = await response.arrayBuffer();
 
     // Convert PNG to WebP for better compression
-    const transform = await env.IMAGES.input(toStream(screenshotBuffer))
+    const transform = await context.processing.images.input(toStream(screenshotBuffer))
       .transform({ fit: "cover" })
       .output({ format: "image/webp", quality: 80 });
 
@@ -81,7 +82,7 @@ export async function processScreenshot(
       const bhWidth = 32;
       const bhHeight = 32;
 
-      const bhTransform = await env.IMAGES.input(toStream(screenshotBuffer))
+      const bhTransform = await context.processing.images.input(toStream(screenshotBuffer))
         .transform({ width: bhWidth, height: bhHeight, fit: "cover" })
         .output({ format: "rgba" });
 
@@ -97,7 +98,7 @@ export async function processScreenshot(
     const newStoragePath = `screenshots/${pageId}/${timestamp}.webp`;
 
     // Store optimized WebP in R2
-    await env.blocks_cakes_assets.put(newStoragePath, webpBuffer, {
+    await context.storage.bucket.put(newStoragePath, webpBuffer, {
       httpMetadata: { contentType: "image/webp" },
     });
 
@@ -133,7 +134,7 @@ export async function processScreenshot(
     // Delete old screenshot from R2 if it exists
     if (oldScreenshot?.storagePath) {
       try {
-        await env.blocks_cakes_assets.delete(oldScreenshot.storagePath);
+        await context.storage.bucket.delete(oldScreenshot.storagePath);
       } catch (err) {
         console.error("Failed to delete old screenshot:", err);
       }

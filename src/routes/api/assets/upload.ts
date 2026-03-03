@@ -6,7 +6,6 @@ import {
   type Router,
 } from "@better-upload/server";
 import { cloudflare } from "@better-upload/server/clients";
-import { env } from "cloudflare:workers";
 import { uuidv7 } from "uuidv7";
 import { drizzleMiddleware } from "@/cms/lib/core/middleware/db";
 import { assets } from "@/cms/lib/core/db/schema";
@@ -19,9 +18,9 @@ export const Route = createFileRoute("/api/assets/upload")({
       POST: async ({ request, context }) => {
         const router: Router = {
           client: cloudflare({
-            accountId: env.CLOUDFLARE_ACCOUNT_ID,
-            accessKeyId: env.CLOUDFLARE_R2_ACCESS_KEY_ID,
-            secretAccessKey: env.CLOUDFLARE_R2_SECRET_ACCESS_KEY,
+            accountId: context.processing.cloudflareAccountId,
+            accessKeyId: context.storage.accessKeyId,
+            secretAccessKey: context.storage.secretAccessKey,
           }),
           bucketName: "blocks-cakes-assets",
           routes: {

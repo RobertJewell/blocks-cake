@@ -12,7 +12,6 @@ import {
 import { processBlocksForSave } from "@/cms/lib/data-ops/save-helpers";
 import { loadPageData } from "@/cms/lib/data-ops/loadPageData";
 import { isValidSlugPath } from "@/cms/lib/helpers/slugs";
-import { env } from "cloudflare:workers";
 import { authRequestMiddleware } from "@/cms/lib/core/middleware/auth/auth-request-middleware";
 
 export const Route = createFileRoute("/api/pages/$")({
@@ -129,13 +128,13 @@ export const Route = createFileRoute("/api/pages/$")({
         }
 
         // Queue Screenshot Generation
-        // Build the page URL for screenshot using env SITE_URL
+        // Build the page URL for screenshot using context config
         const pageslug = slug === "index" ? "" : `${slug}`;
-        const pageUrl = `${env.SITE_URL}/${pageslug}`;
+        const pageUrl = `${context.config.siteUrl}/${pageslug}`;
 
         // Queue the screenshot processing (same screenshot per page, overwrites on updates)
         try {
-          await env.blocks_capture_screenshot.send({
+          await context.queues.screenshotQueue.send({
             pageId: existingPage.id,
             pageUrl,
             timestamp: Date.now(),
@@ -234,7 +233,7 @@ export const Route = createFileRoute("/api/pages/$")({
           for (const screenshot of pageScreenshots) {
             if (screenshot.storagePath) {
               try {
-                await env.blocks_cakes_assets.delete(screenshot.storagePath);
+                await context.storage.bucket.delete(screenshot.storagePath);
               } catch (err) {
                 console.error("Failed to delete screenshot from R2:", err);
               }

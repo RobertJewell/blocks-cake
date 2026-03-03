@@ -2,6 +2,7 @@ import { assets } from "@/cms/lib/core/db/schema";
 import { eq } from "drizzle-orm";
 import { getDB } from "@/cms/lib/core/db/drizzle";
 import { encode } from "blurhash";
+import type { CMSContext } from "@/cms/lib/core/context";
 
 // Configuration & Constants
 export const IMAGE_RESOLUTIONS = {
@@ -16,8 +17,8 @@ export type ImageSizeKey = keyof typeof IMAGE_RESOLUTIONS;
 // Pure/Functional Helpers
 const toStream = (buffer: ArrayBuffer) => new Response(buffer).body!;
 
-const getInfo = async (env: Env, buffer: ArrayBuffer) => {
-  const info = await env.IMAGES.info(toStream(buffer));
+const getInfo = async (context: CMSContext, buffer: ArrayBuffer) => {
+  const info = await context.processing.images.info(toStream(buffer));
   return {
     width: "width" in info ? info.width : 0,
     height: "height" in info ? info.height : 0,
@@ -25,32 +26,32 @@ const getInfo = async (env: Env, buffer: ArrayBuffer) => {
 };
 
 // Main Optimization Pipeline
-export async function processImageOptimisation(key: string, env: Env) {
-  const db = getDB(env.database);
+export async function processImageOptimisation(key: string, context: CMSContext) {
+  const db = getDB(context.database);
 
   // Fetch source
-  const object = await env.blocks_cakes_assets.get(key);
+  const object = await context.storage.bucket.get(key);
   if (!object) throw new Error(`Object not found in R2: ${key}`);
 
   const imageBuffer = await object.arrayBuffer();
 
   // Generate Responsive Variants
   const generateVariants = async () => {
-    const originalDim = await getInfo(env, imageBuffer);
+    const originalDim = await getInfo(context, imageBuffer);
 
     const variantEntries = await Promise.all(
       Object.entries(IMAGE_RESOLUTIONS).map(async ([size, width]) => {
         const variantKey = `${key}_${size.toUpperCase()}`;
 
-        const transform = await env.IMAGES.input(toStream(imageBuffer))
+        const transform = await context.processing.images.input(toStream(imageBuffer))
           .transform({ width, fit: "scale-down" })
           .output({ format: "image/webp", quality: 80 });
 
         const res = transform.response();
         const buffer = await res.arrayBuffer();
-        const dim = await getInfo(env, buffer);
+        const dim = await getInfo(context, buffer);
 
-        await env.blocks_cakes_assets.put(variantKey, buffer, {
+        await context.storage.bucket.put(variantKey, buffer, {
           httpMetadata: { contentType: "image/webp" },
         });
 
@@ -68,7 +69,7 @@ export async function processImageOptimisation(key: string, env: Env) {
   const generateAltText = async () => {
     console.log("🚀 Running AI Alt Text...");
     try {
-      const output = await env.AI.run("@cf/llava-hf/llava-1.5-7b-hf", {
+      const output = await context.processing.ai.run("@cf/llava-hf/llava-1.5-7b-hf", {
         image: [...new Uint8Array(imageBuffer)],
         prompt: "Describe this image in one concise sentence for alt text.",
         max_tokens: 128,
@@ -89,7 +90,7 @@ export async function processImageOptimisation(key: string, env: Env) {
       const bhWidth = 32;
       const bhHeight = 32;
 
-      const transform = await env.IMAGES.input(toStream(imageBuffer))
+      const transform = await context.processing.images.input(toStream(imageBuffer))
         .transform({ width: bhWidth, height: bhHeight, fit: "cover" })
         .output({ format: "rgba" });
 

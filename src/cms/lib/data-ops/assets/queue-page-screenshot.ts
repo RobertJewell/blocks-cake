@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import z from "zod";
 import { authFunctionMiddleware } from "@/cms/lib/core/middleware/auth/auth-function-middleware";
-import { env } from "cloudflare:workers";
 
 export const queuePageScreenshot = createServerFn()
   .middleware([authFunctionMiddleware])
@@ -20,7 +19,7 @@ export const queuePageScreenshot = createServerFn()
     });
     if (!session) throw new Error("Not authenticated");
 
-    await env.blocks_capture_screenshot.send({
+    await context.queues.screenshotQueue.send({
       pageId: data.pageId,
       screenshotId: data.screenshotId,
       pageUrl: data.pageUrl,

@@ -87,8 +87,9 @@ Side note: I know I keep saying "we", it's just me, but it feels weird not to.
 
 When the monorepo happens, each new front-end will need to wire up its own Cloudflare resources and map them to `CMSContext`. The CMS itself won't touch `env` directly — it only knows about the context shape.
 
-Concretely, for each new project you'll need to:
+So, for each new project you'll need to:
 
 - Define the Cloudflare bindings in `wrangler.jsonc` (D1, R2, queues, etc.)
-- Implement `createCMSContextFromEnv` in `src/server.ts`, mapping your binding names to the `CMSContext` shape
-- That's it. The CMS doesn't change.
+- Update `createCMSContextFromEnv` in `src/server.ts`, mapping your binding names to the `CMSContext` shape
+
+We can probably write a cli tool for this
