@@ -82,3 +82,13 @@ This will eventually be a monorepo (likely using and bun or pnpm workspaces, we 
 This is why we're leaning so heavily into server functions over api routes and isolating the cms components. That means less to set up on each new project.
 
 Side note: I know I keep saying "we", it's just me, but it feels weird not to.
+
+### Setting up a new project
+
+When the monorepo happens, each new front-end will need to wire up its own Cloudflare resources and map them to `CMSContext`. The CMS itself won't touch `env` directly — it only knows about the context shape.
+
+Concretely, for each new project you'll need to:
+
+- Define the Cloudflare bindings in `wrangler.jsonc` (D1, R2, queues, etc.)
+- Implement `createCMSContextFromEnv` in `src/server.ts`, mapping your binding names to the `CMSContext` shape
+- That's it. The CMS doesn't change.

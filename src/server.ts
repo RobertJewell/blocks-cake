@@ -1,13 +1,27 @@
 // DO NOT DELETE THIS FILE!!!
 // This file is a good smoke test to make sure the custom server entry is working
 import handler from "@tanstack/react-start/server-entry";
+import {
+  createCMSContextFromEnv,
+  type CMSContext,
+} from "@/cms/lib/core/context";
 import { processImageOptimisation } from "@/cms/lib/data-ops/assets/optimise-images.server";
 import { processScreenshot } from "@/cms/lib/data-ops/assets/process-screenshot.server";
+
+declare module "@tanstack/react-start" {
+  interface Register {
+    server: {
+      requestContext: CMSContext;
+    };
+  }
+}
 
 console.log("[server-entry]: using custom server entry in 'src/server.ts'");
 
 export default {
-  fetch: handler.fetch,
+  async fetch(request: Request, env: Env) {
+    return handler.fetch(request, { context: createCMSContextFromEnv(env) });
+  },
   async queue(
     batch:
       | MessageBatch<{ keys: string[] }>
